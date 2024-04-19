@@ -1,11 +1,17 @@
 ---
+import '@/styles/index.css';
 import Head from '../components/Head.astro';
+import Footer from '../components/Footer.astro';
 ---
-
 <!doctype html>
 <html lang="en">
-	<Head/>
-	<body class="bg-gray-100 font-sans antialiased text-gray-900 flex flex-col min-h-screen">
-		<slot />
-	</body>
+  <Head/>
+  <body class="bg-gradient-to-br from-black to-gray-900 text-white font-sans antialiased flex flex-col min-h-screen">
+    <div class="flex flex-col w-full min-h-screen">
+      <div class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <slot />
+      </div>
+      <Footer />
+    </div>
+  </body>
 </html>

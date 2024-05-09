@@ -13,7 +13,7 @@ import { Chart } from '../components/chart';
         <img src="/star.svg" alt="vista" class="w-8 h-8" />
         <div class="text-5xl font-medium">vista</div>
       </div>
-      <div class="flex items-center justify-center gap-5">
+      <div class="items-center justify-center gap-5 md:flex hidden">
         <a href="#" class="font-mono font-light uppercase bg-[#191919] px-3 py-2 rounded"
           >protocols</a
         >
@@ -23,18 +23,18 @@ import { Chart } from '../components/chart';
       </div>
     </div>
 
-    <div class="mt-24 flex items-center justify-between">
+    <div class="mt-16 md:mt-24 flex items-center justify-between gap-8 flex-wrap">
       <div>
         <h2 class="text-3xl font-medium mb-2">Total Value Locked</h2>
-        <div class="text-xl opacity-70">
-          <span class="block">Total USD value of all canonically bridged, externally bridged,</span>
-          <span class="block">and natively minted tokens.</span>
+        <div class="text-xl opacity-70 max-w-[600px]">
+          Total USD value of all canonically bridged, externally bridged, and natively minted
+          tokens.
         </div>
       </div>
-      <div>
-        <div class="text-[40px] leading-[50px] font-medium text-right">$36.8B</div>
+      <div class="min-w-[120px] text-right">
+        <div class="text-[40px] md:leading-[50px] font-medium">$36.8B</div>
         <div>
-          <div class="flex items-center justify-center gap-2">
+          <div class="flex items-center justify-end gap-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="14"
@@ -55,29 +55,37 @@ import { Chart } from '../components/chart';
     <div class="bg-[#191919] p-8 mt-8 rounded">
       <Chart client:only="react" />
     </div>
-    <div class="bg-[#191919] mt-8 rounded flex items-center justify-between h-[140px]">
-      <div class="flex flex-col items-start justify-center gap-1 p-8 w-[25%]">
+    <div
+      class="bg-[#191919] mt-8 rounded flex items-center justify-between md:h-[140px] flex-wrap md:flex-nowrap"
+    >
+      <div class="flex flex-col items-start justify-center gap-1 p-8 w-full md:w-[25%]">
         <div class="font-mono font-bold text-xs opacity-50">ETH STAKED</div>
         <div class="font-semibold text-2xl">Ξ 32,517,221</div>
       </div>
-      <div class="w-[1px] h-[140px] bg-[#4b4b4b]"></div>
-      <div class="flex flex-col items-start justify-center gap-1 p-8 w-[25%]">
+      <div class="w-[1px] h-[140px] bg-[#4b4b4b] md:block hidden"></div>
+      <div
+        class="flex flex-col items-start justify-center gap-1 p-8 w-full md:w-[25%] md:border-t-0 border-t border-[#4b4b4b]"
+      >
         <div class="font-mono font-bold text-xs opacity-50">VALIDATORS</div>
         <div class="font-semibold text-2xl">1,016,163</div>
       </div>
-      <div class="w-[1px] h-[140px] bg-[#4b4b4b]"></div>
-      <div class="flex flex-col items-start justify-center gap-1 p-8 w-[25%]">
+      <div class="w-[1px] h-[140px] bg-[#4b4b4b] md:block hidden"></div>
+      <div
+        class="flex flex-col items-start justify-center gap-1 p-8 w-full md:w-[25%] md:border-t-0 border-t border-[#4b4b4b]"
+      >
         <div class="font-mono font-bold text-xs opacity-50">STAKED SHARE OF ETH</div>
         <div class="font-semibold text-2xl">27.13%</div>
       </div>
-      <div class="w-[1px] h-[140px] bg-[#4b4b4b]"></div>
-      <div class="flex flex-col items-start justify-center gap-1 p-8 w-[25%]">
+      <div class="w-[1px] h-[140px] bg-[#4b4b4b] md:block hidden"></div>
+      <div
+        class="flex flex-col items-start justify-center gap-1 p-8 w-full md:w-[25%] md:border-t-0 border-t border-[#4b4b4b]"
+      >
         <div class="font-mono font-bold text-xs opacity-50">LIDO DOMINANCE</div>
         <div class="font-semibold text-2xl">28.69%</div>
       </div>
     </div>
     <div class="mt-32">
-      <div class="flex items-center justify-between">
+      <div class="flex items-center justify-between flex-wrap gap-8">
         <div>
           <h2 class="text-3xl font-medium mb-2">Protocol Rankings</h2>
           <div class="text-xl opacity-70">
@@ -107,66 +115,68 @@ import { Chart } from '../components/chart';
           </div>
         </div>
       </div>
-      <table class="mt-8 mb-32 w-full rounded overflow-hidden">
-        <thead class="bg-[#242424] font-mono text-[#949494] border-b border-[#4B4B4B]">
-          <tr>
-            <th class="text-left font-medium p-4 border-r border-[#4B4B4B]">PROTOCOL</th>
-            <th class="text-right font-medium p-4 border-r border-[#4B4B4B]">RETURN</th>
-            <th class="text-right font-medium p-4 border-r border-[#4B4B4B]">TVL</th>
-            <th class="text-right font-medium p-4 border-r border-[#4B4B4B]">CATEGORY</th>
-            <th class="text-right font-medium p-4 border-r border-[#4B4B4B]">VALIDATORS</th>
-            <th class="text-right font-medium p-4 border-r border-[#4B4B4B]">ETH/USD STAKED</th>
-            <th class="text-right font-medium p-4">MKT SHARE</th>
-          </tr>
-        </thead>
-        <tbody class="bg-[#191919]">
-          <tr class="border-b border-[#4B4B4B]">
-            <td class="p-4 font-semibold">Lido Finance</td>
-            <td class="p-4 font-light text-right">13.5%</td>
-            <td class="p-4 font-light text-right">$154.6M</td>
-            <td class="p-4 font-light text-right">Liquid Staking</td>
-            <td class="p-4 font-light text-right">678,453</td>
-            <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
-            <td class="p-4 font-light text-right">31.5%</td>
-          </tr>
-          <tr class="border-b border-[#4B4B4B]">
-            <td class="p-4 font-semibold">Rocket Pool</td>
-            <td class="p-4 font-light text-right">13.5%</td>
-            <td class="p-4 font-light text-right">$154.6M</td>
-            <td class="p-4 font-light text-right">Liquid Staking</td>
-            <td class="p-4 font-light text-right">678,453</td>
-            <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
-            <td class="p-4 font-light text-right">31.5%</td>
-          </tr>
-          <tr class="border-b border-[#4B4B4B]">
-            <td class="p-4 font-semibold">EigenLayer</td>
-            <td class="p-4 font-light text-right">13.5%</td>
-            <td class="p-4 font-light text-right">$154.6M</td>
-            <td class="p-4 font-light text-right">Liquid Staking</td>
-            <td class="p-4 font-light text-right">678,453</td>
-            <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
-            <td class="p-4 font-light text-right">31.5%</td>
-          </tr>
-          <tr class="border-b border-[#4B4B4B]">
-            <td class="p-4 font-semibold">Stakewise</td>
-            <td class="p-4 font-light text-right">13.5%</td>
-            <td class="p-4 font-light text-right">$154.6M</td>
-            <td class="p-4 font-light text-right">Liquid Staking</td>
-            <td class="p-4 font-light text-right">678,453</td>
-            <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
-            <td class="p-4 font-light text-right">31.5%</td>
-          </tr>
-          <tr class="border-b border-[#4B4B4B]">
-            <td class="p-4 font-semibold">Stader</td>
-            <td class="p-4 font-light text-right">13.5%</td>
-            <td class="p-4 font-light text-right">$154.6M</td>
-            <td class="p-4 font-light text-right">Liquid Staking</td>
-            <td class="p-4 font-light text-right">678,453</td>
-            <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
-            <td class="p-4 font-light text-right">31.5%</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="max-w-[100vw] overflow-x-auto mt-8 mb-32">
+        <table class="w-full rounded overflow-hidden">
+          <thead class="bg-[#242424] font-mono text-[#949494] border-b border-[#4B4B4B]">
+            <tr>
+              <th class="text-left font-medium p-4 border-r border-[#4B4B4B]">PROTOCOL</th>
+              <th class="text-right font-medium p-4 border-r border-[#4B4B4B]">RETURN</th>
+              <th class="text-right font-medium p-4 border-r border-[#4B4B4B]">TVL</th>
+              <th class="text-right font-medium p-4 border-r border-[#4B4B4B]">CATEGORY</th>
+              <th class="text-right font-medium p-4 border-r border-[#4B4B4B]">VALIDATORS</th>
+              <th class="text-right font-medium p-4 border-r border-[#4B4B4B]">ETH/USD STAKED</th>
+              <th class="text-right font-medium p-4">MKT SHARE</th>
+            </tr>
+          </thead>
+          <tbody class="bg-[#191919]">
+            <tr class="border-b border-[#4B4B4B]">
+              <td class="p-4 font-semibold">Lido Finance</td>
+              <td class="p-4 font-light text-right">13.5%</td>
+              <td class="p-4 font-light text-right">$154.6M</td>
+              <td class="p-4 font-light text-right">Liquid Staking</td>
+              <td class="p-4 font-light text-right">678,453</td>
+              <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
+              <td class="p-4 font-light text-right">31.5%</td>
+            </tr>
+            <tr class="border-b border-[#4B4B4B]">
+              <td class="p-4 font-semibold">Rocket Pool</td>
+              <td class="p-4 font-light text-right">13.5%</td>
+              <td class="p-4 font-light text-right">$154.6M</td>
+              <td class="p-4 font-light text-right">Liquid Staking</td>
+              <td class="p-4 font-light text-right">678,453</td>
+              <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
+              <td class="p-4 font-light text-right">31.5%</td>
+            </tr>
+            <tr class="border-b border-[#4B4B4B]">
+              <td class="p-4 font-semibold">EigenLayer</td>
+              <td class="p-4 font-light text-right">13.5%</td>
+              <td class="p-4 font-light text-right">$154.6M</td>
+              <td class="p-4 font-light text-right">Liquid Staking</td>
+              <td class="p-4 font-light text-right">678,453</td>
+              <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
+              <td class="p-4 font-light text-right">31.5%</td>
+            </tr>
+            <tr class="border-b border-[#4B4B4B]">
+              <td class="p-4 font-semibold">Stakewise</td>
+              <td class="p-4 font-light text-right">13.5%</td>
+              <td class="p-4 font-light text-right">$154.6M</td>
+              <td class="p-4 font-light text-right">Liquid Staking</td>
+              <td class="p-4 font-light text-right">678,453</td>
+              <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
+              <td class="p-4 font-light text-right">31.5%</td>
+            </tr>
+            <tr class="border-b border-[#4B4B4B]">
+              <td class="p-4 font-semibold">Stader</td>
+              <td class="p-4 font-light text-right">13.5%</td>
+              <td class="p-4 font-light text-right">$154.6M</td>
+              <td class="p-4 font-light text-right">Liquid Staking</td>
+              <td class="p-4 font-light text-right">678,453</td>
+              <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
+              <td class="p-4 font-light text-right">31.5%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </Layout>

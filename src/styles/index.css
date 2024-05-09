@@ -3,38 +3,101 @@
 @import "tailwindcss/utilities";
 
 @font-face {
-  font-family: 'poppins';
+  font-family: 'geist';
+  font-weight: 200;
+  font-display: block;
+  src: url('/fonts/Geist/statics-ttf/Geist-Thin.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'geist';
   font-weight: 300;
   font-display: block;
-  src: url('/fonts/poppins/Poppins-Light.ttf') format('truetype');
-}
+  src: url('/fonts/Geist/statics-ttf/Geist-Light.ttf') format('truetype');
+} 
 
 @font-face {
-  font-family: 'poppins';
+  font-family: 'geist';
   font-weight: 400;
   font-display: block;
-  src: url('/fonts/poppins/Poppins-Regular.ttf') format('truetype');
+  src: url('/fonts/Geist/statics-ttf/Geist-Regular.ttf') format('truetype');
 }
 
 @font-face {
-  font-family: 'poppins';
+  font-family: 'geist';
   font-weight: 500;
   font-display: block;
-  src: url('/fonts/poppins/Poppins-Medium.ttf') format('truetype');
+  src: url('/fonts/Geist/statics-ttf/Geist-Medium.ttf') format('truetype');
 }
 
 @font-face {
-  font-family: 'poppins';
+  font-family: 'geist';
   font-weight: 600;
   font-display: block;
-  src: url('/fonts/poppins/Poppins-SemiBold.ttf') format('truetype');
+  src: url('/fonts/Geist/statics-ttf/Geist-SemiBold.ttf') format('truetype');
 }
 
 @font-face {
-  font-family: 'poppins';
+  font-family: 'geist';
   font-weight: 700;
   font-display: block;
-  src: url('/fonts/poppins/Poppins-Bold.ttf') format('truetype');
+  src: url('/fonts/Geist/statics-ttf/Geist-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'geist';
+  font-weight: 800;
+  font-display: block;
+  src: url('/fonts/Geist/statics-ttf/Geist-Black.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'geist-mono';
+  font-weight: 200;
+  font-display: block;
+  src: url('/fonts/GeistMono/statics-ttf/GeistMono-Thin.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'geist-mono';
+  font-weight: 300;
+  font-display: block;
+  src: url('/fonts/GeistMono/statics-ttf/GeistMono-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'geist-mono';
+  font-weight: 400;
+  font-display: block;
+  src: url('/fonts/GeistMono/statics-ttf/GeistMono-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'geist-mono';
+  font-weight: 500;
+  font-display: block;
+  src: url('/fonts/GeistMono/statics-ttf/GeistMono-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'geist-mono';
+  font-weight: 600;
+  font-display: block;
+  src: url('/fonts/GeistMono/statics-ttf/GeistMono-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'geist-mono';
+  font-weight: 700;
+  font-display: block;
+  src: url('/fonts/GeistMono/statics-ttf/GeistMono-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'geist-mono';
+  font-weight: 800;
+  font-display: block;
+  src: url('/fonts/GeistMono/statics-ttf/GeistMono-Black.ttf') format('truetype');
 }
 
 @layer base {

@@ -1,65 +1,172 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { AreaChart } from '@tremor/react';
-import { getRocketPoolData } from './api/test';
+import { Chart } from '../components/chart';
+// import { getRocketPoolData } from './api/test';
 
-const rocketPoolData = await getRocketPoolData();
+// const rocketPoolData = await getRocketPoolData();
 ---
 
 <Layout>
-  <header class="rounded-lg shadow">
-    <nav class="container mx-auto px-6 py-3">
-      <div class="flex justify-between items-center">
-        <div class="text-2xl font-semibold">Vista</div>
-        <div class="flex space-x-4">
-          <a href="#">Github</a>
-          <a href="#">Twitter</a>
-        </div>
+  <div class="max-w-[1070px] mx-auto">
+    <div class="flex justify-between items-center">
+      <div class="flex items-center justify-center gap-2">
+        <img src="/star.svg" alt="vista" class="w-8 h-8" />
+        <div class="text-5xl font-medium">vista</div>
       </div>
-    </nav>
-  </header>
-
-  <main class="flex-grow container mx-auto mt-10 px-4 sm:px-6 lg:px-8">
-    <section class="text-center mb-8">
-      <h2 class="text-4xl font-bold mb-2">Total Value Locked</h2>
-      <p class="text-5xl font-bold">$0</p>
-      <p class="text-xl text-gray-400">2023 Apr 21 - 2024 Apr 19</p>
-    </section>
-    <div class="my-8">
-      <AreaChart
-        className="h-72"
-        data={rocketPoolData}
-        index="date"
-        yAxisWidth={65}
-        categories={['ethLocked', 'rplLocked']}
-        colors={['green', 'indigo']}
-        client:only="react"
-      />
+      <div class="flex items-center justify-center gap-5">
+        <a href="#" class="font-mono font-light uppercase bg-[#191919] px-3 py-2 rounded"
+          >protocols</a
+        >
+        <a href="#" class="font-mono font-light uppercase bg-[#191919] px-3 py-2 rounded">docs</a>
+        <a href="#" class="font-mono font-light uppercase bg-[#191919] px-3 py-2 rounded">donate</a>
+        <a href="#" class="font-mono font-light uppercase bg-[#191919] px-3 py-2 rounded">about</a>
+      </div>
     </div>
 
-    <section>
-      <table class="w-full text-left table-collapse">
-        <thead>
-          <tr class="">
-            <th class="px-4 py-2">#</th>
-            <th class="px-4 py-2">Name</th>
-            <th class="px-4 py-2">Type</th>
-            <th class="px-4 py-2">Accesibility</th>
-            <th class="px-4 py-2">Total</th>
-            <th class="px-4 py-2">Market Share</th>
+    <div class="mt-24 flex items-center justify-between">
+      <div>
+        <h2 class="text-3xl font-medium mb-2">Total Value Locked</h2>
+        <div class="text-xl opacity-70">
+          <span class="block">Total USD value of all canonically bridged, externally bridged,</span>
+          <span class="block">and natively minted tokens.</span>
+        </div>
+      </div>
+      <div>
+        <div class="text-[40px] leading-[50px] font-medium text-right">$36.8B</div>
+        <div>
+          <div class="flex items-center justify-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="12"
+              viewBox="0 0 14 12"
+              fill="none"
+            >
+              <path d="M7 0L13.9282 12H0.0717969L7 0Z" fill="#33FF54"></path>
+            </svg>
+            <div>
+              <span class="text-green-500">+4.62%</span>
+              <span class="opacity-60">/</span> 7 days
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bg-[#191919] p-8 mt-8 rounded">
+      <Chart client:only="react" />
+    </div>
+    <div class="bg-[#191919] mt-8 rounded flex items-center justify-between h-[140px]">
+      <div class="flex flex-col items-start justify-center gap-1 p-8 w-[25%]">
+        <div class="font-mono font-bold text-xs opacity-50">ETH STAKED</div>
+        <div class="font-semibold text-2xl">Ξ 32,517,221</div>
+      </div>
+      <div class="w-[1px] h-[140px] bg-[#4b4b4b]"></div>
+      <div class="flex flex-col items-start justify-center gap-1 p-8 w-[25%]">
+        <div class="font-mono font-bold text-xs opacity-50">VALIDATORS</div>
+        <div class="font-semibold text-2xl">1,016,163</div>
+      </div>
+      <div class="w-[1px] h-[140px] bg-[#4b4b4b]"></div>
+      <div class="flex flex-col items-start justify-center gap-1 p-8 w-[25%]">
+        <div class="font-mono font-bold text-xs opacity-50">STAKED SHARE OF ETH</div>
+        <div class="font-semibold text-2xl">27.13%</div>
+      </div>
+      <div class="w-[1px] h-[140px] bg-[#4b4b4b]"></div>
+      <div class="flex flex-col items-start justify-center gap-1 p-8 w-[25%]">
+        <div class="font-mono font-bold text-xs opacity-50">LIDO DOMINANCE</div>
+        <div class="font-semibold text-2xl">28.69%</div>
+      </div>
+    </div>
+    <div class="mt-32">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-3xl font-medium mb-2">Protocol Rankings</h2>
+          <div class="text-xl opacity-70">
+            <span class="block"> The top 10 protocols by total value locked. </span>
+          </div>
+        </div>
+        <div class="flex items-center justify-center font-mono text-sm font-bold gap-3">
+          <div
+            class="bg-[#2E46C8] rounded border border-white border-opacity-10 px-3 py-1 select-none cursor-pointer"
+          >
+            7D
+          </div>
+          <div
+            class="bg-[#111111] rounded border border-white border-opacity-10 px-3 py-1 select-none cursor-pointer"
+          >
+            1M
+          </div>
+          <div
+            class="bg-[#111111] rounded border border-white border-opacity-10 px-3 py-1 select-none cursor-pointer"
+          >
+            1Y
+          </div>
+          <div
+            class="bg-[#111111] rounded border border-white border-opacity-10 px-3 py-1 select-none cursor-pointer"
+          >
+            30D
+          </div>
+        </div>
+      </div>
+      <table class="mt-8 mb-32 w-full rounded overflow-hidden">
+        <thead class="bg-[#242424] font-mono text-[#949494] border-b border-[#4B4B4B]">
+          <tr>
+            <th class="text-left font-medium p-4 border-r border-[#4B4B4B]">PROTOCOL</th>
+            <th class="text-right font-medium p-4 border-r border-[#4B4B4B]">RETURN</th>
+            <th class="text-right font-medium p-4 border-r border-[#4B4B4B]">TVL</th>
+            <th class="text-right font-medium p-4 border-r border-[#4B4B4B]">CATEGORY</th>
+            <th class="text-right font-medium p-4 border-r border-[#4B4B4B]">VALIDATORS</th>
+            <th class="text-right font-medium p-4 border-r border-[#4B4B4B]">ETH/USD STAKED</th>
+            <th class="text-right font-medium p-4">MKT SHARE</th>
           </tr>
         </thead>
-        <tbody>
-          <tr class="border-b border-gray-700">
-            <td class="px-4 py-2">1</td>
-            <td class="px-4 py-2">Rocketpool</td>
-            <td class="px-4 py-2">Liquid Staking</td>
-            <td class="px-4 py-2">Decentralized</td>
-            <td class="px-4 py-2">$0</td>
-            <td class="px-4 py-2">0%</td>
+        <tbody class="bg-[#191919]">
+          <tr class="border-b border-[#4B4B4B]">
+            <td class="p-4 font-semibold">Lido Finance</td>
+            <td class="p-4 font-light text-right">13.5%</td>
+            <td class="p-4 font-light text-right">$154.6M</td>
+            <td class="p-4 font-light text-right">Liquid Staking</td>
+            <td class="p-4 font-light text-right">678,453</td>
+            <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
+            <td class="p-4 font-light text-right">31.5%</td>
+          </tr>
+          <tr class="border-b border-[#4B4B4B]">
+            <td class="p-4 font-semibold">Rocket Pool</td>
+            <td class="p-4 font-light text-right">13.5%</td>
+            <td class="p-4 font-light text-right">$154.6M</td>
+            <td class="p-4 font-light text-right">Liquid Staking</td>
+            <td class="p-4 font-light text-right">678,453</td>
+            <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
+            <td class="p-4 font-light text-right">31.5%</td>
+          </tr>
+          <tr class="border-b border-[#4B4B4B]">
+            <td class="p-4 font-semibold">EigenLayer</td>
+            <td class="p-4 font-light text-right">13.5%</td>
+            <td class="p-4 font-light text-right">$154.6M</td>
+            <td class="p-4 font-light text-right">Liquid Staking</td>
+            <td class="p-4 font-light text-right">678,453</td>
+            <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
+            <td class="p-4 font-light text-right">31.5%</td>
+          </tr>
+          <tr class="border-b border-[#4B4B4B]">
+            <td class="p-4 font-semibold">Stakewise</td>
+            <td class="p-4 font-light text-right">13.5%</td>
+            <td class="p-4 font-light text-right">$154.6M</td>
+            <td class="p-4 font-light text-right">Liquid Staking</td>
+            <td class="p-4 font-light text-right">678,453</td>
+            <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
+            <td class="p-4 font-light text-right">31.5%</td>
+          </tr>
+          <tr class="border-b border-[#4B4B4B]">
+            <td class="p-4 font-semibold">Stader</td>
+            <td class="p-4 font-light text-right">13.5%</td>
+            <td class="p-4 font-light text-right">$154.6M</td>
+            <td class="p-4 font-light text-right">Liquid Staking</td>
+            <td class="p-4 font-light text-right">678,453</td>
+            <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
+            <td class="p-4 font-light text-right">31.5%</td>
           </tr>
         </tbody>
       </table>
-    </section>
-  </main>
+    </div>
+  </div>
 </Layout>

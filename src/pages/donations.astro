@@ -1,0 +1,78 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Footer from '@/components/footer.astro';
+import Header from '@/components/header.astro';
+---
+
+<Layout>
+  <div class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    <div class="max-w-[1070px] mx-auto">
+      <Header />
+      <div class="flex justify-center mt-32 gap-16">
+        <div>
+          <div>
+            <div class="flex items-center gap-4">
+              <h1 class="text-8xl font-medium">Donate</h1>
+              <img src="/icons/heart.png" alt="heart" class="w-16 h-16 animate-heartbeat" />
+            </div>
+            <div class="text-white opacity-70 text-2xl flex gap-4 flex-col mt-8">
+              <p>
+                Vista is a passionate group dedicated to staking education and transparency within
+                the Ethereum space.
+              </p>
+              <p>
+                We function as a research and development (R&D) collective for staking, committed to
+                its ongoing development and maturity.
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 mt-16">
+            <a
+              href="#"
+              class="flex font-semibold items-center justify-center bg-[#454A75] text-white px-4 py-2 rounded gap-2"
+              >ETHEREUM
+              <img src="/icons/link.svg" alt="link" class="w-5 h-5" />
+            </a>
+            <a
+              href="#"
+              class="flex font-semibold items-center justify-center bg-[#1E2A36] text-white px-4 py-2 rounded gap-2"
+              >ARBITRUM
+              <img src="/icons/link.svg" alt="link" class="w-5 h-5" />
+            </a>
+            <a
+              href="#"
+              class="flex font-semibold items-center justify-center bg-[#FF0420] text-white px-4 py-2 rounded gap-2"
+              >OPTIMISM
+              <img src="/icons/link.svg" alt="link" class="w-5 h-5" />
+            </a>
+          </div>
+        </div>
+        <div>
+          <img src="/icons/qr.svg" alt="qr" class="w-full" />
+          <p class="text-[#8C8C8C] font-mono mt-8 font-medium">
+            0x438cDDcc8E6f0E0E18CE33F6b5a8fFCFAb5A999c
+          </p>
+        </div>
+      </div>
+      <div class="my-32 border border-white border-opacity-10 rounded overflow-hidden">
+        <div class="flex items-center justify-center bg-[#1EE856] h-16">
+          <div class="text-black opacity-60 text-2xl font-semibold uppercase font-mono">
+            Your support allows us to:
+          </div>
+        </div>
+        <div class="text-white text-xl px-16 py-8 bg-[#191919]">
+          <ul class="mt-2 list-disc flex flex-col gap-3">
+            <li>Deliver accurate and reliable information on staking and Ethereum</li>
+            <li>Develop innovative tools that simplify solo staking</li>
+            <li>Lower the barrier to entry for users interested in staking</li>
+            <li>
+              We value neutrality and transparency and we aim to equip the blockchain community with
+              the knowledge and resources needed to make informed decisions
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <Footer />
+</Layout>

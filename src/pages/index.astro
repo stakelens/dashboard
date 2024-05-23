@@ -1,32 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { Chart } from '../components/chart';
-import { Plasma } from '@/components/noise';
-// import { getRocketPoolData } from './api/test';
-
-// const rocketPoolData = await getRocketPoolData();
+import Footer from '@/components/footer.astro';
+import Header from '@/components/header.astro';
 ---
 
 <Layout>
   <div class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
     <div class="max-w-[1070px] mx-auto">
-      <div class="flex justify-between items-center">
-        <div class="flex items-center justify-center gap-2">
-          <img src="/star.svg" alt="vista" class="w-8 h-8" />
-          <div class="text-5xl font-medium">vista</div>
-        </div>
-        <div class="items-center justify-center gap-5 md:flex hidden">
-          <a href="#" class="font-mono font-light uppercase bg-[#191919] px-3 py-2 rounded"
-            >protocols</a
-          >
-          <a href="#" class="font-mono font-light uppercase bg-[#191919] px-3 py-2 rounded">docs</a>
-          <a href="#" class="font-mono font-light uppercase bg-[#191919] px-3 py-2 rounded"
-            >donate</a
-          >
-          <a href="#" class="font-mono font-light uppercase bg-[#191919] px-3 py-2 rounded">about</a
-          >
-        </div>
-      </div>
+      <Header />
 
       <div class="mt-16 md:mt-24 flex items-center justify-between gap-8 flex-wrap">
         <div>
@@ -183,65 +165,5 @@ import { Plasma } from '@/components/noise';
       </div>
     </div>
   </div>
-  <Plasma client:only="react">
-    <div class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full h-full">
-      <div class="max-w-[1070px] mx-auto w-full h-full">
-        <div class="flex justify-center w-full h-full flex-col gap-6">
-          <div>
-            <p class="text-[30px]">
-              Made with
-              <span class="text-[#FF84BF] font-mono font-bold">
-                {'<3'}
-              </span>
-            </p>
-            <p class="text-[30px] mt-[-8px]">by Vista</p>
-          </div>
-          <div>
-            <div class="relative inline-block max-w-[100%]">
-              <input
-                type="text"
-                placeholder="JOIN OUR MAILING LIST..."
-                class="bg-[#191919] rounded max-w-[100%] w-[490px] h-[62px] px-4 font-mono text-[19px] placeholder:text-white placeholder:text-opacity-50 shadow-lg border border-white border-opacity-10 hover:border-opacity-20 duration-200 outline-none active:outline-none focus:outline-none ring-0 focus:ring-0 active:ring-0 focus:border-white focus:border-opacity-40 active:border-white active:border-opacity-40"
-              />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="absolute right-4 top-[50%] translate-y-[-50%] w-6 h-6 text-[#93DEFF]"
-                ><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg
-              >
-            </div>
-          </div>
-          <div class="flex items-center gap-6 mt-2">
-            <img
-              src="/icons/x.svg"
-              alt="x"
-              class="w-7 h-7 cursor-pointer hover:scale-110 duration-200"
-            />
-            <img
-              src="/icons/github.svg"
-              alt="github"
-              class="w-7 h-7 cursor-pointer hover:scale-110 duration-200"
-            />
-            <img
-              src="/icons/farcaster.svg"
-              alt="farcaster"
-              class="w-7 h-7 cursor-pointer hover:scale-110 duration-200"
-            />
-            <img
-              src="/icons/discord.svg"
-              alt="discord"
-              class="w-7 h-7 cursor-pointer hover:scale-110 duration-200"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  </Plasma>
+  <Footer />
 </Layout>

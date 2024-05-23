@@ -43,7 +43,7 @@ export function Plasma({ children }: { children?: React.ReactNode }) {
   return (
     <div
       style={{ overflow: 'hidden', maxWidth: '100vw' }}
-      className="relative h-[400px] border-t border-white border-opacity-30 "
+      className="relative h-[400px] border-t border-white border-opacity-10"
     >
       <pre
         className="z-[-1] absolute top-0 left-0"

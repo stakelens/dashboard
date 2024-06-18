@@ -1,0 +1,20 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model rocketpool_tvl {
+  id           Int     @id @default(autoincrement())
+  eth_locked   String
+  rpl_locked   String
+  block_number BigInt?
+}
+
+model schema_migrations {
+  version BigInt  @id
+  dirty   Boolean
+}

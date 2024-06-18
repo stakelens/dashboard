@@ -3,6 +3,50 @@ import Layout from '../layouts/Layout.astro';
 import { Chart } from '../components/chart';
 import Footer from '@/components/footer.astro';
 import Header from '@/components/header.astro';
+// import { db } from '@/db';
+
+// const tvl = await db.rocketpool_tvl.findMany({
+//   orderBy: {
+//     block_number: 'desc'
+//   },
+//   take: 12
+// });
+
+const tvl = [
+  {
+    id: 0,
+    eth_locked: 100,
+    rpl_locked: 1,
+    block_number: 1
+  },
+  {
+    id: 0,
+    eth_locked: 100,
+    rpl_locked: 1,
+    block_number: 1
+  },
+  {
+    id: 0,
+    eth_locked: 110,
+    rpl_locked: 1,
+    block_number: 1
+  },
+  {
+    id: 0,
+    eth_locked: 120,
+    rpl_locked: 1,
+    block_number: 1
+  },
+  {
+    id: 0,
+    eth_locked: 130,
+    rpl_locked: 1,
+    block_number: 1
+  }
+];
+
+const formatter = new Intl.NumberFormat('en-US', { currency: 'USD' });
+const rocketPoolETHStaked = formatter.format(Math.round(Number(tvl[0].eth_locked) / 1e18));
 ---
 
 <Layout>
@@ -39,34 +83,40 @@ import Header from '@/components/header.astro';
           </div>
         </div>
       </div>
-      <Chart client:only="react" />
+      <Chart
+        client:only="react"
+        data={tvl.map((item) => ({
+          date: String(item.block_number),
+          'ETH Locked': Number(item.eth_locked) / 1e18
+        }))}
+      />
       <div
         class="bg-[#191919] rounded flex items-center justify-between md:h-[140px] flex-wrap md:flex-nowrap border border-white border-opacity-10"
       >
         <div class="flex flex-col items-start justify-center gap-1 p-8 w-full md:w-[25%]">
           <div class="font-mono font-bold text-xs opacity-50">ETH STAKED</div>
-          <div class="font-semibold text-2xl">Ξ 32,517,221</div>
+          <div class="font-semibold text-2xl">Ξ {rocketPoolETHStaked}</div>
         </div>
         <div class="w-[1px] h-[140px] bg-white bg-opacity-10 md:block hidden"></div>
         <div
           class="flex flex-col items-start justify-center gap-1 p-8 w-full md:w-[25%] md:border-t-0 border-t border-white border-opacity-10"
         >
           <div class="font-mono font-bold text-xs opacity-50">VALIDATORS</div>
-          <div class="font-semibold text-2xl">1,016,163</div>
+          <div class="font-semibold text-2xl">???</div>
         </div>
         <div class="w-[1px] h-[140px] bg-white bg-opacity-10 md:block hidden"></div>
         <div
           class="flex flex-col items-start justify-center gap-1 p-8 w-full md:w-[25%] md:border-t-0 border-t border-white border-opacity-10"
         >
           <div class="font-mono font-bold text-xs opacity-50">STAKED SHARE OF ETH</div>
-          <div class="font-semibold text-2xl">27.13%</div>
+          <div class="font-semibold text-2xl">???</div>
         </div>
         <div class="w-[1px] h-[140px] bg-white bg-opacity-10 md:block hidden"></div>
         <div
           class="flex flex-col items-start justify-center gap-1 p-8 w-full md:w-[25%] md:border-t-0 border-t border-white border-opacity-10"
         >
           <div class="font-mono font-bold text-xs opacity-50">LIDO DOMINANCE</div>
-          <div class="font-semibold text-2xl">28.69%</div>
+          <div class="font-semibold text-2xl">???</div>
         </div>
       </div>
       <div class="mt-32">
@@ -136,7 +186,7 @@ import Header from '@/components/header.astro';
               </tr>
             </thead>
             <tbody class="bg-[#191919]">
-              <tr class="border-b border-white border-opacity-10">
+              <!-- <tr class="border-b border-white border-opacity-10">
                 <td class="p-4">Lido Finance</td>
                 <td class="p-4 font-light text-right">13.5%</td>
                 <td class="p-4 font-light text-right">$154.6M</td>
@@ -144,17 +194,17 @@ import Header from '@/components/header.astro';
                 <td class="p-4 font-light text-right">678,453</td>
                 <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
                 <td class="p-4 font-light text-right">31.5%</td>
-              </tr>
+              </tr> -->
               <tr class="border-b border-white border-opacity-10">
                 <td class="p-4">Rocket Pool</td>
-                <td class="p-4 font-light text-right">13.5%</td>
+                <td class="p-4 font-light text-right">???</td>
                 <td class="p-4 font-light text-right">$154.6M</td>
                 <td class="p-4 font-light text-right">Liquid Staking</td>
-                <td class="p-4 font-light text-right">678,453</td>
+                <td class="p-4 font-light text-right">???</td>
                 <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
-                <td class="p-4 font-light text-right">31.5%</td>
+                <td class="p-4 font-light text-right">???</td>
               </tr>
-              <tr class="border-b border-white border-opacity-10">
+              <!-- <tr class="border-b border-white border-opacity-10">
                 <td class="p-4">EigenLayer</td>
                 <td class="p-4 font-light text-right">13.5%</td>
                 <td class="p-4 font-light text-right">$154.6M</td>
@@ -180,7 +230,7 @@ import Header from '@/components/header.astro';
                 <td class="p-4 font-light text-right">678,453</td>
                 <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
                 <td class="p-4 font-light text-right">31.5%</td>
-              </tr>
+              </tr> -->
             </tbody>
           </table>
         </div>

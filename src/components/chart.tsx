@@ -1,7 +1,14 @@
 import { AreaChart } from '@tremor/react';
 import { useEffect, useState } from 'react';
 
-export function Chart() {
+export function Chart({
+  data
+}: {
+  data: {
+    date: string;
+    'ETH Locked': number;
+  }[];
+}) {
   const [onMobile, setOnMobile] = useState(false);
 
   const handleResize = () => {
@@ -32,13 +39,7 @@ export function Chart() {
       </div>
       <AreaChart
         className="h-[308px] font-mono"
-        data={new Array(onMobile ? 4 : 12).fill(0).map((_, i) => ({
-          date: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric'
-          }),
-          'ETH Locked': 2000 + Math.random() * 1000
-        }))}
+        data={data}
         index="date"
         showLegend={false}
         yAxisWidth={65}

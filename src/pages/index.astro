@@ -3,50 +3,64 @@ import Layout from '../layouts/Layout.astro';
 import { Chart } from '../components/chart';
 import Footer from '@/components/footer.astro';
 import Header from '@/components/header.astro';
-// import { db } from '@/db';
+import { db } from '@/db';
+import { combineTVLs } from '../tvl';
 
-// const tvl = await db.rocketpool_tvl.findMany({
-//   orderBy: {
-//     block_number: 'desc'
-//   },
-//   take: 12
-// });
-
-const tvl = [
-  {
-    id: 0,
-    eth_locked: 100,
-    rpl_locked: 1,
-    block_number: 1
-  },
-  {
-    id: 0,
-    eth_locked: 100,
-    rpl_locked: 1,
-    block_number: 1
-  },
-  {
-    id: 0,
-    eth_locked: 110,
-    rpl_locked: 1,
-    block_number: 1
-  },
-  {
-    id: 0,
-    eth_locked: 120,
-    rpl_locked: 1,
-    block_number: 1
-  },
-  {
-    id: 0,
-    eth_locked: 130,
-    rpl_locked: 1,
-    block_number: 1
+const rocketPoolTVL = await db.rocketPool.findMany({
+  orderBy: {
+    block_number: 'asc'
   }
-];
+});
+
+const etherFi = await db.etherFi.findMany({
+  orderBy: {
+    block_number: 'asc'
+  }
+});
+
+const stakeWiseDB = await db.stakeWise.findMany({
+  orderBy: {
+    block_number: 'asc'
+  }
+});
+
+const stakeWiseBigInt = stakeWiseDB.map((value) => {
+  return {
+    ...value,
+    eth: BigInt(value.eth)
+  };
+});
+
+const stakeWiseTVL: {
+  block_timestamp: bigint;
+  eth: bigint;
+}[] = [];
+
+for (const value of stakeWiseBigInt) {
+  const lastTVL = stakeWiseTVL[stakeWiseTVL.length - 1];
+
+  if (lastTVL) {
+    stakeWiseTVL.push({
+      eth: lastTVL.eth + value.eth,
+      block_timestamp: value.block_timestamp
+    });
+  } else {
+    stakeWiseTVL.push({
+      eth: value.eth,
+      block_timestamp: value.block_timestamp
+    });
+  }
+}
+const stakeWise = stakeWiseTVL.map((value) => ({ ...value, eth: value.eth.toString() }));
+
+const TVLFinal = combineTVLs([rocketPoolTVL, etherFi, stakeWise]);
 
 const formatter = new Intl.NumberFormat('en-US', { currency: 'USD' });
-const rocketPoolETHStaked = formatter.format(Math.round(Number(tvl[0].eth_locked) / 1e18));
+const rocketPoolETHStaked = formatter.format(Math.round(Number(rocketPoolTVL[0].eth) / 1e18));
+const etherFiNow = formatter.format(Math.round(Number(etherFi[etherFi.length - 1].eth) / 1e18));
+const stakeWiseTVLNow = formatter.format(
+  Math.round(Number(stakeWiseTVL[stakeWiseTVL.length - 1].eth) / 1e18)
+);
 ---
 
 <Layout>
@@ -56,10 +70,9 @@ const rocketPoolETHStaked = formatter.format(Math.round(Number(tvl[0].eth_locked
 
       <div class="mt-16 md:mt-24 flex items-center justify-between gap-8 flex-wrap">
         <div>
-          <h2 class="text-3xl font-medium mb-2">Total Value Locked</h2>
-          <div class="text-xl opacity-70 max-w-[600px]">
-            Total USD value of all canonically bridged, externally bridged, and natively minted
-            tokens.
+          <h2 class="text-3xl font-medium mb-2">Liquid Staking</h2>
+          <div class="text-xl opacity-70 max-w-[600px] font-light">
+            Total ETH value of all liquid staking protocol assets.
           </div>
         </div>
         <div class="min-w-[120px] text-right">
@@ -85,12 +98,12 @@ const rocketPoolETHStaked = formatter.format(Math.round(Number(tvl[0].eth_locked
       </div>
       <Chart
         client:only="react"
-        data={tvl.map((item) => ({
-          date: String(item.block_number),
-          'ETH Locked': Number(item.eth_locked) / 1e18
+        data={TVLFinal.map((item) => ({
+          date: new Date(item.timestamp).toDateString(),
+          ETH: Number(item.value) / 1e18
         }))}
       />
-      <div
+      <!-- <div
         class="bg-[#191919] rounded flex items-center justify-between md:h-[140px] flex-wrap md:flex-nowrap border border-white border-opacity-10"
       >
         <div class="flex flex-col items-start justify-center gap-1 p-8 w-full md:w-[25%]">
@@ -118,12 +131,12 @@ const rocketPoolETHStaked = formatter.format(Math.round(Number(tvl[0].eth_locked
           <div class="font-mono font-bold text-xs opacity-50">LIDO DOMINANCE</div>
           <div class="font-semibold text-2xl">???</div>
         </div>
-      </div>
+      </div> -->
       <div class="mt-32">
         <div class="flex items-center justify-between flex-wrap gap-8">
           <div>
             <h2 class="text-3xl font-medium mb-2">Protocol Rankings</h2>
-            <div class="text-xl opacity-70">
+            <div class="text-xl font-light opacity-70">
               <span class="block"> The top 10 protocols by total value locked. </span>
             </div>
           </div>
@@ -160,77 +173,30 @@ const rocketPoolETHStaked = formatter.format(Math.round(Number(tvl[0].eth_locked
               <tr>
                 <th
                   class="text-left text-sm font-medium p-4 border-r border-white border-opacity-10"
-                  >PROTOCOL</th
-                >
+                  >PROTOCOL
+                </th>
                 <th
                   class="text-right text-sm font-medium p-4 border-r border-white border-opacity-10"
-                  >RETURN</th
                 >
-                <th
-                  class="text-right text-sm font-medium p-4 border-r border-white border-opacity-10"
-                  >TVL</th
-                >
-                <th
-                  class="text-right text-sm font-medium p-4 border-r border-white border-opacity-10"
-                  >CATEGORY</th
-                >
-                <th
-                  class="text-right text-sm font-medium p-4 border-r border-white border-opacity-10"
-                  >VALIDATORS</th
-                >
-                <th
-                  class="text-right text-sm font-medium p-4 border-r border-white border-opacity-10"
-                  >ETH/USD STAKED</th
-                >
-                <th class="text-right text-sm font-medium p-4">MKT SHARE</th>
+                  TVL (ETH)
+                </th>
               </tr>
             </thead>
             <tbody class="bg-[#191919]">
-              <!-- <tr class="border-b border-white border-opacity-10">
-                <td class="p-4">Lido Finance</td>
-                <td class="p-4 font-light text-right">13.5%</td>
-                <td class="p-4 font-light text-right">$154.6M</td>
-                <td class="p-4 font-light text-right">Liquid Staking</td>
-                <td class="p-4 font-light text-right">678,453</td>
-                <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
-                <td class="p-4 font-light text-right">31.5%</td>
-              </tr> -->
               <tr class="border-b border-white border-opacity-10">
                 <td class="p-4">Rocket Pool</td>
-                <td class="p-4 font-light text-right">???</td>
-                <td class="p-4 font-light text-right">$154.6M</td>
-                <td class="p-4 font-light text-right">Liquid Staking</td>
-                <td class="p-4 font-light text-right">???</td>
-                <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
-                <td class="p-4 font-light text-right">???</td>
-              </tr>
-              <!-- <tr class="border-b border-white border-opacity-10">
-                <td class="p-4">EigenLayer</td>
-                <td class="p-4 font-light text-right">13.5%</td>
-                <td class="p-4 font-light text-right">$154.6M</td>
-                <td class="p-4 font-light text-right">Liquid Staking</td>
-                <td class="p-4 font-light text-right">678,453</td>
-                <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
-                <td class="p-4 font-light text-right">31.5%</td>
+                <td class="p-4 font-light text-right">
+                  {rocketPoolETHStaked}
+                </td>
               </tr>
               <tr class="border-b border-white border-opacity-10">
-                <td class="p-4">Stakewise</td>
-                <td class="p-4 font-light text-right">13.5%</td>
-                <td class="p-4 font-light text-right">$154.6M</td>
-                <td class="p-4 font-light text-right">Liquid Staking</td>
-                <td class="p-4 font-light text-right">678,453</td>
-                <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
-                <td class="p-4 font-light text-right">31.5%</td>
+                <td class="p-4">EtherFi</td>
+                <td class="p-4 font-light text-right">{etherFiNow}</td>
               </tr>
-              <tr class="">
-                <td class="p-4">Stader</td>
-                <td class="p-4 font-light text-right">13.5%</td>
-                <td class="p-4 font-light text-right">$154.6M</td>
-                <td class="p-4 font-light text-right">Liquid Staking</td>
-                <td class="p-4 font-light text-right">678,453</td>
-                <td class="p-4 font-light text-right">6.7m ($4.8b)</td>
-                <td class="p-4 font-light text-right">31.5%</td>
-              </tr> -->
+              <tr class="border-b border-white border-opacity-10">
+                <td class="p-4">StakeWise (v3)</td>
+                <td class="p-4 font-light text-right">{stakeWiseTVLNow}</td>
+              </tr>
             </tbody>
           </table>
         </div>

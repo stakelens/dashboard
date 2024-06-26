@@ -5,8 +5,8 @@ export function Chart({
   data
 }: {
   data: {
-    date: string;
-    'ETH Locked': number;
+    date: String;
+    'ETH': number;
   }[];
 }) {
   const [onMobile, setOnMobile] = useState(false);
@@ -43,8 +43,8 @@ export function Chart({
         index="date"
         showLegend={false}
         yAxisWidth={65}
-        valueFormatter={(number) => `$${Intl.NumberFormat('us').format(number).toString()}`}
-        categories={['ETH Locked']}
+        valueFormatter={(number) => Intl.NumberFormat('us').format(number/1000000).toString() + "M"}
+        categories={['ETH']}
       />
     </div>
   );

@@ -7,14 +7,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model rocketpool_tvl {
-  id           Int     @id @default(autoincrement())
-  eth_locked   String
-  rpl_locked   String
-  block_number BigInt?
+model EtherFi {
+  block_number    BigInt
+  log_index       BigInt
+  block_timestamp BigInt
+  eth             String
+
+  @@unique([block_number, log_index])
 }
 
-model schema_migrations {
-  version BigInt  @id
-  dirty   Boolean
+model RocketPool {
+  block_number    BigInt
+  log_index       BigInt
+  eth             String
+  rpl             String
+  block_timestamp BigInt
+
+  @@unique([block_number, log_index])
+}
+
+model StakeWise {
+  block_number    BigInt
+  log_index       BigInt
+  vault           String
+  eth             String
+  block_timestamp BigInt
+
+  @@unique([block_number, log_index])
 }

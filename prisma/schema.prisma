@@ -17,13 +17,10 @@ model EtherFi {
 }
 
 model RocketPool {
-  block_number    BigInt
-  log_index       BigInt
+  block_number    BigInt @unique
   eth             String
   rpl             String
   block_timestamp BigInt
-
-  @@unique([block_number, log_index])
 }
 
 model StakeWise {

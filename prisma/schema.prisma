@@ -26,7 +26,6 @@ model RocketPool {
 model StakeWise {
   block_number    BigInt
   log_index       BigInt
-  vault           String
   eth             String
   block_timestamp BigInt
 

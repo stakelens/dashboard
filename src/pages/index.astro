@@ -24,33 +24,29 @@ const stakeWiseDB = await db.stakeWise.findMany({
   }
 });
 
-const stakeWiseBigInt = stakeWiseDB.map((value) => {
+const vaultTVLChanges = stakeWiseDB.map((value) => {
   return {
     ...value,
     eth: BigInt(value.eth)
   };
 });
 
-const stakeWiseTVL: {
+type TVLValue = {
   block_timestamp: bigint;
   eth: bigint;
-}[] = [];
+};
 
-for (const value of stakeWiseBigInt) {
-  const lastTVL = stakeWiseTVL[stakeWiseTVL.length - 1];
+const stakeWiseTVL: TVLValue[] = [];
 
-  if (lastTVL) {
-    stakeWiseTVL.push({
-      eth: lastTVL.eth + value.eth,
-      block_timestamp: value.block_timestamp
-    });
-  } else {
-    stakeWiseTVL.push({
-      eth: value.eth,
-      block_timestamp: value.block_timestamp
-    });
-  }
+stakeWiseTVL[0] = vaultTVLChanges[0];
+
+for (let i = 1; i < vaultTVLChanges.length; i++) {
+  stakeWiseTVL[i] = {
+    eth: vaultTVLChanges[i].eth + stakeWiseTVL[i - 1].eth,
+    block_timestamp: vaultTVLChanges[i].block_timestamp
+  };
 }
+
 const stakeWise = stakeWiseTVL.map((value) => ({ ...value, eth: value.eth.toString() }));
 
 const TVLFinal = combineTVLs([rocketPoolTVL, etherFi, stakeWise]);
@@ -61,6 +57,8 @@ const etherFiNow = formatter.format(Math.round(Number(etherFi[etherFi.length - 1
 const stakeWiseTVLNow = formatter.format(
   Math.round(Number(stakeWiseTVL[stakeWiseTVL.length - 1].eth) / 1e18)
 );
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 ---
 
 <Layout>
@@ -99,7 +97,10 @@ const stakeWiseTVLNow = formatter.format(
       <Chart
         client:only="react"
         data={TVLFinal.map((item) => ({
-          date: new Date(item.timestamp).toDateString(),
+          date: (() => {
+            const date = new Date(item.timestamp);
+            return date.getDay() + ' ' + MONTHS[date.getMonth()];
+          })(),
           ETH: Number(item.value) / 1e18
         }))}
       />

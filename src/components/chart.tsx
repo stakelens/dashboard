@@ -1,12 +1,20 @@
-import { AreaChart } from '@tremor/react';
 import { useEffect, useState } from 'react';
+import {
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  AreaChart,
+  Area
+} from 'recharts';
 
 export function Chart({
   data
 }: {
   data: {
     date: String;
-    'ETH': number;
+    ETH: number;
   }[];
 }) {
   const [onMobile, setOnMobile] = useState(false);
@@ -37,15 +45,63 @@ export function Chart({
           30D
         </div>
       </div>
-      <AreaChart
-        className="h-[308px] font-mono"
-        data={data}
-        index="date"
-        showLegend={false}
-        yAxisWidth={65}
-        valueFormatter={(number) => Intl.NumberFormat('us').format(number/1000000).toString() + "M"}
-        categories={['ETH']}
-      />
+      <div className="w-full h-full">
+        <ResponsiveContainer width={'100%'} height={330}>
+          <AreaChart data={data}>
+            <CartesianGrid vertical={false} horizontal={true} stroke="#ffffff11" />
+            <defs>
+              <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2} />
+                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <XAxis
+              tickLine={false}
+              dataKey="date"
+              className="font-mono text-xs"
+              axisLine={false}
+              stroke={'#6b7280'}
+            />
+            <YAxis
+              tickLine={false}
+              className="font-mono text-xs"
+              axisLine={false}
+              stroke={'#6b7280'}
+            />
+            <Tooltip
+              content={(data) => (
+                <div className="bg-[#191919] border border-white border-opacity-10 rounded p-4 text-xs font-mono">
+                  <p className="mb-2">
+                    {data.payload && data.payload.length ? data.payload[0].payload.date : ''}
+                  </p>
+                  <span className="opacity-50 mr-6">
+                    {data.payload && data.payload.length ? data.payload[0].dataKey + ':' : ''}
+                  </span>
+                  {data.payload && data.payload.length
+                    ? Intl.NumberFormat('us')
+                        .format(Math.round(Number(data.payload[0].value)))
+                        .toString()
+                    : ''}
+                </div>
+              )}
+            ></Tooltip>
+            <Area
+              type="monotone"
+              dataKey="ETH"
+              stroke="#3b82f6"
+              strokeWidth={2}
+              fillOpacity={1}
+              fill="url(#colorUv)"
+              activeDot={{
+                fill: '#3b82f6',
+                stroke: '#FFFFFF88',
+                strokeWidth: 1
+              }}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+      <div />
     </div>
   );
 }

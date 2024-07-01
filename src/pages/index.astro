@@ -5,7 +5,7 @@ import Footer from '@/components/footer.astro';
 import Header from '@/components/header.astro';
 import { db } from '@/db';
 import { combineTVLs } from '../tvl';
-import { ProtocolRankingRow } from '@/components/protocol-ranking';
+import { ProtocolRanking } from '@/components/protocol-ranking';
 
 const rocketPoolTVL = await db.rocketPool.findMany({
   orderBy: {
@@ -110,32 +110,23 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
         <div
           class="max-w-[100vw] overflow-x-auto mt-8 mb-32 border border-white border-opacity-10 rounded"
         >
-          <table class="w-full overflow-hidden">
-            <thead
-              class="bg-[#242424] font-mono text-[#949494] border-b border-white border-opacity-10"
-            >
-              <tr>
-                <th
-                  class="text-left text-sm font-medium p-4 border-r border-white border-opacity-10"
-                  >PROTOCOL
-                </th>
-                <th
-                  class="text-left text-sm font-medium p-4 border-r border-white border-opacity-10"
-                  >24H Volume
-                </th>
-                <th
-                  class="text-right text-sm font-medium p-4 border-r border-white border-opacity-10"
-                >
-                  TVL (ETH)
-                </th>
-              </tr>
-            </thead>
-            <tbody class="bg-[#191919]">
-              <ProtocolRankingRow label="RocketPool" values={rocketPoolTVL} />
-              <ProtocolRankingRow label="EtherFi" values={etherFi} />
-              <ProtocolRankingRow label="StakeWise (v3)" values={stakeWise} />
-            </tbody>
-          </table>
+          <ProtocolRanking
+            protocols={[
+              {
+                label: 'RocketPool',
+                values: rocketPoolTVL
+              },
+              {
+                label: 'EtherFi',
+                values: etherFi
+              },
+              {
+                label: 'StakeWise (v3)',
+                values: stakeWise
+              }
+            ]}
+            client:only="react"
+          />
         </div>
       </div>
     </div>

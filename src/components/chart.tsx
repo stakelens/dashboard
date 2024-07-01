@@ -1,3 +1,4 @@
+import { dataFormater } from '@/format';
 import { useEffect, useState } from 'react';
 import {
   XAxis,
@@ -80,22 +81,6 @@ async function getTokenPrice(token: Token): Promise<number> {
 
   const response = await request.json();
   return response.price;
-}
-
-const formater = Intl.NumberFormat('us', {
-  maximumFractionDigits: 2
-});
-
-function dataFormater(number: number) {
-  if (number > 1000000000) {
-    return formater.format(number / 1000000000) + 'B';
-  } else if (number > 1000000) {
-    return formater.format(number / 1000000) + 'M';
-  } else if (number > 1000) {
-    return formater.format(number / 1000) + 'K';
-  } else {
-    return formater.format(number);
-  }
 }
 
 export function Chart({

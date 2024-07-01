@@ -5,6 +5,7 @@ import Footer from '@/components/footer.astro';
 import Header from '@/components/header.astro';
 import { db } from '@/db';
 import { combineTVLs } from '../tvl';
+import { ProtocolRankingRow } from '@/components/protocol-ranking';
 
 const rocketPoolTVL = await db.rocketPool.findMany({
   orderBy: {
@@ -50,14 +51,6 @@ for (let i = 1; i < vaultTVLChanges.length; i++) {
 const stakeWise = stakeWiseTVL.map((value) => ({ ...value, eth: value.eth.toString() }));
 
 const TVLFinal = combineTVLs([rocketPoolTVL, etherFi, stakeWise]);
-
-const formatter = new Intl.NumberFormat('en-US', { currency: 'USD' });
-const rocketPoolETHStaked = formatter.format(Math.round(Number(rocketPoolTVL[0].eth) / 1e18));
-const etherFiNow = formatter.format(Math.round(Number(etherFi[etherFi.length - 1].eth) / 1e18));
-const stakeWiseTVLNow = formatter.format(
-  Math.round(Number(stakeWiseTVL[stakeWiseTVL.length - 1].eth) / 1e18)
-);
-
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 ---
 
@@ -113,28 +106,6 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
               <span class="block"> The top 10 protocols by total value locked. </span>
             </div>
           </div>
-          <!-- <div class="flex items-center justify-center font-mono text-sm font-bold gap-3">
-            <div
-              class="bg-[#2E46C8] rounded border border-white border-opacity-10 px-3 py-1 select-none cursor-pointer"
-            >
-              7D
-            </div>
-            <div
-              class="bg-[#242424] rounded border border-white border-opacity-10 px-3 py-1 select-none cursor-pointer"
-            >
-              1M
-            </div>
-            <div
-              class="bg-[#242424] rounded border border-white border-opacity-10 px-3 py-1 select-none cursor-pointer"
-            >
-              1Y
-            </div>
-            <div
-              class="bg-[#242424] rounded border border-white border-opacity-10 px-3 py-1 select-none cursor-pointer"
-            >
-              30D
-            </div>
-          </div> -->
         </div>
         <div
           class="max-w-[100vw] overflow-x-auto mt-8 mb-32 border border-white border-opacity-10 rounded"
@@ -149,6 +120,10 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
                   >PROTOCOL
                 </th>
                 <th
+                  class="text-left text-sm font-medium p-4 border-r border-white border-opacity-10"
+                  >24H Volume
+                </th>
+                <th
                   class="text-right text-sm font-medium p-4 border-r border-white border-opacity-10"
                 >
                   TVL (ETH)
@@ -156,20 +131,9 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
               </tr>
             </thead>
             <tbody class="bg-[#191919]">
-              <tr class="border-b border-white border-opacity-10">
-                <td class="p-4">Rocket Pool</td>
-                <td class="p-4 font-light text-right">
-                  {rocketPoolETHStaked}
-                </td>
-              </tr>
-              <tr class="border-b border-white border-opacity-10">
-                <td class="p-4">EtherFi</td>
-                <td class="p-4 font-light text-right">{etherFiNow}</td>
-              </tr>
-              <tr class="border-b border-white border-opacity-10">
-                <td class="p-4">StakeWise (v3)</td>
-                <td class="p-4 font-light text-right">{stakeWiseTVLNow}</td>
-              </tr>
+              <ProtocolRankingRow label="RocketPool" values={rocketPoolTVL} />
+              <ProtocolRankingRow label="EtherFi" values={etherFi} />
+              <ProtocolRankingRow label="StakeWise (v3)" values={stakeWise} />
             </tbody>
           </table>
         </div>

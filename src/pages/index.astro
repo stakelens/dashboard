@@ -99,8 +99,9 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
         data={TVLFinal.map((item) => ({
           date: (() => {
             const date = new Date(item.timestamp);
-            return date.getDay() + ' ' + MONTHS[date.getMonth()];
+            return MONTHS[date.getMonth()] + ' ' + date.getDate();
           })(),
+          timestamp: item.timestamp,
           ETH: Number(item.value) / 1e18
         }))}
       />

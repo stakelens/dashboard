@@ -39,6 +39,18 @@ function FilterOption({
   );
 }
 
+type Token = 'ethereum' | 'rocket-pool';
+
+async function getTokenPrice(token: Token): Promise<number> {
+  const request = await fetch('/api/token-price', {
+    method: 'post',
+    body: JSON.stringify({ token })
+  });
+
+  const response = await request.json();
+  return response.price;
+}
+
 export function Chart({
   data
 }: {
@@ -50,13 +62,28 @@ export function Chart({
 }) {
   const [filter, setFilter] = useState(Infinity);
   const [onMobile, setOnMobile] = useState(false);
+  const [ETHPrice, setETHPrice] = useState(1);
+  const [isUSD, setIsUSD] = useState(false);
   const [filteredData, setFilteredData] = useState(data);
 
   useEffect(() => {
+    getTokenPrice('ethereum').then((price) => setETHPrice(price));
+  }, []);
+
+  useEffect(() => {
     const now = Date.now();
-    const filteredData = data.filter((x) => now - x.timestamp < filter);
+    let filteredData = data.filter((x) => now - x.timestamp < filter);
+
+    if (isUSD) {
+      filteredData = filteredData.map((x) => ({ ...x }));
+
+      for (const value of filteredData) {
+        value.ETH *= ETHPrice;
+      }
+    }
+
     setFilteredData(filteredData);
-  }, [filter]);
+  }, [filter, isUSD]);
 
   const handleResize = () => {
     setOnMobile(window.innerWidth < 768);
@@ -70,13 +97,35 @@ export function Chart({
 
   return (
     <div className="mt-4 md:mt-8 rounded mb-16">
-      <div className="flex items-center justify-end font-mono text-sm font-bold gap-3 mb-8">
-        <FilterOption setFilter={setFilter} filter={filter} value={Infinity} label="MAX" />
-        <FilterOption setFilter={setFilter} filter={filter} value={YEAR} label="1Y" />
-        <FilterOption setFilter={setFilter} filter={filter} value={3 * MONTH} label="3M" />
-        <FilterOption setFilter={setFilter} filter={filter} value={MONTH} label="1M" />
-        <FilterOption setFilter={setFilter} filter={filter} value={WEEK} label="7D" />
-        <FilterOption setFilter={setFilter} filter={filter} value={DAY} label="24H" />
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-center gap-3 font-mono text-sm font-bold">
+          <div
+            className="rounded border border-white border-opacity-10 px-3 py-1 select-none cursor-pointer"
+            style={{
+              backgroundColor: isUSD ? '#2E46C8' : '#242424'
+            }}
+            onClick={() => setIsUSD(true)}
+          >
+            USD
+          </div>
+          <div
+            className="rounded border border-white border-opacity-10 px-3 py-1 select-none cursor-pointer"
+            style={{
+              backgroundColor: !isUSD ? '#2E46C8' : '#242424'
+            }}
+            onClick={() => setIsUSD(false)}
+          >
+            ETH
+          </div>
+        </div>
+        <div className="flex items-center justify-end font-mono text-sm font-bold gap-3">
+          <FilterOption setFilter={setFilter} filter={filter} value={Infinity} label="MAX" />
+          <FilterOption setFilter={setFilter} filter={filter} value={YEAR} label="1Y" />
+          <FilterOption setFilter={setFilter} filter={filter} value={3 * MONTH} label="3M" />
+          <FilterOption setFilter={setFilter} filter={filter} value={MONTH} label="1M" />
+          <FilterOption setFilter={setFilter} filter={filter} value={WEEK} label="7D" />
+          <FilterOption setFilter={setFilter} filter={filter} value={DAY} label="24H" />
+        </div>
       </div>
       <div className="w-full h-full">
         <ResponsiveContainer width={'100%'} height={330} style={{ padding: 4 }}>

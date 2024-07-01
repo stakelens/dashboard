@@ -65,35 +65,6 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
   <div class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
     <div class="max-w-[1070px] mx-auto">
       <Header />
-
-      <div class="mt-16 md:mt-24 flex items-center justify-between gap-8 flex-wrap">
-        <div>
-          <h2 class="text-3xl font-medium mb-2">Liquid Staking</h2>
-          <div class="text-xl opacity-70 max-w-[600px] font-light">
-            Total ETH value of all liquid staking protocol assets.
-          </div>
-        </div>
-        <div class="min-w-[120px] text-right">
-          <div class="text-[40px] md:leading-[50px] font-medium">$36.8B</div>
-          <div>
-            <div class="flex items-center justify-end gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="14"
-                height="12"
-                viewBox="0 0 14 12"
-                fill="none"
-              >
-                <path d="M7 0L13.9282 12H0.0717969L7 0Z" fill="#33FF54"></path>
-              </svg>
-              <div>
-                <span class="text-green-500">+4.62%</span>
-                <span class="opacity-60">/</span> 7 days
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
       <Chart
         client:only="react"
         data={TVLFinal.map((item) => ({

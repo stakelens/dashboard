@@ -82,6 +82,22 @@ async function getTokenPrice(token: Token): Promise<number> {
   return response.price;
 }
 
+const formater = Intl.NumberFormat('us', {
+  maximumFractionDigits: 2
+});
+
+function dataFormater(number: number) {
+  if (number > 1000000000) {
+    return formater.format(number / 1000000000) + 'B';
+  } else if (number > 1000000) {
+    return formater.format(number / 1000000) + 'M';
+  } else if (number > 1000) {
+    return formater.format(number / 1000) + 'K';
+  } else {
+    return formater.format(number);
+  }
+}
+
 export function Chart({
   data
 }: {
@@ -223,6 +239,7 @@ export function Chart({
                 axisLine={false}
                 stroke={'#6b7280'}
                 domain={['dataMin', 'dataMax']}
+                tickFormatter={dataFormater}
               />
               <Tooltip
                 content={(data) => (

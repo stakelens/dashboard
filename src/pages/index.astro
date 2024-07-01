@@ -73,7 +73,7 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
             return MONTHS[date.getMonth()] + ' ' + date.getDate();
           })(),
           timestamp: item.timestamp,
-          ETH: Number(item.value) / 1e18
+          ETH: Math.round(Number(item.value) / 1e18)
         }))}
       />
       <!-- <div

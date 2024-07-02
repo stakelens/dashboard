@@ -133,15 +133,15 @@ export function Chart({
   }, []);
 
   return (
-    <div>
-      <div className="mt-16 md:mt-24 flex items-center justify-between gap-8 flex-wrap">
+    <div className="mt-16 md:mt-24 mb-16">
+      <div className="flex items-center justify-between gap-4 md:gap-8 flex-wrap">
         <div>
-          <h2 className="text-3xl font-medium mb-2">Liquid Staking</h2>
-          <div className="text-xl opacity-70 max-w-[600px] font-light">
+          <h2 className="text-2xl md:text-3xl font-medium mb-2">Liquid Staking</h2>
+          <div className="text-lg md:text-xl opacity-70 max-w-[600px] font-light">
             Total ETH value of all liquid staking protocol assets.
           </div>
         </div>
-        <div className="min-w-[120px] text-right">
+        <div className="min-w-[120px] text-right w-full lg:w-auto">
           <div className="text-[40px] md:leading-[50px] font-medium">
             ${Intl.NumberFormat('us').format((ETHPrice * Number(data[data.length - 1].ETH)) / 1e9)}B
           </div>
@@ -169,9 +169,9 @@ export function Chart({
           </div>
         </div>
       </div>
-      <div className="mt-4 md:mt-8 rounded mb-16">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center justify-center gap-3 font-mono text-sm font-bold">
+      <div className="mt-4 md:mt-8 rounded">
+        <div className="flex items-center justify-between mb-8 flex-wrap gap-3">
+          <div className="flex items-center justify-center font-mono text-xs md:text-sm gap-2 lg:gap-3 font-bold">
             <div
               className="rounded border border-white border-opacity-10 px-3 py-1 select-none cursor-pointer"
               style={{
@@ -191,7 +191,7 @@ export function Chart({
               ETH
             </div>
           </div>
-          <div className="flex items-center justify-end font-mono text-sm font-bold gap-3">
+          <div className="flex items-center justify-end font-mono font-bold text-xs md:text-sm gap-2 lg:gap-3 flex-wrap">
             <FilterOption setFilter={setFilter} filter={filter} value={Infinity} />
             <FilterOption setFilter={setFilter} filter={filter} value={YEAR} />
             <FilterOption setFilter={setFilter} filter={filter} value={3 * MONTH} />

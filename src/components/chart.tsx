@@ -252,12 +252,16 @@ export function Chart({ tvls }: { tvls: TVL[][] }) {
                 content={(data) => (
                   <div className="bg-[#191919] border border-white border-opacity-10 rounded p-4 text-xs font-mono">
                     <p className="mb-2">
-                      {data.payload && data.payload.length ? new Date(data.payload[0].payload.timestamp).toDateString() : ''}
+                      {data.payload && data.payload.length
+                        ? new Date(data.payload[0].payload.timestamp).toDateString()
+                        : ''}
                     </p>
-                    <span className="opacity-50 mr-6">{isUSD ? 'USD: ' : 'ETH: '}</span>
+                    <span className="opacity-50 mr-2">{isUSD ? 'USD: ' : 'ETH: '}</span>
                     {data.payload && data.payload.length
                       ? Intl.NumberFormat('us')
-                          .format(Math.round(Number(data.payload[0].value)))
+                          .format(
+                            Math.round(Number(data.payload[0].value) * (isUSD ? ETHPrice : 1))
+                          )
                           .toString()
                       : ''}
                   </div>

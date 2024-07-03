@@ -143,7 +143,9 @@ export function Chart({
         </div>
         <div className="min-w-[120px] text-right w-full lg:w-auto">
           <div className="text-[40px] md:leading-[50px] font-medium">
-            ${Intl.NumberFormat('us').format((ETHPrice * Number(data[data.length - 1].ETH)) / 1e9)}B
+            {isUSD ? '$' : ''}
+            {dataFormater(Number(data[data.length - 1].ETH * (isUSD ? ETHPrice : 1)))}{' '}
+            {isUSD ? '' : 'ETH'}
           </div>
           <div>
             <div className="flex items-center justify-end gap-2">
@@ -192,12 +194,12 @@ export function Chart({
             </div>
           </div>
           <div className="flex items-center justify-end font-mono font-bold text-xs md:text-sm gap-2 lg:gap-3 flex-wrap">
-            <FilterOption setFilter={setFilter} filter={filter} value={Infinity} />
-            <FilterOption setFilter={setFilter} filter={filter} value={YEAR} />
-            <FilterOption setFilter={setFilter} filter={filter} value={3 * MONTH} />
-            <FilterOption setFilter={setFilter} filter={filter} value={MONTH} />
-            <FilterOption setFilter={setFilter} filter={filter} value={WEEK} />
             <FilterOption setFilter={setFilter} filter={filter} value={DAY} />
+            <FilterOption setFilter={setFilter} filter={filter} value={WEEK} />
+            <FilterOption setFilter={setFilter} filter={filter} value={MONTH} />
+            <FilterOption setFilter={setFilter} filter={filter} value={3 * MONTH} />
+            <FilterOption setFilter={setFilter} filter={filter} value={YEAR} />
+            <FilterOption setFilter={setFilter} filter={filter} value={Infinity} />
           </div>
         </div>
         <div className="w-full h-full">

@@ -1,132 +1,67 @@
 const DAY_MS = 1000 * 60 * 60 * 24;
 
-function getDayTimestamp(timestamp: BigInt) {
-  return new Date(new Date(Number(timestamp.toString()) * 1000).toDateString()).getTime();
-}
+function getTimestamps(min: number, max: number, step: number) {
+  const result: number[] = [];
+  let timestamp = min;
 
-function getDaysFromRange(minDay: number, maxDay: number) {
-  const days: number[] = [];
-  let timestamp = minDay;
-
-  while (timestamp <= maxDay) {
-    days.push(timestamp);
-    timestamp += DAY_MS;
+  while (timestamp <= max) {
+    result.push(timestamp);
+    timestamp += step;
   }
 
-  return days;
+  return result;
 }
-
-// Filters the TVL values so that we only keep the last tvl value of each day.
-function getTheLastTVLOfEachDay(values: TVLFromDB[]): Map<number, bigint> {
-  const historicalTVL: Map<number, bigint> = new Map();
-
-  for (const value of values) {
-    const timestamp = getDayTimestamp(value.block_timestamp);
-    historicalTVL.set(timestamp, BigInt(value.eth));
-  }
-
-  return historicalTVL;
-}
-
-// Fill the gaps in the historical TVL. If the TVL is not defined for a day,
-// we will set the TVL of that day to the last TVL value.
-function fillTVLGaps({
-  historicalTVL,
-  min,
-  max
-}: {
-  historicalTVL: Map<number, bigint>;
-  min: number;
-  max: number;
-}): Map<number, bigint> {
-  const days = getDaysFromRange(min, max);
-  let lastTVL = BigInt(0);
-
-  for (const day of days) {
-    const dayTVL = historicalTVL.get(day);
-
-    if (!dayTVL) {
-      historicalTVL.set(day, lastTVL);
-    } else {
-      lastTVL = dayTVL;
-    }
-  }
-
-  return historicalTVL;
-}
-
-type TVLFromDB = {
-  block_timestamp: bigint;
-  eth: string;
-};
 
 type TVL = {
   value: bigint;
   timestamp: number;
 };
 
-function getTVL(tvl: TVLFromDB[]): TVL[] {
-  let historicalTVL = getTheLastTVLOfEachDay(tvl);
+function fillGaps(tvls: TVL[], timestamps: number[]) {
+  const result: TVL[] = [];
 
-  const timestamps = Array.from(historicalTVL.keys());
-  const max = Math.max(...timestamps);
-  const min = Math.min(...timestamps);
+  for (let y = 0; y < tvls.length; y++) {
+    const record = tvls[y];
 
-  historicalTVL = fillTVLGaps({
-    historicalTVL,
-    min,
-    max
-  });
+    for (let i = 0; i < timestamps.length; i++) {
+      const timestamp = timestamps[i];
 
-  const resultArray: TVL[] = [];
-
-  for (const [timestamp, value] of historicalTVL.entries()) {
-    resultArray.push({
-      value,
-      timestamp
-    });
-  }
-
-  return resultArray;
-}
-
-export function combineTVLs(tvls: TVLFromDB[][]): TVL[] {
-  const result: Map<number, bigint> = new Map();
-
-  const tvlMapsWithGaps = tvls.map(getTheLastTVLOfEachDay);
-
-  const timestamps = tvlMapsWithGaps.map((tvlMap) => Array.from(tvlMap.keys())).flat();
-  const max = Math.max(...timestamps);
-  const min = Math.min(...timestamps);
-
-  const tvlMaps = tvlMapsWithGaps.map((historicalTVL) =>
-    fillTVLGaps({
-      historicalTVL,
-      min,
-      max
-    })
-  );
-
-  for (const tvlMap of tvlMaps) {
-    for (const [timestamp, tvlValue] of tvlMap) {
-      const finalValue = result.get(timestamp);
-
-      if (finalValue) {
-        result.set(timestamp, finalValue + tvlValue);
-      } else {
-        result.set(timestamp, tvlValue);
+      if (record.timestamp <= timestamp) {
+        result[i] = {
+          value: record.value,
+          timestamp
+        };
       }
     }
   }
 
-  const resultArray: TVL[] = [];
+  return result;
+}
 
-  for (const [timestamp, value] of result.entries()) {
-    resultArray.push({
-      value,
-      timestamp
-    });
+export function combineTVLs(tvls: TVL[][], step = DAY_MS / 100): TVL[] {
+  const allTimestamps = tvls.map((tvl) => tvl.map((value) => value.timestamp)).flat();
+  const max = Math.max(...allTimestamps);
+  const min = Math.min(...allTimestamps);
+  const resultTimestamps = getTimestamps(min, max, step);
+
+  const result: TVL[] = [];
+
+  for (let i = 0; i < resultTimestamps.length; i++) {
+    result[i] = {
+      value: BigInt(0),
+      timestamp: resultTimestamps[i]
+    };
   }
 
-  return resultArray.sort((a, b) => a.timestamp - b.timestamp);
+  for (const tvlWithGaps of tvls) {
+    const tvl = fillGaps(tvlWithGaps, resultTimestamps);
+
+    for (let i = 0; i < resultTimestamps.length; i++) {
+      if (tvl[i]) {
+        result[i].value = result[i].value + tvl[i].value;
+      }
+    }
+  }
+
+  return result;
 }

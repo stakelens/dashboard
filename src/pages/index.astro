@@ -48,9 +48,24 @@ for (let i = 1; i < vaultTVLChanges.length; i++) {
   };
 }
 
-const stakeWise = stakeWiseTVL.map((value) => ({ ...value, eth: value.eth.toString() }));
+const stakeWise = stakeWiseTVL
+  .map((value) => ({ ...value, eth: value.eth.toString() }))
+  .sort((a, b) => Number(a.block_timestamp - b.block_timestamp));
 
-const TVLFinal = combineTVLs([rocketPoolTVL, etherFi, stakeWise]);
+const TVLFinal = combineTVLs([
+  rocketPoolTVL.map((value) => ({
+    value: BigInt(value.eth),
+    timestamp: Number(value.block_timestamp) * 1000
+  })),
+  etherFi.map((value) => ({
+    value: BigInt(value.eth),
+    timestamp: Number(value.block_timestamp) * 1000
+  })),
+  stakeWise.map((value) => ({
+    value: BigInt(value.eth),
+    timestamp: Number(value.block_timestamp) * 1000
+  }))
+]);
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 ---
 

@@ -44,7 +44,7 @@ const valueToLabel: Record<
   },
   [Infinity]: {
     long: 'All time',
-    short: 'All time'
+    short: 'MAX'
   }
 };
 

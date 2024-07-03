@@ -1,13 +1,13 @@
-const DAY_MS = 1000 * 60 * 60 * 24;
-
 function getTimestamps(min: number, max: number, step: number) {
   const result: number[] = [];
   let timestamp = min;
 
-  while (timestamp <= max) {
+  while (timestamp < max) {
     result.push(timestamp);
     timestamp += step;
   }
+
+  result[result.length - 1] = max;
 
   return result;
 }

@@ -58,9 +58,9 @@ function ProtocolRankingRow({ label, values }: { label: string; values: { eth: s
   );
 
   return (
-    <tr className="border-b border-white border-opacity-10">
-      <td className="p-4">{label}</td>
-      <td className="p-4 font-light text-right relative">
+    <tr className="border-t border-white border-opacity-10">
+      <td className="p-4 border-r border-white border-opacity-10">{label}</td>
+      <td className="p-4 font-light text-right relative border-r border-white border-opacity-10">
         <Change positive={dayChange >= 0}>
           <span>
             {Intl.NumberFormat('en-US', {

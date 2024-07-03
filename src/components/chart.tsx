@@ -252,7 +252,7 @@ export function Chart({ tvls }: { tvls: TVL[][] }) {
                 content={(data) => (
                   <div className="bg-[#191919] border border-white border-opacity-10 rounded p-4 text-xs font-mono">
                     <p className="mb-2">
-                      {data.payload && data.payload.length ? data.payload[0].payload.timestamp : ''}
+                      {data.payload && data.payload.length ? new Date(data.payload[0].payload.timestamp).toDateString() : ''}
                     </p>
                     <span className="opacity-50 mr-6">{isUSD ? 'USD: ' : 'ETH: '}</span>
                     {data.payload && data.payload.length

@@ -38,7 +38,7 @@ function fillGaps(tvls: TVL[], timestamps: number[]) {
   return result;
 }
 
-export function combineTVLs(tvls: TVL[][], step = DAY_MS / 100): TVL[] {
+export function combineTVLs(tvls: TVL[][], step = DAY_MS / 10): TVL[] {
   const allTimestamps = tvls.map((tvl) => tvl.map((value) => value.timestamp)).flat();
   const max = Math.max(...allTimestamps);
   const min = Math.min(...allTimestamps);

@@ -40,7 +40,7 @@ export function ProtocolRanking({
   );
 }
 
-function bigIntDiv(numerator: bigint, denominator: bigint, decimals: number = 6): number {
+export function bigIntDiv(numerator: bigint, denominator: bigint, decimals: number = 6): number {
   const decimalsHelper = 10 ** decimals;
   return Number((numerator * BigInt(decimalsHelper)) / denominator) / decimalsHelper;
 }

@@ -1,4 +1,5 @@
 import { dataFormater } from '@/format';
+import { combineTVLs, type TVL } from '@/tvl';
 import { useEffect, useState, type ReactNode } from 'react';
 import {
   XAxis,
@@ -14,6 +15,7 @@ const DAY = 1000 * 60 * 60 * 24;
 const WEEK = 7 * DAY;
 const MONTH = 30 * DAY;
 const YEAR = 12 * MONTH;
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 const valueToLabel: Record<
   number,
@@ -107,54 +109,51 @@ export function Change({ positive, children }: { positive: boolean; children: Re
   );
 }
 
-export function Chart({
-  data
-}: {
-  data: {
-    date: String;
-    ETH: number;
-    timestamp: number;
-  }[];
-}) {
+const DATA_CACHE: Map<number, TVL[]> = new Map();
+
+export function Chart({ tvls }: { tvls: TVL[][] }) {
+  const [data, setData] = useState<TVL[]>([]);
+
   const [filter, setFilter] = useState(Infinity);
-  const [onMobile, setOnMobile] = useState(false);
   const [ETHPrice, setETHPrice] = useState(1);
   const [isUSD, setIsUSD] = useState(false);
-  const [filteredData, setFilteredData] = useState(data);
   const [rangeChange, setRangeChange] = useState(0);
+
+  useEffect(() => {
+    const tvl = DATA_CACHE.get(filter);
+
+    if (tvl) {
+      setData(tvl);
+    } else {
+      const allTimestamps = tvls.map((tvl) => tvl.map((value) => value.timestamp)).flat();
+
+      const now = Date.now();
+
+      const tvl = combineTVLs({
+        tvls,
+        divisions: 1000,
+        max: now,
+        min: filter === Infinity ? Math.min(...allTimestamps) : now - filter
+      });
+
+      DATA_CACHE.set(filter, tvl);
+      setData(tvl);
+    }
+  }, [filter]);
 
   useEffect(() => {
     getTokenPrice('ethereum').then((price) => setETHPrice(price));
   }, []);
 
   useEffect(() => {
-    const now = Date.now();
-    let filteredData = data.filter((x) => now - x.timestamp < filter);
-
-    if (isUSD) {
-      filteredData = filteredData.map((x) => ({ ...x }));
-
-      for (const value of filteredData) {
-        value.ETH *= ETHPrice;
-      }
+    if (data.length) {
+      setRangeChange((100 * (data[data.length - 1].value - data[0].value)) / data[0].value);
     }
+  }, [data]);
 
-    setFilteredData(filteredData);
-    setRangeChange(
-      (100 * (filteredData[filteredData.length - 1].ETH - filteredData[0].ETH)) /
-        filteredData[0].ETH
-    );
-  }, [filter, isUSD]);
-
-  const handleResize = () => {
-    setOnMobile(window.innerWidth < 768);
-  };
-
-  useEffect(() => {
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  if (data.length === 0) {
+    return null;
+  }
 
   return (
     <div className="mt-16 md:mt-24 mb-16">
@@ -168,7 +167,9 @@ export function Chart({
         <div className="min-w-[120px] text-right w-full lg:w-auto">
           <div className="text-[40px] md:leading-[50px] font-medium">
             {isUSD ? '$' : ''}
-            {dataFormater(Number(data[data.length - 1].ETH * (isUSD ? ETHPrice : 1)))}{' '}
+            {dataFormater(
+              Number(Number(data[data.length - 1].value) * (isUSD ? ETHPrice : 1))
+            )}{' '}
             {isUSD ? '' : 'ETH'}
           </div>
           <Change positive={rangeChange >= 0}>
@@ -217,7 +218,7 @@ export function Chart({
         </div>
         <div className="w-full h-full">
           <ResponsiveContainer width={'100%'} height={330} style={{ padding: 4 }}>
-            <AreaChart data={filteredData}>
+            <AreaChart data={data}>
               <CartesianGrid vertical={false} horizontal={true} stroke="#ffffff11" />
               <defs>
                 <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
@@ -229,9 +230,13 @@ export function Chart({
                 tickLine={false}
                 axisLine={false}
                 className="font-mono text-xs"
-                dataKey="date"
+                dataKey="timestamp"
                 stroke={'#6b7280'}
                 minTickGap={100}
+                tickFormatter={(timestamp) => {
+                  const date = new Date(timestamp);
+                  return MONTHS[date.getMonth()] + ' ' + date.getDate();
+                }}
               />
               <YAxis
                 tickLine={false}
@@ -239,13 +244,15 @@ export function Chart({
                 axisLine={false}
                 stroke={'#6b7280'}
                 domain={['dataMin', 'dataMax']}
-                tickFormatter={dataFormater}
+                tickFormatter={(item) => {
+                  return dataFormater(item * (isUSD ? ETHPrice : 1));
+                }}
               />
               <Tooltip
                 content={(data) => (
                   <div className="bg-[#191919] border border-white border-opacity-10 rounded p-4 text-xs font-mono">
                     <p className="mb-2">
-                      {data.payload && data.payload.length ? data.payload[0].payload.date : ''}
+                      {data.payload && data.payload.length ? data.payload[0].payload.timestamp : ''}
                     </p>
                     <span className="opacity-50 mr-6">{isUSD ? 'USD: ' : 'ETH: '}</span>
                     {data.payload && data.payload.length
@@ -258,7 +265,7 @@ export function Chart({
               ></Tooltip>
               <Area
                 type="monotone"
-                dataKey="ETH"
+                dataKey="value"
                 stroke="#3b82f6"
                 strokeWidth={2}
                 fillOpacity={1}

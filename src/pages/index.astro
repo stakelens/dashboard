@@ -4,8 +4,8 @@ import { Chart } from '../components/chart';
 import Footer from '@/components/footer.astro';
 import Header from '@/components/header.astro';
 import { db } from '@/db';
-import { combineTVLs } from '../tvl';
 import { ProtocolRanking } from '@/components/protocol-ranking';
+import { bigIntDiv } from '../components/protocol-ranking';
 
 const rocketPoolTVL = await db.rocketPool.findMany({
   orderBy: {
@@ -52,38 +52,27 @@ const stakeWise = stakeWiseTVL
   .map((value) => ({ ...value, eth: value.eth.toString() }))
   .sort((a, b) => Number(a.block_timestamp - b.block_timestamp));
 
-const TVLFinal = combineTVLs([
+const tvls = [
   rocketPoolTVL.map((value) => ({
-    value: BigInt(value.eth),
+    value: bigIntDiv(BigInt(value.eth), BigInt(1e18)),
     timestamp: Number(value.block_timestamp) * 1000
   })),
   etherFi.map((value) => ({
-    value: BigInt(value.eth),
+    value: bigIntDiv(BigInt(value.eth), BigInt(1e18)),
     timestamp: Number(value.block_timestamp) * 1000
   })),
   stakeWise.map((value) => ({
-    value: BigInt(value.eth),
+    value: bigIntDiv(BigInt(value.eth), BigInt(1e18)),
     timestamp: Number(value.block_timestamp) * 1000
   }))
-]);
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+];
 ---
 
 <Layout>
   <div class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
     <div class="max-w-[1070px] mx-auto">
       <Header />
-      <Chart
-        client:only="react"
-        data={TVLFinal.map((item) => ({
-          date: (() => {
-            const date = new Date(item.timestamp);
-            return MONTHS[date.getMonth()] + ' ' + date.getDate();
-          })(),
-          timestamp: item.timestamp,
-          ETH: Math.round(Number(item.value) / 1e18)
-        }))}
-      />
+      <Chart tvls={tvls} client:only="react" />
       <!-- <div
         class="bg-[#191919] rounded flex items-center justify-between md:h-[140px] flex-wrap md:flex-nowrap border border-white border-opacity-10"
       >

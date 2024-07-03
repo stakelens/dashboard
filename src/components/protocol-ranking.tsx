@@ -40,12 +40,21 @@ export function ProtocolRanking({
   );
 }
 
+function bigIntDiv(numerator: bigint, denominator: bigint, decimals: number = 6): number {
+  const decimalsHelper = 10 ** decimals;
+  return Number((numerator * BigInt(decimalsHelper)) / denominator) / decimalsHelper;
+}
+
+function percentChange(a: bigint, b: bigint): number {
+  return 100 * bigIntDiv(a - b, b);
+}
+
 function ProtocolRankingRow({ label, values }: { label: string; values: { eth: string }[] }) {
   const TVL = Number(BigInt(values[values.length - 1].eth) / BigInt(1e18));
-  const dayChange = Number(
-    (BigInt(100) *
-      (BigInt(values[values.length - 1].eth) - BigInt(values[values.length - 2].eth))) /
-      BigInt(values[values.length - 2].eth)
+
+  const dayChange = percentChange(
+    BigInt(values[values.length - 1].eth),
+    BigInt(values[values.length - 2].eth)
   );
 
   return (

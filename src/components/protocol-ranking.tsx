@@ -1,5 +1,6 @@
 import { dataFormater } from '@/format';
 import { useState } from 'react';
+import { Change } from './chart';
 
 const formatter = new Intl.NumberFormat('en-US', { currency: 'USD' });
 
@@ -19,7 +20,7 @@ export function ProtocolRanking({
             PROTOCOL
           </th>
           <th className="text-left text-sm font-medium p-4 border-r border-white border-opacity-10">
-            24H Volume
+            24H
           </th>
           <th className="text-right text-sm font-medium p-4 border-r border-white border-opacity-10">
             TVL (ETH)
@@ -42,13 +43,24 @@ export function ProtocolRanking({
 function ProtocolRankingRow({ label, values }: { label: string; values: { eth: string }[] }) {
   const TVL = Number(BigInt(values[values.length - 1].eth) / BigInt(1e18));
   const dayChange = Number(
-    (BigInt(values[values.length - 1].eth) - BigInt(values[values.length - 2].eth)) / BigInt(1e18)
+    (BigInt(100) *
+      (BigInt(values[values.length - 1].eth) - BigInt(values[values.length - 2].eth))) /
+      BigInt(values[values.length - 2].eth)
   );
 
   return (
     <tr className="border-b border-white border-opacity-10">
       <td className="p-4">{label}</td>
-      <Cell value={dayChange} />
+      <td className="p-4 font-light text-right relative">
+        <Change positive={dayChange >= 0}>
+          <span>
+            {Intl.NumberFormat('en-US', {
+              maximumFractionDigits: 2
+            }).format(dayChange)}
+            %
+          </span>
+        </Change>
+      </td>
       <Cell value={TVL} />
     </tr>
   );

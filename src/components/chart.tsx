@@ -1,5 +1,5 @@
 import { dataFormater } from '@/format';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import {
   XAxis,
   YAxis,
@@ -83,6 +83,30 @@ async function getTokenPrice(token: Token): Promise<number> {
   return response.price;
 }
 
+export function Change({ positive, children }: { positive: boolean; children: ReactNode }) {
+  const color = positive ? '#22c55e' : '#ef4444';
+
+  return (
+    <div className="flex items-center justify-end gap-2">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="14"
+        height="12"
+        viewBox="0 0 14 12"
+        style={{
+          fill: color,
+          transform: positive ? 'rotate(0deg)' : 'rotate(180deg)'
+        }}
+      >
+        <path d="M7 0L13.9282 12H0.0717969L7 0Z"></path>
+      </svg>
+      <div className="font-mono" style={{ color }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
 export function Chart({
   data
 }: {
@@ -147,28 +171,17 @@ export function Chart({
             {dataFormater(Number(data[data.length - 1].ETH * (isUSD ? ETHPrice : 1)))}{' '}
             {isUSD ? '' : 'ETH'}
           </div>
-          <div>
-            <div className="flex items-center justify-end gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="14"
-                height="12"
-                viewBox="0 0 14 12"
-                fill="none"
-              >
-                <path d="M7 0L13.9282 12H0.0717969L7 0Z" fill="#33FF54"></path>
-              </svg>
-              <div className=" font-mono">
-                <span className="text-green-500">
-                  {Intl.NumberFormat('en-US', {
-                    maximumFractionDigits: 2
-                  }).format(rangeChange)}
-                  %
-                </span>
-                <span className="opacity-60"> /</span> {valueToLabel[filter].long}
-              </div>
-            </div>
-          </div>
+          <Change positive={rangeChange >= 0}>
+            <span>
+              {Intl.NumberFormat('en-US', {
+                maximumFractionDigits: 2
+              }).format(rangeChange)}
+              %
+            </span>
+            <span className="text-white">
+              <span className="opacity-60"> /</span> {valueToLabel[filter].long}
+            </span>
+          </Change>
         </div>
       </div>
       <div className="mt-4 md:mt-8 rounded">

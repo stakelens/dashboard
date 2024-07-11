@@ -8,6 +8,11 @@ import Header from '@/components/header.astro';
   <div class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
     <div class="max-w-[1070px] mx-auto">
       <Header />
+      <style is:inline>
+        h1 {
+            font-size: 100px !important;
+        }
+      </style>
       <slot />
     </div>
   </div>

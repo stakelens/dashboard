@@ -9,7 +9,8 @@ import {
   Tooltip,
   ResponsiveContainer,
   AreaChart,
-  Area
+  Area,
+  type TooltipProps
 } from 'recharts';
 
 const DAY = 1000 * 60 * 60 * 24;
@@ -74,7 +75,7 @@ function FilterOption({
   );
 }
 
-type Token = 'ethereum' | 'rocket-pool';
+type EthPrices = Record<string, number>;
 
 export function Change({ positive, children }: { positive: boolean; children: ReactNode }) {
   const color = positive ? '#22c55e' : '#ef4444';
@@ -160,9 +161,26 @@ export function Chart({ tvls }: { tvls: TVL[][] }) {
     }
   }, [data]);
 
+  useEffect(() => {
+    if (data.length > 0) {
+      const lastPoint = data[data.length - 1];
+      const usdValue = convertETHToUSD(lastPoint.value, lastPoint.timestamp, ethPrices, true);
+      console.log('Last data point:', {
+        timestamp: formatDate(new Date(lastPoint.timestamp)),
+        ethValue: lastPoint.value,
+        ethPrice: ethPrices[formatDate(new Date(lastPoint.timestamp))],
+        usdValue: usdValue
+      });
+    }
+  }, [data, ethPrices]);
+
   if (data.length === 0) {
     return null;
   }
+
+  const formatValue = (value: number): string => {
+    return dataFormater(value);
+  };
 
   return (
     <div className="mt-16 md:mt-24 mb-16">
@@ -254,37 +272,21 @@ export function Chart({ tvls }: { tvls: TVL[][] }) {
                 axisLine={false}
                 stroke={'#6b7280'}
                 domain={['dataMin', 'dataMax']}
-                tickFormatter={(item) => {
-                  return dataFormater(
-                    item *
-                      (isUSD
-                        ? ethPrices[formatDate(new Date(data[data.length - 1].timestamp))] || 1
-                        : 1)
-                  );
+                tickFormatter={(value: number) => {
+                  return formatValue(value);
                 }}
               />
               <Tooltip
-                content={(data) => (
-                  <div className="bg-[#191919] border border-white border-opacity-10 rounded p-4 text-xs font-mono">
+                content={(data: TooltipProps<number, number>) => (
+                  <div className="bg-[#191919] border border-white border-opacity-10 rounded p-4 text-xs font-mono text-white">
                     <p className="mb-2">
-                      {data.payload && data.payload.length
-                        ? new Date(data.payload[0].payload.timestamp).toDateString()
-                        : ''}
+                      {data.payload &&
+                        data.payload.length > 0 &&
+                        formatDate(new Date(data.payload[0].payload.timestamp))}
                     </p>
                     <span className="opacity-50 mr-2">{isUSD ? 'USD: ' : 'ETH: '}</span>
-                    {data.payload && data.payload.length
-                      ? Intl.NumberFormat('us')
-                          .format(
-                            Math.round(
-                              Number(data.payload[0].value) *
-                                (isUSD
-                                  ? ethPrices[
-                                      formatDate(new Date(data.payload[0].payload.timestamp))
-                                    ] || 1
-                                  : 1)
-                            )
-                          )
-                          .toString()
+                    {data.payload && data.payload.length > 0 && data.payload[0].value !== undefined
+                      ? formatValue(data.payload[0].value)
                       : ''}
                   </div>
                 )}
@@ -304,9 +306,7 @@ export function Chart({ tvls }: { tvls: TVL[][] }) {
                 isAnimationActive={false}
                 data={data.map((point) => ({
                   ...point,
-                  value: isUSD
-                    ? point.value * (ethPrices[formatDate(new Date(point.timestamp))] || 1)
-                    : point.value
+                  value: convertETHToUSD(point.value, point.timestamp, ethPrices, isUSD)
                 }))}
               />
             </AreaChart>
@@ -322,3 +322,18 @@ function filterLastYear(data: TVL[]): TVL[] {
   const oneYearAgo = Date.now() - YEAR;
   return data.filter((point) => point.timestamp >= oneYearAgo);
 }
+
+const convertETHToUSD = (
+  value: number,
+  timestamp: number,
+  ethPrices: EthPrices,
+  isUSD: boolean
+): number => {
+  if (!isUSD) return value;
+  const price = ethPrices[formatDate(new Date(timestamp))];
+  if (typeof price !== 'number') {
+    console.warn(`No ETH price found for date: ${formatDate(new Date(timestamp))}`);
+    return value;
+  }
+  return value * price;
+};

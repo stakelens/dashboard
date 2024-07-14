@@ -31,3 +31,41 @@ model StakeWise {
 
   @@unique([block_number, log_index])
 }
+
+model Lido {
+  block_number    BigInt @unique
+  block_timestamp BigInt
+  eth             String
+}
+
+model Mantle {
+  block_number    BigInt @unique
+  block_timestamp BigInt
+  eth             String
+}
+
+model Renzo {
+  block_number    BigInt @unique
+  block_timestamp BigInt
+  eth             String
+}
+
+model Stader {
+  block_number    BigInt @unique
+  block_timestamp BigInt
+  eth             String
+}
+
+model Swell {
+  block_number    BigInt @unique
+  block_timestamp BigInt
+  eth             String
+}
+
+model CurrencyPrice {
+  name  String
+  date  String
+  price Float
+
+  @@id([name, date])
+}

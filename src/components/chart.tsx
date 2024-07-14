@@ -1,4 +1,5 @@
 import { dataFormater } from '@/format';
+import { formatDateToDDMMYYYY as formatDate } from '@/lib/utils';
 import { combineTVLs, type TVL } from '@/tvl';
 import { useEffect, useState, type ReactNode } from 'react';
 import {
@@ -8,7 +9,8 @@ import {
   Tooltip,
   ResponsiveContainer,
   AreaChart,
-  Area
+  Area,
+  type TooltipProps
 } from 'recharts';
 
 const DAY = 1000 * 60 * 60 * 24;
@@ -73,17 +75,7 @@ function FilterOption({
   );
 }
 
-type Token = 'ethereum' | 'rocket-pool';
-
-async function getTokenPrice(token: Token): Promise<number> {
-  const request = await fetch('/api/token-price', {
-    method: 'post',
-    body: JSON.stringify({ token })
-  });
-
-  const response = await request.json();
-  return response.price;
-}
+type EthPrices = Record<string, number>;
 
 export function Change({ positive, children }: { positive: boolean; children: ReactNode }) {
   const color = positive ? '#22c55e' : '#ef4444';
@@ -115,7 +107,7 @@ export function Chart({ tvls }: { tvls: TVL[][] }) {
   const [data, setData] = useState<TVL[]>([]);
 
   const [filter, setFilter] = useState(Infinity);
-  const [ETHPrice, setETHPrice] = useState(1);
+  const [ethPrices, setEthPrices] = useState<Record<string, number>>({});
   const [isUSD, setIsUSD] = useState(false);
   const [rangeChange, setRangeChange] = useState(0);
 
@@ -123,7 +115,7 @@ export function Chart({ tvls }: { tvls: TVL[][] }) {
     const tvl = DATA_CACHE.get(filter);
 
     if (tvl) {
-      setData(tvl);
+      setData(filterLastYear(tvl));
     } else {
       const allTimestamps = tvls.map((tvl) => tvl.map((value) => value.timestamp)).flat();
 
@@ -137,13 +129,31 @@ export function Chart({ tvls }: { tvls: TVL[][] }) {
       });
 
       DATA_CACHE.set(filter, tvl);
-      setData(tvl);
+      setData(filterLastYear(tvl));
     }
   }, [filter]);
 
   useEffect(() => {
-    getTokenPrice('ethereum').then((price) => setETHPrice(price));
-  }, []);
+    const fetchPrices = async () => {
+      const uniqueDates = [...new Set(data.map((point) => new Date(point.timestamp)))];
+      const response = await fetch('/api/token-prices', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          token: 'ethereum',
+          dates: uniqueDates
+        })
+      });
+      const { prices } = await response.json();
+      setEthPrices(prices);
+    };
+
+    if (data.length > 0) {
+      fetchPrices();
+    }
+  }, [data]);
 
   useEffect(() => {
     if (data.length) {
@@ -151,9 +161,26 @@ export function Chart({ tvls }: { tvls: TVL[][] }) {
     }
   }, [data]);
 
+  useEffect(() => {
+    if (data.length > 0) {
+      const lastPoint = data[data.length - 1];
+      const usdValue = convertETHToUSD(lastPoint.value, lastPoint.timestamp, ethPrices, true);
+      console.log('Last data point:', {
+        timestamp: formatDate(new Date(lastPoint.timestamp)),
+        ethValue: lastPoint.value,
+        ethPrice: ethPrices[formatDate(new Date(lastPoint.timestamp))],
+        usdValue: usdValue
+      });
+    }
+  }, [data, ethPrices]);
+
   if (data.length === 0) {
     return null;
   }
+
+  const formatValue = (value: number): string => {
+    return dataFormater(value);
+  };
 
   return (
     <div className="mt-16 md:mt-24 mb-16">
@@ -168,7 +195,8 @@ export function Chart({ tvls }: { tvls: TVL[][] }) {
           <div className="text-[40px] md:leading-[50px] font-medium">
             {isUSD ? '$' : ''}
             {dataFormater(
-              Number(Number(data[data.length - 1].value) * (isUSD ? ETHPrice : 1))
+              Number(data[data.length - 1].value) *
+                (isUSD ? ethPrices[formatDate(new Date(data[data.length - 1].timestamp))] || 1 : 1)
             )}{' '}
             {isUSD ? '' : 'ETH'}
           </div>
@@ -244,29 +272,25 @@ export function Chart({ tvls }: { tvls: TVL[][] }) {
                 axisLine={false}
                 stroke={'#6b7280'}
                 domain={['dataMin', 'dataMax']}
-                tickFormatter={(item) => {
-                  return dataFormater(item * (isUSD ? ETHPrice : 1));
+                tickFormatter={(value: number) => {
+                  return formatValue(value);
                 }}
               />
               <Tooltip
-                content={(data) => (
-                  <div className="bg-[#191919] border border-white border-opacity-10 rounded p-4 text-xs font-mono">
+                content={(data: TooltipProps<number, number>) => (
+                  <div className="bg-[#191919] border border-white border-opacity-10 rounded p-4 text-xs font-mono text-white">
                     <p className="mb-2">
-                      {data.payload && data.payload.length
-                        ? new Date(data.payload[0].payload.timestamp).toDateString()
-                        : ''}
+                      {data.payload &&
+                        data.payload.length > 0 &&
+                        formatDate(new Date(data.payload[0].payload.timestamp))}
                     </p>
                     <span className="opacity-50 mr-2">{isUSD ? 'USD: ' : 'ETH: '}</span>
-                    {data.payload && data.payload.length
-                      ? Intl.NumberFormat('us')
-                          .format(
-                            Math.round(Number(data.payload[0].value) * (isUSD ? ETHPrice : 1))
-                          )
-                          .toString()
+                    {data.payload && data.payload.length > 0 && data.payload[0].value !== undefined
+                      ? formatValue(data.payload[0].value)
                       : ''}
                   </div>
                 )}
-              ></Tooltip>
+              />
               <Area
                 type="monotone"
                 dataKey="value"
@@ -280,6 +304,10 @@ export function Chart({ tvls }: { tvls: TVL[][] }) {
                   strokeWidth: 1
                 }}
                 isAnimationActive={false}
+                data={data.map((point) => ({
+                  ...point,
+                  value: convertETHToUSD(point.value, point.timestamp, ethPrices, isUSD)
+                }))}
               />
             </AreaChart>
           </ResponsiveContainer>
@@ -289,3 +317,23 @@ export function Chart({ tvls }: { tvls: TVL[][] }) {
     </div>
   );
 }
+
+function filterLastYear(data: TVL[]): TVL[] {
+  const oneYearAgo = Date.now() - YEAR;
+  return data.filter((point) => point.timestamp >= oneYearAgo);
+}
+
+const convertETHToUSD = (
+  value: number,
+  timestamp: number,
+  ethPrices: EthPrices,
+  isUSD: boolean
+): number => {
+  if (!isUSD) return value;
+  const price = ethPrices[formatDate(new Date(timestamp))];
+  if (typeof price !== 'number') {
+    console.warn(`No ETH price found for date: ${formatDate(new Date(timestamp))}`);
+    return value;
+  }
+  return value * price;
+};

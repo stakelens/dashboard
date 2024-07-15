@@ -6,10 +6,10 @@ export type TokenConfig = {
 export const TOKENS = {
   ethereum: {
     coingeckoLabel: 'ethereum',
-    startDate: 123
+    startDate: 1689537821430
   },
   rocketPool: {
     coingeckoLabel: 'rocket-pool',
-    startDate: 1235
+    startDate: 1689537821430
   }
 } satisfies Record<string, TokenConfig>;

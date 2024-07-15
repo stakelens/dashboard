@@ -1,6 +1,6 @@
-import { dataFormater } from '@/format';
+import { numberFormater } from '@/format';
 import { useState } from 'react';
-import { Change } from './chart';
+import { Change } from './tvl-chart';
 
 const formatter = new Intl.NumberFormat('en-US', { currency: 'USD' });
 
@@ -84,7 +84,7 @@ function Cell({ value }: { value: number }) {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      {hover ? formatter.format(value) : dataFormater(value)}
+      {hover ? formatter.format(value) : numberFormater(value)}
     </td>
   );
 }

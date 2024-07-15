@@ -1,0 +1,47 @@
+---
+import Layout from '../../layouts/layout.astro';
+import { TimeChart } from '../../components/time-chart.tsx';
+import { tokenPriceManager } from '@/tokens/token-price-manager';
+
+const { token } = Astro.params;
+
+if (!token) {
+  return new Response('Token required');
+}
+
+const now = Date.now();
+const lastMonth = now - 1000 * 60 * 60 * 24 * 365;
+
+const prices = await tokenPriceManager.getPrices({
+  token: token,
+  range: {
+    from: lastMonth,
+    to: now
+  }
+});
+
+if (!prices) {
+  return Response('Data not found');
+}
+
+function convertDateToTimestamp(date: string): number {
+  const values = date.split('-');
+  return Number(new Date(`${values[1]}-${values[0]}-${values[2]}`));
+}
+
+const pricesArray = Object.keys(prices)
+  .map((date) => ({
+    timestamp: convertDateToTimestamp(date),
+    value: prices[date]
+  }))
+  .sort((a, b) => a.timestamp - b.timestamp);
+---
+
+<Layout>
+  <div class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    <div class="max-w-[800px] mx-auto">
+      <h1>{token}</h1>
+      <TimeChart data={pricesArray} client:only="react" />
+    </div>
+  </div>
+</Layout>

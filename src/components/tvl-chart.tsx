@@ -1,4 +1,4 @@
-import { dataFormater } from '@/format';
+import { numberFormater } from '@/format';
 import { formatDateToDDMMYYYY as formatDate } from '@/lib/utils';
 import { combineTVLs, type TVL } from '@/tvl';
 import { useEffect, useState, type ReactNode } from 'react';
@@ -12,12 +12,7 @@ import {
   Area,
   type TooltipProps
 } from 'recharts';
-
-const DAY = 1000 * 60 * 60 * 24;
-const WEEK = 7 * DAY;
-const MONTH = 30 * DAY;
-const YEAR = 12 * MONTH;
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+import { DAY, MONTH, MONTHS, WEEK, YEAR } from './time-constants';
 
 const valueToLabel: Record<
   number,
@@ -156,8 +151,15 @@ export function Chart({ tvls }: { tvls: TVL[][] }) {
   }, [data]);
 
   useEffect(() => {
-    if (data.length) {
-      setRangeChange((100 * (data[data.length - 1].value - data[0].value)) / data[0].value);
+    if (data.length > 1) {
+      const lastValue = data[data.length - 1].value;
+      const firstValue = data[0].value;
+
+      const percentChange = (100 * (lastValue + firstValue)) / firstValue;
+
+      setRangeChange(percentChange);
+    } else {
+      setRangeChange(0);
     }
   }, [data]);
 
@@ -179,7 +181,7 @@ export function Chart({ tvls }: { tvls: TVL[][] }) {
   }
 
   const formatValue = (value: number): string => {
-    return dataFormater(value);
+    return numberFormater(value);
   };
 
   return (
@@ -194,7 +196,7 @@ export function Chart({ tvls }: { tvls: TVL[][] }) {
         <div className="min-w-[120px] text-right w-full lg:w-auto">
           <div className="text-[40px] md:leading-[50px] font-medium">
             {isUSD ? '$' : ''}
-            {dataFormater(
+            {numberFormater(
               Number(data[data.length - 1].value) *
                 (isUSD ? ethPrices[formatDate(new Date(data[data.length - 1].timestamp))] || 1 : 1)
             )}{' '}

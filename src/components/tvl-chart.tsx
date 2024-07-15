@@ -215,7 +215,7 @@ export function Chart({ tvls }: { tvls: TVL[][] }) {
           </Change>
         </div>
       </div>
-      <div className="mt-4 md:mt-8 rounded relative">
+      <div className="mt-4 md:mt-8 relative">
         <div className="flex items-center justify-between mb-8 flex-wrap gap-3">
           <div className="flex items-center justify-center font-mono text-xs md:text-sm gap-2 lg:gap-3 font-bold">
             <div
@@ -246,79 +246,77 @@ export function Chart({ tvls }: { tvls: TVL[][] }) {
             <FilterOption setFilter={setFilter} filter={filter} value={Infinity} />
           </div>
         </div>
-        <div className="w-full h-full">
-          <ResponsiveContainer width={'100%'} height={330} style={{ padding: 4 }}>
-            <AreaChart data={data}>
-              <CartesianGrid vertical={false} horizontal={true} stroke="#ffffff11" />
-              <defs>
-                <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2} />
-                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <XAxis
-                tickLine={false}
-                axisLine={false}
-                className="font-mono text-xs"
-                dataKey="timestamp"
-                stroke={'#6b7280'}
-                minTickGap={100}
-                tickFormatter={(timestamp) => {
-                  const date = new Date(timestamp);
-                  return MONTHS[date.getMonth()] + ' ' + date.getDate();
-                }}
-              />
-              <YAxis
-                tickLine={false}
-                className="font-mono text-xs"
-                axisLine={false}
-                stroke={'#6b7280'}
-                domain={['dataMin', 'dataMax']}
-                tickFormatter={(value: number) => {
-                  return formatValue(value);
-                }}
-              />
-              <Tooltip
-                content={(data: TooltipProps<number, number>) => (
-                  <div className="bg-[#191919] border border-white border-opacity-10 rounded p-4 text-xs font-mono text-white">
-                    <p className="mb-2">
-                      {data.payload &&
-                        data.payload.length > 0 &&
-                        formatDate(new Date(data.payload[0].payload.timestamp))}
-                    </p>
-                    <span className="opacity-50 mr-2">{isUSD ? 'USD: ' : 'ETH: '}</span>
-                    {data.payload && data.payload.length > 0 && data.payload[0].value !== undefined
-                      ? formatValue(data.payload[0].value)
-                      : ''}
-                  </div>
-                )}
-              />
-              <Area
-                type="monotone"
-                dataKey="value"
-                stroke="#3b82f6"
-                strokeWidth={2}
-                fillOpacity={1}
-                fill="url(#colorUv)"
-                activeDot={{
-                  fill: '#3b82f6',
-                  stroke: '#FFFFFF88',
-                  strokeWidth: 1
-                }}
-                isAnimationActive={false}
-                data={data.map((point) => ({
-                  ...point,
-                  value: convertETHToUSD(point.value, point.timestamp, ethPrices, isUSD)
-                }))}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-        <div className="absolute pointer-events-none bottom-12 right-8 opacity-50">
-          <div className="flex items-center justify-center gap-2">
-            <img src="/aperture.png" alt="aperture" className="w-6 h-6" />
-            <div className="text-2xl font-medium font-mono">Stakelens</div>
-          </div>
+        <ResponsiveContainer width={'100%'} height={330} style={{ padding: 4 }}>
+          <AreaChart data={data}>
+            <CartesianGrid vertical={false} horizontal={true} stroke="#ffffff11" />
+            <defs>
+              <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2} />
+                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <XAxis
+              tickLine={false}
+              axisLine={false}
+              className="font-mono text-xs"
+              dataKey="timestamp"
+              stroke={'#6b7280'}
+              minTickGap={100}
+              tickFormatter={(timestamp) => {
+                const date = new Date(timestamp);
+                return MONTHS[date.getMonth()] + ' ' + date.getDate();
+              }}
+            />
+            <YAxis
+              tickLine={false}
+              className="font-mono text-xs"
+              axisLine={false}
+              stroke={'#6b7280'}
+              domain={['dataMin', 'dataMax']}
+              tickFormatter={(value: number) => {
+                return formatValue(value);
+              }}
+            />
+            <Tooltip
+              content={(data: TooltipProps<number, number>) => (
+                <div className="bg-[#191919] border border-white border-opacity-10 rounded p-4 text-xs font-mono text-white">
+                  <p className="mb-2">
+                    {data.payload &&
+                      data.payload.length > 0 &&
+                      formatDate(new Date(data.payload[0].payload.timestamp))}
+                  </p>
+                  <span className="opacity-50 mr-2">{isUSD ? 'USD: ' : 'ETH: '}</span>
+                  {data.payload && data.payload.length > 0 && data.payload[0].value !== undefined
+                    ? formatValue(data.payload[0].value)
+                    : ''}
+                </div>
+              )}
+            />
+            <Area
+              type="monotone"
+              dataKey="value"
+              stroke="#3b82f6"
+              strokeWidth={2}
+              fillOpacity={1}
+              fill="url(#colorUv)"
+              activeDot={{
+                fill: '#3b82f6',
+                stroke: '#FFFFFF88',
+                strokeWidth: 1
+              }}
+              isAnimationActive={false}
+              data={data.map((point) => ({
+                ...point,
+                value: convertETHToUSD(point.value, point.timestamp, ethPrices, isUSD)
+              }))}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+      <div className="absolute pointer-events-none bottom-12 right-8 opacity-50">
+        <div className="flex items-center justify-center gap-2">
+          <img src="/aperture.png" alt="aperture" className="w-6 h-6" />
+          <div className="text-2xl font-medium font-mono">Stakelens</div>
         </div>
       </div>
     </div>

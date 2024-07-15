@@ -40,7 +40,7 @@ export async function fetchWithRetry(
   throw new Error('Max retries reached');
 }
 
-const DAY = 1000 * 60 * 60 * 24;
+export const ONE_DAY = 1000 * 60 * 60 * 24;
 
 export function getDatesInRange({ from, to }: { from: number; to: number }) {
   const dates: string[] = [];
@@ -48,7 +48,7 @@ export function getDatesInRange({ from, to }: { from: number; to: number }) {
 
   while (currentDate < to) {
     dates.push(formatDateToDDMMYYYY(new Date(currentDate)));
-    currentDate += DAY;
+    currentDate += ONE_DAY;
   }
 
   return dates;

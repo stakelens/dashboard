@@ -1,5 +1,5 @@
 import { db } from '@/db';
-import { delay, fetchWithRetry, getDatesInRange } from '@/lib/utils';
+import { delay, fetchWithRetry, getDatesInRange, ONE_DAY } from '@/lib/utils';
 import type { TokenConfig } from './tokens';
 
 const COINGECKO_RATE_LIMIT = 25;
@@ -21,7 +21,8 @@ export class TokenPrices {
       if (dates.length === 0) {
         return;
       }
-      await delay(60 * 1000);
+
+      await delay(1000);
     }
   }
 
@@ -48,12 +49,14 @@ export class TokenPrices {
     while (true) {
       const dates = this.getDatesWithNoPrice();
 
+      if (dates.length == 0) {
+        await delay(ONE_DAY);
+      }
+
       for (const date of dates.slice(0, COINGECKO_RATE_LIMIT)) {
         const price = await this.fetchPrice(date);
         await this.savePrice(date, price);
       }
-
-      await delay(60 * 1000);
     }
   }
 

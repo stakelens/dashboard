@@ -21,7 +21,7 @@ const prices = await tokenPriceManager.getPrices({
 });
 
 if (!prices) {
-  return Response('Data not found');
+  return new Response('Data not found');
 }
 
 function convertDateToTimestamp(date: string): number {

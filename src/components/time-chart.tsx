@@ -78,7 +78,7 @@ function Tooltip({ data }: { data: TooltipProps<ValueType, NameType> }) {
     return null;
   }
 
-  const date = formatDate(data.payload[0].payload.timestamp);
+  const date = formatDate(new Date(data.payload[0].payload.timestamp));
   const value = numberFormater(data.payload[0].value);
 
   return (

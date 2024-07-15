@@ -20,7 +20,7 @@ export const POST: APIRoute = async ({ request }) => {
     });
   }
 
-  const prices = await tokenPriceManager.fetchTokenPrices(token, dates);
+  const prices = await tokenPriceManager.getTokenPrices(token, dates);
 
   return new Response(
     JSON.stringify({

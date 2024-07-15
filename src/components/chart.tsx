@@ -213,7 +213,7 @@ export function Chart({ tvls }: { tvls: TVL[][] }) {
           </Change>
         </div>
       </div>
-      <div className="mt-4 md:mt-8 rounded">
+      <div className="mt-4 md:mt-8 rounded relative">
         <div className="flex items-center justify-between mb-8 flex-wrap gap-3">
           <div className="flex items-center justify-center font-mono text-xs md:text-sm gap-2 lg:gap-3 font-bold">
             <div
@@ -312,7 +312,12 @@ export function Chart({ tvls }: { tvls: TVL[][] }) {
             </AreaChart>
           </ResponsiveContainer>
         </div>
-        <div />
+        <div className="absolute pointer-events-none bottom-12 right-8 opacity-50">
+          <div className="flex items-center justify-center gap-2">
+            <img src="/aperture.png" alt="aperture" className="w-6 h-6" />
+            <div className="text-2xl font-medium font-mono">Stakelens</div>
+          </div>
+        </div>
       </div>
     </div>
   );

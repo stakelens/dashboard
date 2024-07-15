@@ -1,26 +1,35 @@
-import { TokenPriceManager } from '@/token-price-manager';
+import { tokenPriceManager } from '@/tokens/token-price-manager';
+import { TOKENS } from '@/tokens/tokens';
 import type { APIRoute } from 'astro';
+import z from 'astro/zod';
 
-const tokens = ['ethereum', 'rocket-pool'];
-
-const tokenPriceManager = new TokenPriceManager();
+const RangeSchema = z
+  .object({
+    from: z.number(),
+    to: z.number()
+  })
+  .refine((data) => data.from > data.to, {
+    message: 'Invalid range'
+  });
 
 export const POST: APIRoute = async ({ request }) => {
-  let { token, dates } = await request.json();
+  let { token, range } = await request.json();
 
-  if (!Array.isArray(dates) || dates.length === 0) {
-    return new Response('Invalid dates', {
-      status: 400
-    });
-  }
-
-  if (!tokens.includes(token)) {
+  if (!(token in TOKENS)) {
     return new Response('Invalid token', {
       status: 400
     });
   }
 
-  const prices = await tokenPriceManager.getTokenPrices(token, dates);
+  const parsedRange = RangeSchema.safeParse(range);
+
+  if (!parsedRange.success) {
+    return new Response('Invalid range', {
+      status: 400
+    });
+  }
+
+  const prices = await tokenPriceManager.getPrices({ token, range: parsedRange.data });
 
   return new Response(
     JSON.stringify({

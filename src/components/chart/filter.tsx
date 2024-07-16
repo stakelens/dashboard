@@ -35,7 +35,7 @@ export function Filter({
   filter: number;
 }) {
   return (
-    <div className="flex items-center justify-end font-mono font-bold text-xs md:text-sm gap-2 lg:gap-3 flex-wrap">
+    <div className="flex flex-wrap items-center justify-end gap-2 font-mono text-xs font-bold md:text-sm lg:gap-3">
       <FilterOption setFilter={setFilter} currentValue={filter} value={DAY} />
       <FilterOption setFilter={setFilter} currentValue={filter} value={WEEK} />
       <FilterOption setFilter={setFilter} currentValue={filter} value={MONTH} />

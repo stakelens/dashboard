@@ -1,10 +1,10 @@
-import { numberFormater } from '@/format';
 import { combineTVLs } from '@/tvl';
+import { numberFormater } from '@/format';
+import { ArrowChange } from './arrow-change';
+import { USDToggele } from './chart/usd-toggle';
 import { useEffect, useMemo, useState } from 'react';
 import { Filter, FILTER_TO_LABEL } from './chart/filter';
-import { ArrowChange } from './arrow-change';
 import { TimeChart, type DataPoint } from './chart/time-chart';
-import { USDToggele } from './chart/usd-toggle';
 
 export function TVLChat({ tvls }: { tvls: DataPoint[][] }) {
   const [filter, setFilter] = useState(Infinity);
@@ -26,10 +26,10 @@ export function TVLChat({ tvls }: { tvls: DataPoint[][] }) {
   }
 
   return (
-    <div className="mt-16 md:mt-24 mb-16">
+    <div className="my-16 md:mt-24">
       <TVLHeader data={data} filter={filter} />
-      <div className="mt-4 md:mt-8 relative">
-        <div className="flex items-center justify-between mb-8 flex-wrap gap-3">
+      <div className="mt-4 md:mt-8">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
           <USDToggele isUSD={isUSD} setIsUSD={setIsUSD} />
           <Filter filter={filter} setFilter={setFilter} />
         </div>
@@ -50,9 +50,9 @@ function TVLHeader({ data, filter }: { data: DataPoint[]; filter: number }) {
   useEffect(() => setRangeChange(percentChange(data)), [data]);
 
   return (
-    <div className="flex items-center justify-between gap-4 md:gap-8 flex-wrap">
+    <div className="flex flex-wrap items-center justify-between gap-4 md:gap-8">
       <div>
-        <h2 className="text-2xl md:text-3xl font-medium mb-2">Liquid Staking</h2>
+        <h2 className="mb-2 text-2xl font-medium md:text-3xl">Liquid Staking</h2>
         <div className="text-lg md:text-xl opacity-70 max-w-[600px] font-light">
           Total ETH value of all liquid staking protocol assets.
         </div>

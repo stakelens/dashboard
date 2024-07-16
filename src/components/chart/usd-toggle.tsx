@@ -6,9 +6,9 @@ export function USDToggele({
   setIsUSD: (value: boolean) => void;
 }) {
   return (
-    <div className="flex items-center justify-center font-mono text-xs md:text-sm gap-2 lg:gap-3 font-bold">
+    <div className="flex items-center justify-center gap-2 font-mono text-xs font-bold md:text-sm lg:gap-3">
       <div
-        className="rounded border border-white border-opacity-10 px-3 py-1 select-none cursor-pointer"
+        className="px-3 py-1 border border-white rounded cursor-pointer select-none border-opacity-10"
         style={{
           backgroundColor: isUSD ? '#2E46C8' : '#242424'
         }}
@@ -17,7 +17,7 @@ export function USDToggele({
         USD
       </div>
       <div
-        className="rounded border border-white border-opacity-10 px-3 py-1 select-none cursor-pointer"
+        className="px-3 py-1 border border-white rounded cursor-pointer select-none border-opacity-10"
         style={{
           backgroundColor: !isUSD ? '#2E46C8' : '#242424'
         }}

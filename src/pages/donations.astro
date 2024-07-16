@@ -5,17 +5,17 @@ import Header from '@/components/header.astro';
 ---
 
 <Layout>
-  <div class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+  <div class="flex-grow w-full px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
     <div class="max-w-[1070px] mx-auto">
       <Header />
-      <div class="flex justify-center lg:flex-row flex-col mt-16 md:mt-32 gap-16">
+      <div class="flex flex-col justify-center gap-16 mt-16 lg:flex-row md:mt-32">
         <div>
           <div>
             <div class="flex items-center gap-4">
-              <h1 class="text-6xl md:text-8xl font-medium">Donate</h1>
+              <h1 class="text-6xl font-medium md:text-8xl">Donate</h1>
               <img src="/icons/heart.png" alt="heart" class="w-16 h-16 animate-heartbeat" />
             </div>
-            <div class="text-white opacity-70 text-2xl flex gap-4 flex-col mt-8">
+            <div class="flex flex-col gap-4 mt-8 text-2xl text-white opacity-70">
               <p>
                 Vista is a passionate group dedicated to staking education and transparency within
                 the Ethereum space.
@@ -26,7 +26,7 @@ import Header from '@/components/header.astro';
               </p>
             </div>
           </div>
-          <div class="flex items-center gap-4 mt-8 md:mt-16 md:flex-row flex-col">
+          <div class="flex flex-col items-center gap-4 mt-8 md:mt-16 md:flex-row">
             <a
               href="#"
               class="flex font-semibold items-center justify-center bg-[#454A75] text-white px-4 py-2 rounded gap-2 w-full md:w-auto border border-white border-opacity-10"
@@ -55,15 +55,15 @@ import Header from '@/components/header.astro';
         </div>
       </div>
       <div
-        class="mt-16 md:mt-16 md:mb-16 border border-white border-opacity-10 rounded overflow-hidden"
+        class="mt-16 overflow-hidden border border-white rounded md:mt-16 md:mb-16 border-opacity-10"
       >
         <div class="flex items-center justify-center bg-[#1EE856] h-16">
-          <div class="text-black opacity-60 text-xl md:text-2xl font-semibold uppercase font-mono">
+          <div class="font-mono text-xl font-semibold text-black uppercase opacity-60 md:text-2xl">
             Your support allows us to:
           </div>
         </div>
         <div class="text-white text-xl px-12 md:px-16 py-8 bg-[#191919]">
-          <ul class="mt-2 list-disc flex flex-col gap-3">
+          <ul class="flex flex-col gap-3 mt-2 list-disc">
             <li>Deliver accurate and reliable information on staking and Ethereum</li>
             <li>Develop innovative tools that simplify solo staking</li>
             <li>Lower the barrier to entry for users interested in staking</li>

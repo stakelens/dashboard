@@ -16,13 +16,13 @@ export function ProtocolRanking({
     <table className="w-full overflow-hidden">
       <thead className="bg-[#242424] font-mono text-[#949494] border-b border-white border-opacity-10">
         <tr>
-          <th className="text-left text-sm font-medium p-4 border-r border-white border-opacity-10">
+          <th className="p-4 text-sm font-medium text-left border-r border-white border-opacity-10">
             PROTOCOL
           </th>
-          <th className="text-left text-sm font-medium p-4 border-r border-white border-opacity-10">
+          <th className="p-4 text-sm font-medium text-left border-r border-white border-opacity-10">
             24H
           </th>
-          <th className="text-right text-sm font-medium p-4 border-r border-white border-opacity-10">
+          <th className="p-4 text-sm font-medium text-right border-r border-white border-opacity-10">
             TVL (ETH)
           </th>
         </tr>
@@ -60,7 +60,7 @@ function ProtocolRankingRow({ label, values }: { label: string; values: { eth: s
   return (
     <tr className="border-t border-white border-opacity-10">
       <td className="p-4 border-r border-white border-opacity-10">{label}</td>
-      <td className="p-4 font-light text-right relative border-r border-white border-opacity-10">
+      <td className="relative p-4 font-light text-right border-r border-white border-opacity-10">
         <ArrowChange positive={dayChange >= 0}>
           <span>
             {Intl.NumberFormat('en-US', {
@@ -80,7 +80,7 @@ function Cell({ value }: { value: number }) {
 
   return (
     <td
-      className="p-4 font-light text-right relative"
+      className="relative p-4 font-light text-right"
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >

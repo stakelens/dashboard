@@ -82,7 +82,7 @@ function Tooltip({ data }: { data: TooltipProps<ValueType, NameType> }) {
   const value = numberFormater(data.payload[0].value);
 
   return (
-    <div className="bg-[#191919] border border-white border-opacity-10 rounded p-4 text-xs font-mono text-white">
+    <div className="bg-[#191919] border border-white border-opacity-10 rounded p-4 font-mono text-xs text-white">
       <p className="mb-2">{date}</p>
       {value}
     </div>
@@ -91,10 +91,10 @@ function Tooltip({ data }: { data: TooltipProps<ValueType, NameType> }) {
 
 function WaterMark() {
   return (
-    <div className="absolute pointer-events-none bottom-12 right-8 opacity-50">
+    <div className="absolute opacity-50 pointer-events-none bottom-12 right-8">
       <div className="flex items-center justify-center gap-2">
         <img src="/aperture.png" alt="aperture" className="w-6 h-6" />
-        <div className="text-2xl font-medium font-mono">Stakelens</div>
+        <div className="font-mono text-2xl font-medium">Stakelens</div>
       </div>
     </div>
   );

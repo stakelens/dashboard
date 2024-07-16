@@ -49,6 +49,13 @@ export function combineTVLs({
   max: number;
   min: number;
 }): TVL[] {
+  const allTimestamps = tvls.map((tvl) => tvl.map((value) => value.timestamp)).flat();
+  const allTimestampsMin = Math.min(...allTimestamps);
+
+  if (min < Math.min(...allTimestamps)) {
+    min = allTimestampsMin;
+  }
+
   const step = Math.round((max - min) / divisions);
   const resultTimestamps = getTimestamps(min, max, step);
 

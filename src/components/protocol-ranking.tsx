@@ -1,6 +1,6 @@
 import { numberFormater } from '@/format';
 import { useState } from 'react';
-import { Change } from './tvl-chart';
+import { ArrowChange } from './arrow-change';
 
 const formatter = new Intl.NumberFormat('en-US', { currency: 'USD' });
 
@@ -61,14 +61,14 @@ function ProtocolRankingRow({ label, values }: { label: string; values: { eth: s
     <tr className="border-t border-white border-opacity-10">
       <td className="p-4 border-r border-white border-opacity-10">{label}</td>
       <td className="p-4 font-light text-right relative border-r border-white border-opacity-10">
-        <Change positive={dayChange >= 0}>
+        <ArrowChange positive={dayChange >= 0}>
           <span>
             {Intl.NumberFormat('en-US', {
               maximumFractionDigits: 2
             }).format(dayChange)}
             %
           </span>
-        </Change>
+        </ArrowChange>
       </td>
       <Cell value={TVL} />
     </tr>

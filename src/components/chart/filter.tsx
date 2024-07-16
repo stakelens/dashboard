@@ -41,7 +41,7 @@ export function Filter({
       <FilterOption setFilter={setFilter} currentValue={filter} value={MONTH} />
       <FilterOption setFilter={setFilter} currentValue={filter} value={3 * MONTH} />
       <FilterOption setFilter={setFilter} currentValue={filter} value={YEAR} />
-      <FilterOption setFilter={setFilter} currentValue={filter} value={Infinity} />
+      {/* <FilterOption setFilter={setFilter} currentValue={filter} value={Infinity} /> */}
     </div>
   );
 }

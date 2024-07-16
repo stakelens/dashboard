@@ -64,7 +64,6 @@ export function TimeChart({ data }: { data: DataPoint[] }) {
               stroke: '#FFFFFF88',
               strokeWidth: 1
             }}
-            isAnimationActive={false}
             data={data}
           />
         </AreaChart>

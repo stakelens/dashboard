@@ -51,5 +51,11 @@ export function getDatesInRange({ from, to }: { from: number; to: number }) {
     currentDate += ONE_DAY;
   }
 
+  const lastDate = formatDateToDDMMYYYY(new Date(to));
+
+  if (dates[dates.length - 1] !== lastDate) {
+    dates.push(lastDate);
+  }
+
   return dates;
 }

@@ -38,7 +38,7 @@ const pricesArray = Object.keys(prices)
 ---
 
 <Layout>
-  <div class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+  <div class="flex-grow w-full px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
     <div class="max-w-[800px] mx-auto">
       <h1>{token}</h1>
       <TimeChart data={pricesArray} client:only="react" />

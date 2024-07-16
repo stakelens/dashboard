@@ -8,7 +8,7 @@ const RangeSchema = z
     from: z.number(),
     to: z.number()
   })
-  .refine((data) => data.from > data.to, {
+  .refine((data) => data.from < data.to, {
     message: 'Invalid range'
   });
 
@@ -31,14 +31,9 @@ export const POST: APIRoute = async ({ request }) => {
 
   const prices = await tokenPriceManager.getPrices({ token, range: parsedRange.data });
 
-  return new Response(
-    JSON.stringify({
-      prices
-    }),
-    {
-      headers: {
-        'content-type': 'application/json'
-      }
+  return new Response(JSON.stringify(prices), {
+    headers: {
+      'content-type': 'application/json'
     }
-  );
+  });
 };

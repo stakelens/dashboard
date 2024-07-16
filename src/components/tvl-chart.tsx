@@ -5,12 +5,16 @@ import { USDToggele } from './chart/usd-toggle';
 import { useEffect, useMemo, useState } from 'react';
 import { Filter, FILTER_TO_LABEL } from './chart/filter';
 import { TimeChart, type DataPoint } from './chart/time-chart';
+import { useETHPrice } from '@/lib/eth-prices';
+import { YEAR } from '@/lib/time-constants';
+import { formatDateToDDMMYYYY } from '@/lib/utils';
 
 export function TVLChat({ tvls }: { tvls: DataPoint[][] }) {
-  const [filter, setFilter] = useState(Infinity);
+  const [filter, setFilter] = useState(YEAR);
   const [isUSD, setIsUSD] = useState(false);
+  const ethPrice = useETHPrice();
 
-  const data = useMemo(
+  const ethTVL = useMemo(
     () =>
       combineTVLs({
         tvls,
@@ -21,19 +25,32 @@ export function TVLChat({ tvls }: { tvls: DataPoint[][] }) {
     [filter]
   );
 
-  if (data.length === 0) {
+  const usdTVL = useMemo(() => {
+    if (!ethPrice) {
+      return [];
+    }
+
+    return ethTVL.map((point) => ({
+      timestamp: point.timestamp,
+      value: point.value * ethPrice[formatDateToDDMMYYYY(new Date(point.timestamp))]
+    }));
+  }, [ethTVL, ethPrice]);
+
+  const TVL = useMemo(() => (isUSD ? usdTVL : ethTVL), [isUSD, usdTVL, ethTVL]);
+
+  if (TVL.length === 0) {
     return null;
   }
 
   return (
     <div className="my-16 md:mt-24">
-      <TVLHeader data={data} filter={filter} />
+      <TVLHeader data={TVL} filter={filter} isUSD={isUSD} />
       <div className="mt-4 md:mt-8">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
           <USDToggele isUSD={isUSD} setIsUSD={setIsUSD} />
           <Filter filter={filter} setFilter={setFilter} />
         </div>
-        <TimeChart data={data} />
+        <TimeChart data={TVL} />
       </div>
     </div>
   );
@@ -45,9 +62,11 @@ function percentChange(chartData: DataPoint[]) {
   return (100 * (lastValue + firstValue)) / firstValue;
 }
 
-function TVLHeader({ data, filter }: { data: DataPoint[]; filter: number }) {
+function TVLHeader({ data, filter, isUSD }: { data: DataPoint[]; filter: number; isUSD: boolean }) {
   const [rangeChange, setRangeChange] = useState(0);
   useEffect(() => setRangeChange(percentChange(data)), [data]);
+
+  const TVL = numberFormater(Number(data[data.length - 1].value));
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-4 md:gap-8">
@@ -59,7 +78,7 @@ function TVLHeader({ data, filter }: { data: DataPoint[]; filter: number }) {
       </div>
       <div className="min-w-[120px] text-right w-full lg:w-auto">
         <div className="text-[40px] md:leading-[50px] font-medium">
-          {numberFormater(Number(data[data.length - 1].value))} ETH
+          {isUSD ? `$ ${TVL}` : `${TVL} ETH`}
         </div>
         <ArrowChange positive={rangeChange >= 0}>
           <span>

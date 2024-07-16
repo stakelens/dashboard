@@ -47,7 +47,7 @@ function convertETHChartToUSD(data: DataPoint[], key: number) {
     }));
 
     return usdCache.current[key];
-  }, [data, ethPrice]);
+  }, [data, key, ethPrice]);
 }
 
 export function TVLChat({ tvls }: { tvls: DataPoint[][] }) {

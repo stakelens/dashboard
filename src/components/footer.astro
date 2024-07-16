@@ -5,7 +5,7 @@ import { Plasma } from './noise';
 <Plasma client:only="react">
   <div class="flex-grow w-full h-full px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
     <div class="max-w-[1070px] mx-auto w-full h-full">
-      <div class="flex flex-col justify-center w-full h-full gap-6">
+      <div class="flex flex-col justify-center items-center w-full h-full gap-6">
         <!-- <div>
           <p class="text-[30px]">
             Made with
@@ -38,17 +38,21 @@ import { Plasma } from './noise';
           </div>
         </div> -->
         <div class="flex items-center gap-6 mt-2">
-          <img
-            src="/icons/x.svg"
-            alt="x"
-            class="duration-200 cursor-pointer w-7 h-7 hover:scale-110"
-          />
-          <img
-            src="/icons/github.svg"
-            alt="github"
-            class="duration-200 cursor-pointer w-7 h-7 hover:scale-110"
-          />
-          <img
+          <a href="https://x.com/stakelens">
+            <img
+              src="/icons/x.svg"
+              alt="x"
+              class="duration-200 cursor-pointer w-7 h-7 hover:scale-110"
+            />
+          </a>
+          <a href="https://github.com/stakelens">
+            <img
+              src="/icons/github.svg"
+              alt="github"
+              class="duration-200 cursor-pointer w-7 h-7 hover:scale-110"
+            />
+          </a>
+          <!-- <img
             src="/icons/farcaster.svg"
             alt="farcaster"
             class="duration-200 cursor-pointer w-7 h-7 hover:scale-110"
@@ -57,7 +61,7 @@ import { Plasma } from './noise';
             src="/icons/discord.svg"
             alt="discord"
             class="duration-200 cursor-pointer w-7 h-7 hover:scale-110"
-          />
+          /> -->
         </div>
       </div>
     </div>

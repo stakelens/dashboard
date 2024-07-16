@@ -65,7 +65,7 @@ export function TVLChat({ tvls }: { tvls: DataPoint[][] }) {
 
   return (
     <div className="my-16 md:mt-24">
-      <TVLHeader data={TVL} filter={filter} isUSD={isUSD} />
+      <TVLHeader data={TVL} changeRange={FILTER_TO_LABEL[filter].long} isUSD={isUSD} />
       <div className="mt-4 md:mt-8">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
           <USDToggele isUSD={isUSD} setIsUSD={setIsUSD} />
@@ -78,12 +78,20 @@ export function TVLChat({ tvls }: { tvls: DataPoint[][] }) {
 }
 
 function percentChange(chartData: DataPoint[]) {
-  const lastValue = chartData[chartData.length - 1].value;
-  const firstValue = chartData[0].value;
-  return (100 * (lastValue + firstValue)) / firstValue;
+  const finalValue = chartData[chartData.length - 1].value;
+  const initialValue = chartData[0].value;
+  return (100 * (finalValue - initialValue)) / initialValue;
 }
 
-function TVLHeader({ data, filter, isUSD }: { data: DataPoint[]; filter: number; isUSD: boolean }) {
+function TVLHeader({
+  data,
+  changeRange,
+  isUSD
+}: {
+  data: DataPoint[];
+  changeRange: string;
+  isUSD: boolean;
+}) {
   const [rangeChange, setRangeChange] = useState(0);
   useEffect(() => setRangeChange(percentChange(data)), [data]);
 
@@ -109,7 +117,7 @@ function TVLHeader({ data, filter, isUSD }: { data: DataPoint[]; filter: number;
             %
           </span>
           <span className="text-white">
-            <span className="opacity-60"> /</span> {FILTER_TO_LABEL[filter].long}
+            <span className="opacity-60"> /</span> {changeRange}
           </span>
         </ArrowChange>
       </div>

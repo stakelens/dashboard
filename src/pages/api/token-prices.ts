@@ -1,5 +1,5 @@
-import { tokenPriceManager } from '@/tokens/token-price-manager';
-import { TOKENS } from '@/tokens/tokens';
+import { tokenPriceManager } from '@/server/tokens/token-price-manager';
+import { TOKENS } from '@/server/tokens/tokens';
 import type { APIRoute } from 'astro';
 import z from 'astro/zod';
 

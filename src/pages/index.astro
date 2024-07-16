@@ -1,11 +1,11 @@
 ---
-import Layout from '../layouts/layout.astro';
-import { TVLChat } from '../components/tvl-chart.tsx'
+import { db } from '@/server/db';
+import Layout from '@/layouts/layout.astro';
 import Footer from '@/components/footer.astro';
 import Header from '@/components/header.astro';
-import { db } from '@/db';
+import { TVLChat } from '@/components/tvl-chart.tsx'
+import { bigIntDiv } from '@/components/protocol-ranking';
 import { ProtocolRanking } from '@/components/protocol-ranking';
-import { bigIntDiv } from '../components/protocol-ranking';
 
 const rocketPoolTVL = await db.rocketPool.findMany({
   orderBy: {

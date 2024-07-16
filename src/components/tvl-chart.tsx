@@ -1,5 +1,5 @@
-import { combineTVLs } from '@/tvl';
-import { numberFormater } from '@/format';
+import { combineTVLs } from '@/server/tvl';
+import { numberFormater } from '@/lib/format';
 import { ArrowChange } from './arrow-change';
 import { USDToggele } from './chart/usd-toggle';
 import { useEffect, useMemo, useState } from 'react';

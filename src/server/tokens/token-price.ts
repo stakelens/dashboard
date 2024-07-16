@@ -1,6 +1,6 @@
-import { db } from '@/db';
-import { delay, fetchWithRetry, getDatesInRange, ONE_DAY } from '@/lib/utils';
+import { db } from '@/server/db';
 import type { TokenConfig } from './tokens';
+import { delay, fetchWithRetry, getDatesInRange, ONE_DAY } from '@/lib/utils';
 
 const COINGECKO_RATE_LIMIT = 25;
 

@@ -9,8 +9,8 @@ import {
   AreaChart,
   Area
 } from 'recharts';
-import { MONTHS } from '../time-constants';
-import { numberFormater } from '@/format';
+import { MONTHS } from '@/lib/time-constants';
+import { numberFormater } from '@/lib/format';
 import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
 
 export type DataPoint = {

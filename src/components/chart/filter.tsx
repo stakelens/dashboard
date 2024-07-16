@@ -1,4 +1,4 @@
-import { DAY, MONTH, THREE_MONTHS, WEEK, YEAR } from '../time-constants';
+import { DAY, MONTH, THREE_MONTHS, WEEK, YEAR } from '@/lib/time-constants';
 
 export const FILTER_TO_LABEL = {
   [DAY]: {

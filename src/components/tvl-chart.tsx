@@ -2,39 +2,60 @@ import { combineTVLs } from '@/server/tvl';
 import { numberFormater } from '@/lib/format';
 import { ArrowChange } from './arrow-change';
 import { USDToggele } from './chart/usd-toggle';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Filter, FILTER_TO_LABEL } from './chart/filter';
 import { TimeChart, type DataPoint } from './chart/time-chart';
 import { useETHPrice } from '@/lib/eth-prices';
 import { YEAR } from '@/lib/time-constants';
 import { formatDateToDDMMYYYY } from '@/lib/utils';
 
-export function TVLChat({ tvls }: { tvls: DataPoint[][] }) {
-  const [filter, setFilter] = useState(YEAR);
-  const [isUSD, setIsUSD] = useState(false);
+function useCombineTVL(data: DataPoint[][], filter: number) {
+  const cache = useRef<Record<number, DataPoint[]>>({});
+
+  return useMemo(() => {
+    if (cache.current[filter]) {
+      return cache.current[filter];
+    }
+
+    cache.current[filter] = combineTVLs({
+      tvls: data,
+      divisions: 365,
+      max: Date.now(),
+      min: Date.now() - filter
+    });
+
+    return cache.current[filter];
+  }, [data, filter]);
+}
+
+function convertETHChartToUSD(data: DataPoint[], key: number) {
   const ethPrice = useETHPrice();
+  const usdCache = useRef<Record<number, DataPoint[]>>({});
 
-  const ethTVL = useMemo(
-    () =>
-      combineTVLs({
-        tvls,
-        divisions: 1000,
-        max: Date.now(),
-        min: Date.now() - filter
-      }),
-    [filter]
-  );
-
-  const usdTVL = useMemo(() => {
+  return useMemo(() => {
     if (!ethPrice) {
       return [];
     }
 
-    return ethTVL.map((point) => ({
+    if (usdCache.current[key]) {
+      return usdCache.current[key];
+    }
+
+    usdCache.current[key] = data.map((point) => ({
       timestamp: point.timestamp,
       value: point.value * ethPrice[formatDateToDDMMYYYY(new Date(point.timestamp))]
     }));
-  }, [ethTVL, ethPrice]);
+
+    return usdCache.current[key];
+  }, [data, ethPrice]);
+}
+
+export function TVLChat({ tvls }: { tvls: DataPoint[][] }) {
+  const [filter, setFilter] = useState(YEAR);
+  const [isUSD, setIsUSD] = useState(false);
+
+  const ethTVL = useCombineTVL(tvls, filter);
+  const usdTVL = convertETHChartToUSD(ethTVL, filter);
 
   const TVL = useMemo(() => (isUSD ? usdTVL : ethTVL), [isUSD, usdTVL, ethTVL]);
 

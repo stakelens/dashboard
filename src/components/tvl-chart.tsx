@@ -42,10 +42,11 @@ function convertChartData({
     const value = data[i].value;
 
     const dateString = formatDateToDDMMYYYY(new Date(timestamp));
-    const conversionValue = conversionTable[dateString];
+    let conversionValue = conversionTable[dateString];
 
     if (!conversionValue) {
-      throw new Error(`Conversion value not found for ${dateString}.`);
+      console.warn(`Conversion value not found for ${dateString}.`);
+      conversionValue = 1;
     }
 
     result[i] = {

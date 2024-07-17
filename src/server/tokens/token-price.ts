@@ -101,6 +101,10 @@ export class TokenPrices {
       }
     });
 
+    console.log('Fetch price:');
+    console.log('date: ', date);
+    console.log('response: ', response);
+
     return response.market_data.current_price.usd;
   }
 

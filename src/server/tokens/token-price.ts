@@ -93,7 +93,7 @@ export class TokenPrices {
       method: 'GET',
       headers: {
         accept: 'application/json',
-        'x-cg-api-key': import.meta.env.PUBLIC_COIN_GECKO
+        'x-cg-api-key': import.meta.env.COIN_GECKO
       }
     });
 

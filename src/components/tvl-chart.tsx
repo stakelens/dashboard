@@ -28,13 +28,42 @@ function useCombineTVL(data: DataPoint[][], filter: number) {
   }, [data, filter]);
 }
 
+function convertChartData({
+  data,
+  conversionTable
+}: {
+  data: DataPoint[];
+  conversionTable: Record<string, number>;
+}) {
+  const result = [];
+
+  for (let i = 0; i < data.length; i++) {
+    const timestamp = data[i].timestamp;
+    const value = data[i].value;
+
+    const dateString = formatDateToDDMMYYYY(new Date(timestamp));
+    const conversionValue = conversionTable[dateString];
+
+    if (!conversionValue) {
+      throw new Error(`Conversion value not found for ${dateString}.`);
+    }
+
+    result[i] = {
+      value: value * conversionValue,
+      timestamp: timestamp
+    };
+  }
+
+  return result;
+}
+
 function convertETHChartToUSD(data: DataPoint[], key: number) {
   const ethPrice = useETHPrice();
   const usdCache = useRef<Record<number, DataPoint[]>>({});
 
   return useMemo(() => {
     if (!ethPrice) {
-      console.log("ETH PRICE NOT FOUND")
+      console.log('ETH PRICE NOT FOUND');
       return [];
     }
 
@@ -42,10 +71,10 @@ function convertETHChartToUSD(data: DataPoint[], key: number) {
       return usdCache.current[key];
     }
 
-    usdCache.current[key] = data.map((point) => ({
-      timestamp: point.timestamp,
-      value: point.value * ethPrice[formatDateToDDMMYYYY(new Date(point.timestamp))]
-    }));
+    usdCache.current[key] = convertChartData({
+      data,
+      conversionTable: ethPrice
+    });
 
     return usdCache.current[key];
   }, [data, key, ethPrice]);

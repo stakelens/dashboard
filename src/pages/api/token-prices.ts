@@ -31,6 +31,12 @@ export const POST: APIRoute = async ({ request }) => {
 
   const prices = await tokenPriceManager.getPrices({ token, range: parsedRange.data });
 
+  if (prices == null) {
+    return new Response('Missing data', {
+      status: 400
+    });
+  }
+
   return new Response(JSON.stringify(prices), {
     headers: {
       'content-type': 'application/json'

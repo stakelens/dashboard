@@ -60,12 +60,13 @@ export function TVLChat({ tvls }: { tvls: DataPoint[][] }) {
 
   const TVL = useMemo(() => (isUSD ? usdTVL : ethTVL), [isUSD, usdTVL, ethTVL]);
 
-  if (TVL.length === 0) {
-    return null;
-  }
-
   return (
-    <div className="my-16 md:mt-24">
+    <div className="my-16 md:mt-24 relative">
+      {isUSD && usdTVL.length == 0 && (
+        <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
+          Loading...
+        </div>
+      )}
       <TVLHeader data={TVL} changeRange={FILTER_TO_LABEL[filter].long} isUSD={isUSD} />
       <div className="mt-4 md:mt-8">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-8">

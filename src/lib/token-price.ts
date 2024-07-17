@@ -1,3 +1,5 @@
+import { fetchWithRetry } from './utils';
+
 type FetchPrice = {
   token: 'ethereum' | 'rocketPool';
   range: {
@@ -7,13 +9,13 @@ type FetchPrice = {
 };
 
 export async function fetchPrices(input: FetchPrice): Promise<Record<string, number> | null> {
-  const response = await fetch('/api/token-prices', {
+  return await fetchWithRetry({
+    url: '/api/token-prices',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(input)
+    body: JSON.stringify(input),
+    RETRY_DELAY: 1000
   });
-
-  return await response.json();
 }

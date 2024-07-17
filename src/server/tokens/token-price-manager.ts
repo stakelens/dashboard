@@ -10,9 +10,7 @@ class TokenPriceManager {
 
   private async load() {
     for (const [token, config] of Object.entries(TOKENS)) {
-      const tokenPrices = new TokenPrices(config);
-      await tokenPrices.waitForAllPrices();
-      this.tokenPrices[token] = tokenPrices;
+      this.tokenPrices[token] = new TokenPrices(config);
     }
   }
 

@@ -2,8 +2,6 @@ import { db } from '@/server/db';
 import type { TokenConfig } from './tokens';
 import { delay, fetchWithRetry, getDatesInRange, ONE_DAY } from '@/lib/utils';
 
-const COINGECKO_RATE_LIMIT = 25;
-
 export class TokenPrices {
   private startDate: number;
   private coingeckoLabel: string;
@@ -13,17 +11,6 @@ export class TokenPrices {
     this.startDate = config.startDate;
     this.coingeckoLabel = config.coingeckoLabel;
     this.init();
-  }
-
-  async waitForAllPrices() {
-    while (true) {
-      const dates = this.getDatesWithNoPrice();
-      if (dates.length === 0) {
-        return;
-      }
-
-      await delay(1000);
-    }
   }
 
   async getPrices(params: { from: number; to: number }): Promise<Record<string, number> | null> {
@@ -53,7 +40,7 @@ export class TokenPrices {
         await delay(ONE_DAY);
       }
 
-      for (const date of dates.slice(0, COINGECKO_RATE_LIMIT)) {
+      for (const date of dates) {
         const price = await this.fetchPrice(date);
         await this.savePrice(date, price);
       }

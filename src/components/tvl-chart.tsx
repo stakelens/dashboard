@@ -2,7 +2,7 @@ import { combineTVLs } from '@/server/tvl';
 import { numberFormater } from '@/lib/format';
 import { ArrowChange } from './arrow-change';
 import { USDToggele } from './chart/usd-toggle';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState, type ReactNode } from 'react';
 import { Filter, FILTER_TO_LABEL } from './chart/filter';
 import { TimeChart } from './chart/time-chart';
 import { useETHPrice } from '@/lib/eth-prices';
@@ -50,7 +50,17 @@ function convertETHChartToUSD(data: DataPoint[], key: number) {
   }, [data, key, ethPrice]);
 }
 
-export function TVLChat({ tvls }: { tvls: DataPoint[][] }) {
+export function TVLChart({
+  title,
+  logo,
+  description,
+  tvls
+}: {
+  tvls: DataPoint[][];
+  title: string;
+  logo?: string;
+  description: string;
+}) {
   const [filter, setFilter] = useState(YEAR);
   const [isUSD, setIsUSD] = useState(false);
 
@@ -60,9 +70,16 @@ export function TVLChat({ tvls }: { tvls: DataPoint[][] }) {
   const TVL = useMemo(() => (isUSD ? usdTVL : ethTVL), [isUSD, usdTVL, ethTVL]);
 
   return (
-    <div className="my-16 md:mt-24 relative">
+    <div className="relative">
       {isUSD && usdTVL.length == 0 && <LoadingOverlay />}
-      <TVLHeader data={TVL} changeRange={FILTER_TO_LABEL[filter].long} isUSD={isUSD} />
+      <TVLHeader
+        title={title}
+        logo={logo}
+        description={description}
+        changeRange={FILTER_TO_LABEL[filter].long}
+        isUSD={isUSD}
+        data={TVL}
+      />
       <div className="mt-4 md:mt-8">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
           <USDToggele isUSD={isUSD} setIsUSD={setIsUSD} />
@@ -83,10 +100,16 @@ function LoadingOverlay() {
 }
 
 function TVLHeader({
+  title,
+  logo,
+  description,
   data,
   changeRange,
   isUSD
 }: {
+  title: string;
+  description: string;
+  logo?: string;
   data: DataPoint[];
   changeRange: string;
   isUSD: boolean;
@@ -98,10 +121,11 @@ function TVLHeader({
   return (
     <div className="flex flex-wrap items-center justify-between gap-4 md:gap-8">
       <div>
-        <h2 className="mb-2 text-2xl font-medium md:text-3xl">Liquid Staking</h2>
-        <div className="text-lg md:text-xl opacity-70 max-w-[600px] font-light">
-          Total ETH value of all liquid staking protocol assets.
+        <div className="flex items-center justify-start gap-2 mb-2">
+          {logo && <img src={logo} className="w-8 h-8" />}
+          <h2 className="text-2xl font-medium md:text-3xl">{title}</h2>
         </div>
+        <div className="text-lg md:text-xl opacity-70 max-w-[600px] font-light">{description}</div>
       </div>
       <div className="min-w-[120px] text-right w-full lg:w-auto">
         <div className="text-[40px] md:leading-[50px] font-medium">

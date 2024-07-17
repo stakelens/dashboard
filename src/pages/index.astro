@@ -3,7 +3,7 @@ import { db } from '@/server/db';
 import Layout from '@/layouts/layout.astro';
 import Footer from '@/components/footer.astro';
 import Header from '@/components/header.astro';
-import { TVLChat } from '@/components/tvl-chart.tsx'
+import { TVLChart } from '@/components/tvl-chart.tsx';
 import { bigIntDiv } from '@/components/protocol-ranking';
 import { ProtocolRanking } from '@/components/protocol-ranking';
 
@@ -72,7 +72,14 @@ const tvls = [
   <div class="flex-grow w-full px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
     <div class="max-w-[1070px] mx-auto">
       <Header />
-      <TVLChat tvls={tvls} client:only="react" />
+      <div class="my-16 md:mt-24">
+        <TVLChart
+          title={'Liquid Staking'}
+          description={'Total ETH value of all liquid staking protocol assets.'}
+          tvls={tvls}
+          client:only="react"
+        />
+      </div>
       <!-- <div
         class="bg-[#191919] rounded flex items-center justify-between md:h-[140px] flex-wrap md:flex-nowrap border border-white border-opacity-10"
       >

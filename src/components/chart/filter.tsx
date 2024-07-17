@@ -1,4 +1,5 @@
 import { DAY, MONTH, THREE_MONTHS, WEEK, YEAR } from '@/lib/time-constants';
+import { ChartButton } from './chart-button';
 
 export const FILTER_TO_LABEL = {
   [DAY]: {
@@ -36,35 +37,41 @@ export function Filter({
 }) {
   return (
     <div className="flex flex-wrap items-center justify-end gap-2 font-mono text-xs font-bold md:text-sm lg:gap-3">
-      <FilterOption setFilter={setFilter} currentValue={filter} value={DAY} />
-      <FilterOption setFilter={setFilter} currentValue={filter} value={WEEK} />
-      <FilterOption setFilter={setFilter} currentValue={filter} value={MONTH} />
-      <FilterOption setFilter={setFilter} currentValue={filter} value={3 * MONTH} />
-      <FilterOption setFilter={setFilter} currentValue={filter} value={YEAR} />
-      {/* <FilterOption setFilter={setFilter} currentValue={filter} value={Infinity} /> */}
-    </div>
-  );
-}
+      <ChartButton
+        active={filter === DAY}
+        onClick={() => setFilter(DAY)}
+        label={FILTER_TO_LABEL[DAY].short}
+      />
 
-function FilterOption({
-  value,
-  setFilter,
-  currentValue
-}: {
-  value: number;
-  setFilter: (value: number) => void;
-  currentValue: number;
-}) {
-  return (
-    <div
-      className={
-        currentValue === value
-          ? 'bg-[#2E46C8] rounded border border-white border-opacity-10 px-3 py-1 select-none duration-100'
-          : 'bg-[#242424] rounded border border-white border-opacity-10 px-3 py-1 select-none cursor-pointer duration-100 hover:brightness-90'
-      }
-      onClick={() => setFilter(value)}
-    >
-      {FILTER_TO_LABEL[value].short}
+      <ChartButton
+        active={filter === WEEK}
+        onClick={() => setFilter(WEEK)}
+        label={FILTER_TO_LABEL[WEEK].short}
+      />
+
+      <ChartButton
+        active={filter === MONTH}
+        onClick={() => setFilter(MONTH)}
+        label={FILTER_TO_LABEL[MONTH].short}
+      />
+
+      <ChartButton
+        active={filter === THREE_MONTHS}
+        onClick={() => setFilter(THREE_MONTHS)}
+        label={FILTER_TO_LABEL[THREE_MONTHS].short}
+      />
+
+      <ChartButton
+        active={filter === YEAR}
+        onClick={() => setFilter(YEAR)}
+        label={FILTER_TO_LABEL[YEAR].short}
+      />
+
+      <ChartButton
+        active={filter === Infinity}
+        onClick={() => setFilter(Infinity)}
+        label={FILTER_TO_LABEL[Infinity].short}
+      />
     </div>
   );
 }

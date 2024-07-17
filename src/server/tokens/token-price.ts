@@ -88,6 +88,10 @@ export class TokenPrices {
   }
 
   private async fetchPrice(date: string): Promise<number> {
+    if (!import.meta.env.COIN_GECKO) {
+      throw new Error('ENV variable COIN_GECKO not found.');
+    }
+
     const response = await fetchWithRetry({
       url: `https://api.coingecko.com/api/v3/coins/${this.coingeckoLabel}/history?date=${date}&localization=false`,
       method: 'GET',

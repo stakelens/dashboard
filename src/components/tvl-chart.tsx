@@ -34,7 +34,6 @@ function convertETHChartToUSD(data: DataPoint[], key: number) {
 
   return useMemo(() => {
     if (!ethPrice) {
-      console.log('ETH PRICE NOT FOUND');
       return [];
     }
 

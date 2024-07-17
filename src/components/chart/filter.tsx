@@ -67,11 +67,11 @@ export function Filter({
         label={FILTER_TO_LABEL[YEAR].short}
       />
 
-      <ChartButton
+      {/* <ChartButton
         active={filter === Infinity}
         onClick={() => setFilter(Infinity)}
         label={FILTER_TO_LABEL[Infinity].short}
-      />
+      /> */}
     </div>
   );
 }

@@ -12,11 +12,7 @@ import {
 import { MONTHS } from '@/lib/time-constants';
 import { numberFormater } from '@/lib/format';
 import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
-
-export type DataPoint = {
-  timestamp: number;
-  value: number;
-};
+import type { DataPoint } from '@/lib/chart-utils';
 
 export function TimeChart({ data }: { data: DataPoint[] }) {
   return (

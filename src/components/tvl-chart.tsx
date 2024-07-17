@@ -4,10 +4,10 @@ import { ArrowChange } from './arrow-change';
 import { USDToggele } from './chart/usd-toggle';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Filter, FILTER_TO_LABEL } from './chart/filter';
-import { TimeChart, type DataPoint } from './chart/time-chart';
+import { TimeChart } from './chart/time-chart';
 import { useETHPrice } from '@/lib/eth-prices';
 import { YEAR } from '@/lib/time-constants';
-import { formatDateToDDMMYYYY } from '@/lib/utils';
+import { convertChartDenomination, percentChange, type DataPoint } from '@/lib/chart-utils';
 
 function useCombineTVL(data: DataPoint[][], filter: number) {
   const cache = useRef<Record<number, DataPoint[]>>({});
@@ -28,36 +28,6 @@ function useCombineTVL(data: DataPoint[][], filter: number) {
   }, [data, filter]);
 }
 
-function convertChartData({
-  data,
-  conversionTable
-}: {
-  data: DataPoint[];
-  conversionTable: Record<string, number>;
-}) {
-  const result = [];
-
-  for (let i = 0; i < data.length; i++) {
-    const timestamp = data[i].timestamp;
-    const value = data[i].value;
-
-    const dateString = formatDateToDDMMYYYY(new Date(timestamp));
-    let conversionValue = conversionTable[dateString];
-
-    if (!conversionValue) {
-      console.warn(`Conversion value not found for ${dateString}.`);
-      conversionValue = 1;
-    }
-
-    result[i] = {
-      value: value * conversionValue,
-      timestamp: timestamp
-    };
-  }
-
-  return result;
-}
-
 function convertETHChartToUSD(data: DataPoint[], key: number) {
   const ethPrice = useETHPrice();
   const usdCache = useRef<Record<number, DataPoint[]>>({});
@@ -72,7 +42,7 @@ function convertETHChartToUSD(data: DataPoint[], key: number) {
       return usdCache.current[key];
     }
 
-    usdCache.current[key] = convertChartData({
+    usdCache.current[key] = convertChartDenomination({
       data,
       conversionTable: ethPrice
     });
@@ -106,12 +76,6 @@ export function TVLChat({ tvls }: { tvls: DataPoint[][] }) {
       </div>
     </div>
   );
-}
-
-function percentChange(chartData: DataPoint[]) {
-  const finalValue = chartData[chartData.length - 1].value;
-  const initialValue = chartData[0].value;
-  return (100 * (finalValue - initialValue)) / initialValue;
 }
 
 function TVLHeader({

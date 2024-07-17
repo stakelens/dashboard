@@ -87,10 +87,9 @@ function TVLHeader({
   changeRange: string;
   isUSD: boolean;
 }) {
-  const [rangeChange, setRangeChange] = useState(0);
-  useEffect(() => setRangeChange(percentChange(data)), [data]);
-
-  const TVL = numberFormater(Number(data[data.length - 1].value));
+  const rangeChange = percentChange(data);
+  const lastValue = data[data.length - 1];
+  const TVL = lastValue ? numberFormater(lastValue.value) : 0;
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-4 md:gap-8">

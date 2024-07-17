@@ -6,6 +6,10 @@ export type DataPoint = {
 };
 
 export function percentChange(chartData: DataPoint[]) {
+  if (chartData.length < 2) {
+    return 0;
+  }
+
   const finalValue = chartData[chartData.length - 1].value;
   const initialValue = chartData[0].value;
   return (100 * (finalValue - initialValue)) / initialValue;

@@ -1,6 +1,13 @@
 import { db } from '@/server/db';
 import type { TokenConfig } from './tokens';
-import { delay, fetchWithRetry, getDatesInRange, ONE_DAY } from '@/lib/utils';
+import { delay, fetchWithRetry, getDatesInRange } from '@/lib/utils';
+import { DAY, HOUR } from '@/lib/time-constants';
+
+function millisecondsUntilTomorrow() {
+  const now = Date.now();
+  const tomorrow = Math.floor((now + DAY) / DAY) * DAY;
+  return tomorrow - now;
+}
 
 export class TokenPrices {
   private startDate: number;
@@ -37,7 +44,7 @@ export class TokenPrices {
       const dates = this.getDatesWithNoPrice();
 
       if (dates.length == 0) {
-        await delay(ONE_DAY);
+        await delay(millisecondsUntilTomorrow() + HOUR);
       }
 
       for (const date of dates) {

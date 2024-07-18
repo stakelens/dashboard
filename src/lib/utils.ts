@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { DAY } from './time-constants';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -44,15 +45,13 @@ export async function fetchWithRetry(
   throw new Error('Max retries reached');
 }
 
-export const ONE_DAY = 1000 * 60 * 60 * 24;
-
 export function getDatesInRange({ from, to }: { from: number; to: number }) {
   const dates: string[] = [];
   let currentDate = from;
 
   while (currentDate < to) {
     dates.push(formatDateToDDMMYYYY(new Date(currentDate)));
-    currentDate += ONE_DAY;
+    currentDate += DAY;
   }
 
   const lastDate = formatDateToDDMMYYYY(new Date(to));

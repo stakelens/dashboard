@@ -89,7 +89,7 @@ function WaterMark() {
   return (
     <div className="absolute opacity-50 pointer-events-none bottom-12 right-8 select-none z-[100]">
       <div className="flex items-center justify-center gap-2">
-        <img src="/aperture.png" alt="aperture" className="w-6 h-6" />
+        <img src="/logo.svg" alt="logo" class="w-6 h-6" />
         <div className="font-mono text-2xl font-medium">stakelens</div>
       </div>
     </div>

@@ -16,7 +16,7 @@ import type { DataPoint } from '@/lib/chart-utils';
 
 export function TimeChart({ data }: { data: DataPoint[] }) {
   return (
-    <div className="relative">
+    <div className="relative bg-[#111]" id="tvl-chart">
       <WaterMark />
       <ResponsiveContainer width={'100%'} height={330} style={{ padding: 4 }}>
         <AreaChart data={data}>
@@ -89,7 +89,7 @@ function WaterMark() {
   return (
     <div className="absolute opacity-50 pointer-events-none bottom-12 right-8 select-none z-[100]">
       <div className="flex items-center justify-center gap-2">
-        <img src="/logo.svg" alt="logo" className="w-6 h-6" />
+        <img src="/logo.svg" alt="logo" />
         <div className="font-mono text-2xl font-medium">stakelens</div>
       </div>
     </div>

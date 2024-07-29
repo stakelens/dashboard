@@ -24,6 +24,7 @@
     "astro": "^4.6.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "html2canvas": "^1.4.1",
     "lucide-react": "^0.371.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

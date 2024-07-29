@@ -8,6 +8,7 @@ import { TimeChart } from './chart/time-chart';
 import { useETHPrice } from '@/lib/eth-prices';
 import { YEAR } from '@/lib/time-constants';
 import { convertChartDenomination, percentChange, type DataPoint } from '@/lib/chart-utils';
+import html2canvas from 'html2canvas';
 
 function useCombineTVL(data: DataPoint[][], filter: number) {
   const cache = useRef<Record<number, DataPoint[]>>({});
@@ -70,7 +71,7 @@ export function TVLChart({
   const TVL = useMemo(() => (isUSD ? usdTVL : ethTVL), [isUSD, usdTVL, ethTVL]);
 
   return (
-    <div className="relative">
+    <div className="relative bg-[#111] p-8 rounded border border-white border-opacity-10">
       {isUSD && usdTVL.length == 0 && <LoadingOverlay />}
       <TVLHeader
         title={title}
@@ -86,6 +87,51 @@ export function TVLChart({
           <Filter filter={filter} setFilter={setFilter} />
         </div>
         <TimeChart data={TVL} />
+        <CopyToClipboard />
+      </div>
+    </div>
+  );
+}
+
+function CopyToClipboard() {
+  return (
+    <div className="flex items-center justify-end gap-3">
+      <div
+        className="border border-white border-opacity-10 rounded p-2 bg-[#242424] hover:bg-[#222] duration-200 cursor-pointer flex items-center justify-center gap-2 "
+        onClick={async () => {
+          const chart = document.getElementById('tvl-chart');
+
+          if (!chart) {
+            return;
+          }
+
+          const canvas = await html2canvas(chart);
+
+          canvas.toBlob(function (blob) {
+            if (!blob) {
+              return;
+            }
+
+            const item = new ClipboardItem({ 'image/png': blob });
+            navigator.clipboard.write([item]);
+          });
+        }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          className="w-4 h-4"
+        >
+          <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+          <circle cx="12" cy="13" r="3" />
+        </svg>
       </div>
     </div>
   );

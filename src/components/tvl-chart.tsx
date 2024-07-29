@@ -1,8 +1,8 @@
-import { combineTVLs } from '@/server/tvl';
+import { combineTVLs } from '@/lib/tvl/tvl-utils';
 import { numberFormater } from '@/lib/format';
 import { ArrowChange } from './arrow-change';
 import { USDToggele } from './chart/usd-toggle';
-import { useMemo, useRef, useState, type ReactNode } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Filter, FILTER_TO_LABEL } from './chart/filter';
 import { TimeChart } from './chart/time-chart';
 import { useETHPrice } from '@/lib/eth-prices';

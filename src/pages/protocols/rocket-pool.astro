@@ -3,7 +3,7 @@ import { Main, Sidebar, Section, SidebarItem, Container } from '@/components/pro
 import Layout from '../../layouts/protocol.astro';
 import { TVLChart } from '@/components/tvl-chart';
 import { db } from '@/server/db';
-import { bigIntDiv } from '@/components/protocol-ranking';
+import { bigIntDiv } from '@/lib/utils';
 
 const rocketPoolDB = await db.rocketPool.findMany({
   orderBy: {

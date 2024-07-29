@@ -1,71 +1,12 @@
 ---
-import { db } from '@/server/db';
 import Layout from '@/layouts/layout.astro';
 import Footer from '@/components/footer.astro';
 import Header from '@/components/header.astro';
 import { TVLChart } from '@/components/tvl-chart.tsx';
-import { bigIntDiv } from '@/components/protocol-ranking';
 import { ProtocolRanking } from '@/components/protocol-ranking';
+import { getAllTVLs } from '@/lib/tvl/tvls';
 
-const rocketPoolTVL = await db.rocketPool.findMany({
-  orderBy: {
-    block_number: 'asc'
-  }
-});
-
-const etherFi = await db.etherFi.findMany({
-  orderBy: {
-    block_number: 'asc'
-  }
-});
-
-const stakeWiseDB = await db.stakeWise.findMany({
-  orderBy: {
-    block_number: 'asc'
-  }
-});
-
-const vaultTVLChanges = stakeWiseDB.map((value) => {
-  return {
-    ...value,
-    eth: BigInt(value.eth)
-  };
-});
-
-type TVLValue = {
-  block_timestamp: bigint;
-  eth: bigint;
-};
-
-const stakeWiseTVL: TVLValue[] = [];
-
-stakeWiseTVL[0] = vaultTVLChanges[0];
-
-for (let i = 1; i < vaultTVLChanges.length; i++) {
-  stakeWiseTVL[i] = {
-    eth: vaultTVLChanges[i].eth + stakeWiseTVL[i - 1].eth,
-    block_timestamp: vaultTVLChanges[i].block_timestamp
-  };
-}
-
-const stakeWise = stakeWiseTVL
-  .map((value) => ({ ...value, eth: value.eth.toString() }))
-  .sort((a, b) => Number(a.block_timestamp - b.block_timestamp));
-
-const tvls = [
-  rocketPoolTVL.map((value) => ({
-    value: bigIntDiv(BigInt(value.eth), BigInt(1e18)),
-    timestamp: Number(value.block_timestamp) * 1000
-  })),
-  etherFi.map((value) => ({
-    value: bigIntDiv(BigInt(value.eth), BigInt(1e18)),
-    timestamp: Number(value.block_timestamp) * 1000
-  })),
-  stakeWise.map((value) => ({
-    value: bigIntDiv(BigInt(value.eth), BigInt(1e18)),
-    timestamp: Number(value.block_timestamp) * 1000
-  }))
-];
+const tvls = await getAllTVLs();
 ---
 
 <Layout>
@@ -74,10 +15,15 @@ const tvls = [
       <Header />
       <div class="my-16 md:mt-24">
         <TVLChart
+          client:only="react"
           title={'Liquid Staking'}
           description={'Total ETH value of all liquid staking protocol assets.'}
-          tvls={tvls}
-          client:only="react"
+          tvls={Object.values(tvls).map((tvl) =>
+            tvl.map((x) => ({
+              timestamp: x.timestamp,
+              value: x.eth
+            }))
+          )}
         />
       </div>
       <!-- <div
@@ -125,15 +71,15 @@ const tvls = [
             protocols={[
               {
                 label: 'RocketPool',
-                values: rocketPoolTVL
+                values: tvls.rocketPoolTVL
               },
               {
                 label: 'EtherFi',
-                values: etherFi
+                values: tvls.etherFiTVL
               },
               {
                 label: 'StakeWise (v3)',
-                values: stakeWise
+                values: tvls.stakeWiseTVL
               }
             ]}
             client:only="react"

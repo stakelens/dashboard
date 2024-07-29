@@ -9,7 +9,7 @@ export function ProtocolRanking({
 }: {
   protocols: {
     label: string;
-    values: { eth: string }[];
+    values: { eth: number }[];
   }[];
 }) {
   return (
@@ -40,22 +40,13 @@ export function ProtocolRanking({
   );
 }
 
-export function bigIntDiv(numerator: bigint, denominator: bigint, decimals: number = 6): number {
-  const decimalsHelper = 10 ** decimals;
-  return Number((numerator * BigInt(decimalsHelper)) / denominator) / decimalsHelper;
+function percentChange(a: number, b: number): number {
+  return (100 * (a - b)) / b;
 }
 
-function percentChange(a: bigint, b: bigint): number {
-  return 100 * bigIntDiv(a - b, b);
-}
-
-function ProtocolRankingRow({ label, values }: { label: string; values: { eth: string }[] }) {
-  const TVL = Number(BigInt(values[values.length - 1].eth) / BigInt(1e18));
-
-  const dayChange = percentChange(
-    BigInt(values[values.length - 1].eth),
-    BigInt(values[values.length - 2].eth)
-  );
+function ProtocolRankingRow({ label, values }: { label: string; values: { eth: number }[] }) {
+  const TVL = values[values.length - 1].eth;
+  const dayChange = percentChange(values[values.length - 1].eth, values[values.length - 2].eth);
 
   return (
     <tr className="border-t border-white border-opacity-10">

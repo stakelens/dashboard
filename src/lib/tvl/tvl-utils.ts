@@ -12,7 +12,7 @@ function getTimestamps(min: number, max: number, step: number) {
   return result;
 }
 
-export type TVL = {
+type TVL = {
   value: number;
   timestamp: number;
 };

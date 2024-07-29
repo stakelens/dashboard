@@ -9,6 +9,7 @@ import { useETHPrice } from '@/lib/eth-prices';
 import { YEAR } from '@/lib/time-constants';
 import { convertChartDenomination, percentChange, type DataPoint } from '@/lib/chart-utils';
 import html2canvas from 'html2canvas';
+import { getDateText } from '@/lib/utils';
 
 function useCombineTVL(data: DataPoint[][], filter: number) {
   const cache = useRef<Record<number, DataPoint[]>>({});
@@ -64,6 +65,7 @@ export function TVLChart({
 }) {
   const [filter, setFilter] = useState(YEAR);
   const [isUSD, setIsUSD] = useState(false);
+  const timestamp = getLastTimestamp(tvls);
 
   const ethTVL = useCombineTVL(tvls, filter);
   const usdTVL = convertETHChartToUSD(ethTVL, filter);
@@ -87,8 +89,36 @@ export function TVLChart({
           <Filter filter={filter} setFilter={setFilter} />
         </div>
         <TimeChart data={TVL} />
-        <CopyToClipboard />
+        <div className="flex items-center justify-end gap-2">
+          <LastUpdated timestamp={timestamp} />
+          <CopyToClipboard />
+        </div>
       </div>
+    </div>
+  );
+}
+
+function getLastTimestamp(tvls: DataPoint[][]) {
+  let lastTimestamp = 0;
+
+  for (const tvl of tvls) {
+    for (const value of tvl) {
+      if (value.timestamp > lastTimestamp) {
+        lastTimestamp = value.timestamp;
+      }
+    }
+  }
+
+  return lastTimestamp;
+}
+
+function LastUpdated({ timestamp }: { timestamp: number }) {
+  return (
+    <div className="py-2 px-4 rounded bg-[#22c55e] bg-opacity-10 text-[#22c55e] text-xs border border-[#22c55e] border-opacity-10 flex items-center justify-center gap-2">
+      <div className="bg-[#22c55e] rounded-full w-2 h-2 relative shadow ">
+        <div className="bg-[#22c55e] rounded-full w-2 h-2 animate-ping absolute"></div>
+      </div>
+      Last update {getDateText(new Date(timestamp))}
     </div>
   );
 }
@@ -152,7 +182,8 @@ function CopyToClipboard() {
             right: '0px',
             opacity: showCopyMsg ? '100%' : '0%',
             top: showCopyMsg ? '-65px' : '0px',
-            transition: 'opacity 0.2s, top 0.3s'
+            transition: 'opacity 0.2s, top 0.3s',
+            pointerEvents: 'none'
           }}
         >
           Image copied to clipboard! 🎉

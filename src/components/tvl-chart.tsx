@@ -94,27 +94,41 @@ export function TVLChart({
 }
 
 function CopyToClipboard() {
+  const [showCopyMsg, setShowCopyMsg] = useState(false);
+
   return (
     <div className="flex items-center justify-end gap-3">
       <div
-        className="border border-white border-opacity-10 rounded p-2 bg-[#242424] hover:bg-[#222] duration-200 cursor-pointer flex items-center justify-center gap-2 "
+        className="border border-white border-opacity-10 rounded p-2 bg-[#242424] hover:bg-[#222] duration-200 cursor-pointer flex items-center justify-center gap-2 relative"
         onClick={async () => {
-          const chart = document.getElementById('tvl-chart');
+          setShowCopyMsg((value) => {
+            if (value) {
+              return true;
+            }
 
-          if (!chart) {
-            return;
-          }
+            setTimeout(() => setShowCopyMsg(false), 1000);
 
-          const canvas = await html2canvas(chart);
+            return true;
+          });
 
-          canvas.toBlob(function (blob) {
-            if (!blob) {
+          setTimeout(async () => {
+            const chart = document.getElementById('tvl-chart');
+
+            if (!chart) {
               return;
             }
 
-            const item = new ClipboardItem({ 'image/png': blob });
-            navigator.clipboard.write([item]);
-          });
+            const canvas = await html2canvas(chart);
+
+            canvas.toBlob(function (blob) {
+              if (!blob) {
+                return;
+              }
+
+              const item = new ClipboardItem({ 'image/png': blob });
+              navigator.clipboard.write([item]);
+            });
+          }, 300);
         }}
       >
         <svg
@@ -132,6 +146,17 @@ function CopyToClipboard() {
           <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
           <circle cx="12" cy="13" r="3" />
         </svg>
+        <div
+          className="absolute border border-white border-opacity-10 p-4 rounded-lg bg-[#111] w-[230px] text-center z-[100] shadow-xl text-sm select-none"
+          style={{
+            right: '0px',
+            opacity: showCopyMsg ? '100%' : '0%',
+            top: showCopyMsg ? '-65px' : '0px',
+            transition: 'opacity 0.2s, top 0.3s'
+          }}
+        >
+          Image copied to clipboard! 🎉
+        </div>
       </div>
     </div>
   );

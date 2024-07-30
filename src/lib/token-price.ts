@@ -1,7 +1,12 @@
 import { fetchWithRetry } from './utils';
 
+type Token = 'RPL' | 'WETH' | 'USDC';
+
 type FetchPrice = {
-  token: 'ethereum' | 'rocketPool';
+  pair: {
+    baseToken: Token;
+    quoteToken: Token;
+  };
   range: {
     from: number;
     to: number;

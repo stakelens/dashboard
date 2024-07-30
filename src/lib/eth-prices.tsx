@@ -3,11 +3,14 @@ import { fetchPrices } from './token-price';
 import { YEAR } from './time-constants';
 
 export function useETHPrice() {
-  const [ethPrices, setEthPrices] = useState<Record<string, number> | null>(null);
+  const [ethPrices, setEthPrices] = useState<Record<number, number> | null>(null);
 
   useEffect(() => {
     fetchPrices({
-      token: 'ethereum',
+      pair: {
+        baseToken: 'WETH',
+        quoteToken: 'USDC'
+      },
       range: {
         to: Date.now(),
         from: Date.now() - YEAR

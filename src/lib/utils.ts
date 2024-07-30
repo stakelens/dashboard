@@ -1,6 +1,5 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { DAY } from './time-constants';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -45,24 +44,6 @@ export async function fetchWithRetry(
   throw new Error('Max retries reached');
 }
 
-export function getDatesInRange({ from, to }: { from: number; to: number }) {
-  const dates: string[] = [];
-  let currentDate = from;
-
-  while (currentDate < to) {
-    dates.push(formatDateToDDMMYYYY(new Date(currentDate)));
-    currentDate += DAY;
-  }
-
-  const lastDate = formatDateToDDMMYYYY(new Date(to));
-
-  if (dates[dates.length - 1] !== lastDate) {
-    dates.push(lastDate);
-  }
-
-  return dates;
-}
-
 export function bigIntDiv(numerator: bigint, denominator: bigint, decimals: number = 6): number {
   const decimalsHelper = 10 ** decimals;
   return Number((numerator * BigInt(decimalsHelper)) / denominator) / decimalsHelper;
@@ -103,4 +84,14 @@ export function getDateText(givenDate: Date | string) {
       year: 'numeric'
     });
   }
+}
+
+export function average(values: number[]): number {
+  let sum = 0;
+
+  for (let i = 0; i < values.length; i++) {
+    sum += values[i];
+  }
+
+  return sum / values.length;
 }

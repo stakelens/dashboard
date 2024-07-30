@@ -1,4 +1,4 @@
-import { formatDateToDDMMYYYY } from '@/lib/utils';
+import { DAY } from './time-constants';
 
 export type DataPoint = {
   timestamp: number;
@@ -20,7 +20,7 @@ export function convertChartDenomination({
   conversionTable
 }: {
   data: DataPoint[];
-  conversionTable: Record<string, number>;
+  conversionTable: Record<number, number>;
 }) {
   const result = [];
 
@@ -28,11 +28,10 @@ export function convertChartDenomination({
     const timestamp = data[i].timestamp;
     const value = data[i].value;
 
-    const dateString = formatDateToDDMMYYYY(new Date(timestamp));
-    let conversionValue = conversionTable[dateString];
+    let conversionValue = conversionTable[Math.floor(timestamp / DAY) * DAY];
 
     if (!conversionValue) {
-      console.warn(`Conversion value not found for ${dateString}.`);
+      console.warn(`Conversion value not found for ${timestamp}.`);
       conversionValue = 1;
     }
 

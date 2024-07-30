@@ -1,122 +1,71 @@
 import { db } from '@/server/db';
-import type { TokenConfig } from './tokens';
-import { delay, fetchWithRetry, getDatesInRange } from '@/lib/utils';
-import { DAY, HOUR } from '@/lib/time-constants';
+import { DAY } from '@/lib/time-constants';
+import { average } from '@/lib/utils';
 
-function millisecondsUntilTomorrow() {
-  const now = Date.now();
-  const tomorrow = Math.floor((now + DAY) / DAY) * DAY;
-  return tomorrow - now;
+function closestDay(timestamp: number): number {
+  return Math.floor(timestamp / DAY) * DAY;
 }
 
-export class TokenPrices {
-  private startDate: number;
-  private coingeckoLabel: string;
-  private prices: Map<string, number> = new Map();
+export class TokenPair {
+  readonly baseToken: string;
+  readonly quoteToken: string;
+  readonly refetchInterval: number = 1000 * 60 * 5;
+  private prices: Map<number, number> = new Map();
 
-  constructor(config: TokenConfig) {
-    this.startDate = config.startDate;
-    this.coingeckoLabel = config.coingeckoLabel;
-    this.init();
+  constructor(baseToken: string, quoteToken: string) {
+    this.baseToken = baseToken;
+    this.quoteToken = quoteToken;
+    setInterval(() => this.loadFromDB(), this.refetchInterval);
   }
 
-  async getPrices(params: { from: number; to: number }): Promise<Record<string, number> | null> {
-    const dates = getDatesInRange(params);
-    const result: Record<string, number> = {};
+  async getPrices({
+    from,
+    to
+  }: {
+    from: number;
+    to: number;
+  }): Promise<{ timestamp: number; price: number }[] | null> {
+    const result: { timestamp: number; price: number }[] = [];
 
-    for (const date of dates) {
-      const price = await this.prices.get(date);
+    for (let day = closestDay(from); day <= to; day += DAY) {
+      const price = this.prices.get(day);
 
-      if (price == undefined) {
+      if (!price) {
         return null;
       }
 
-      result[date] = price;
+      result.push({ timestamp: day, price: price });
     }
 
     return result;
   }
 
-  private async init() {
-    await this.loadFromDB();
-
-    while (true) {
-      const dates = this.getDatesWithNoPrice();
-
-      if (dates.length == 0) {
-        await delay(millisecondsUntilTomorrow() + HOUR);
-      }
-
-      for (const date of dates) {
-        const price = await this.fetchPrice(date);
-        await this.savePrice(date, price);
-      }
-    }
-  }
-
-  private async loadFromDB() {
-    const records = await db.currencyPrice.findMany({
+  async loadFromDB() {
+    const records = await db.uniswapTWAP.findMany({
       where: {
-        name: this.coingeckoLabel
+        quote_token: this.quoteToken,
+        base_token: this.baseToken
+      },
+      orderBy: {
+        block_timestamp: 'asc'
       }
     });
+
+    const valuesPerDay: Map<number, number[]> = new Map();
 
     for (const record of records) {
-      this.prices.set(record.date, record.price);
-    }
-  }
+      const day = closestDay(Number(record.block_timestamp) * 1000);
+      const valuesOfDay = valuesPerDay.get(day);
 
-  private getDatesWithNoPrice(): string[] {
-    const today = Date.now();
-    const dates = getDatesInRange({ from: this.startDate, to: today });
-
-    const datesWithNoPrice: string[] = [];
-
-    for (const date of dates) {
-      if (!this.prices.has(date)) {
-        datesWithNoPrice.push(date);
+      if (!valuesOfDay) {
+        valuesPerDay.set(day, [record.price]);
+      } else {
+        valuesOfDay.push(record.price);
       }
     }
 
-    return datesWithNoPrice;
-  }
-
-  private async fetchPrice(date: string): Promise<number> {
-    if (!import.meta.env.COIN_GECKO) {
-      throw new Error('ENV variable COIN_GECKO not found.');
+    for (const [key, value] of valuesPerDay) {
+      this.prices.set(key, average(value));
     }
-
-    const response = await fetchWithRetry({
-      url: `https://api.coingecko.com/api/v3/coins/${this.coingeckoLabel}/history?date=${date}&localization=false`,
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        'x-cg-api-key': import.meta.env.COIN_GECKO
-      }
-    });
-
-    return response.market_data.current_price.usd;
-  }
-
-  private async savePrice(date: string, price: number) {
-    this.prices.set(date, price);
-
-    await db.currencyPrice.upsert({
-      create: {
-        name: this.coingeckoLabel,
-        price: price,
-        date: date
-      },
-      update: {
-        name: this.coingeckoLabel,
-        price: price
-      },
-      where: {
-        name_date: {
-          name: this.coingeckoLabel,
-          date: date
-        }
-      }
-    });
   }
 }

@@ -62,10 +62,11 @@ model Swell {
   eth             String
 }
 
-model CurrencyPrice {
-  name  String
-  date  String
-  price Float
+model UniswapTWAP {
+  price           Float
+  block_timestamp BigInt
+  base_token      String
+  quote_token     String
 
-  @@id([name, date])
+  @@id([base_token, quote_token, block_timestamp])
 }

@@ -233,7 +233,7 @@ function TVLHeader({
         <div className="text-[40px] md:leading-[50px] font-medium">
           {isUSD ? `$ ${TVL}` : `${TVL} ETH`}
         </div>
-        <ArrowChange positive={rangeChange >= 0}>
+        <ArrowChange change={rangeChange}>
           <span>
             {Intl.NumberFormat('en-US', {
               maximumFractionDigits: 2

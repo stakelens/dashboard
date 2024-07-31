@@ -27,11 +27,11 @@ export async function getAllTVLs() {
     }
   });
 
-  // const swellTVL = await db.swell.findMany({
-  //   orderBy: {
-  //     block_number: 'asc'
-  //   }
-  // });
+  const swellTVL = await db.swell.findMany({
+    orderBy: {
+      block_number: 'asc'
+    }
+  });
 
   const mantleTVL = await db.mantle.findMany({
     orderBy: {
@@ -62,10 +62,10 @@ export async function getAllTVLs() {
       eth: bigIntDiv(BigInt(value.eth), BigInt(1e18)),
       timestamp: Number(value.block_timestamp) * 1000
     })),
-    // swellTVL: swellTVL.map((value) => ({
-    //   eth: bigIntDiv(BigInt(value.eth), BigInt(1e18)),
-    //   timestamp: Number(value.block_timestamp) * 1000
-    // }))
+    swellTVL: swellTVL.map((value) => ({
+      eth: bigIntDiv(BigInt(value.eth), BigInt(1e18)),
+      timestamp: Number(value.block_timestamp) * 1000
+    })),
     mantleTVL: mantleTVL.map((value) => ({
       eth: bigIntDiv(BigInt(value.eth), BigInt(1e18)),
       timestamp: Number(value.block_timestamp) * 1000

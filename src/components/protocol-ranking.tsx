@@ -74,14 +74,21 @@ function ProtocolRankingRow({ label, values }: { label: string; values: { eth: n
 
 function Cell({ value }: { value: number }) {
   const [hover, setHover] = useState(false);
+  const formattedValue = formatter.format(value);
+  const shortValue = numberFormater(value);
 
   return (
-    <td
-      className="relative p-4 font-light text-right"
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-    >
-      {hover ? formatter.format(value) : numberFormater(value)}
+    <td className="p-4 font-light text-right">
+      <div className="relative inline-block">
+        <span className="invisible">{formattedValue}</span>
+        <span
+          className="absolute inset-0 cursor-default"
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+        >
+          {hover ? formattedValue : shortValue}
+        </span>
+      </div>
     </td>
   );
 }

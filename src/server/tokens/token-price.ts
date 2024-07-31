@@ -24,17 +24,21 @@ export class TokenPair {
   }: {
     from: number;
     to: number;
-  }): Promise<{ timestamp: number; price: number }[] | null> {
+  }): Promise<{ timestamp: number; price: number }[]> {
     const result: { timestamp: number; price: number }[] = [];
+    let lastValidPrice: number | undefined;
 
     for (let day = closestDay(from); day <= to; day += DAY) {
       const price = this.prices.get(day);
 
-      if (!price) {
-        return null;
+      if (price !== undefined) {
+        result.push({ timestamp: day, price: price });
+        lastValidPrice = price;
+      } else if (lastValidPrice !== undefined) {
+        result.push({ timestamp: day, price: lastValidPrice });
+      } else {
+        return [];
       }
-
-      result.push({ timestamp: day, price: price });
     }
 
     return result;

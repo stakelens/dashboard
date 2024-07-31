@@ -80,6 +80,18 @@ const tvls = await getAllTVLs();
               {
                 label: 'StakeWise (v3)',
                 values: tvls.stakeWiseTVL
+              },
+              {
+                label: 'Lido',
+                values: tvls.lidoTVL
+              },
+              {
+                label: 'Stader',
+                values: tvls.staderTVL
+              },
+              {
+                label: 'Mantle',
+                values: tvls.mantleTVL
               }
             ]}
             client:only="react"

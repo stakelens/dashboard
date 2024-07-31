@@ -12,6 +12,12 @@ export function ProtocolRanking({
     values: { eth: number }[];
   }[];
 }) {
+  const sortedProtocols = [...protocols].sort((a, b) => {
+    const tvlA = a.values[a.values.length - 1].eth;
+    const tvlB = b.values[b.values.length - 1].eth;
+    return tvlB - tvlA;
+  });
+
   return (
     <table className="w-full overflow-hidden">
       <thead className="bg-[#242424] font-mono text-[#949494] border-b border-white border-opacity-10">
@@ -28,7 +34,7 @@ export function ProtocolRanking({
         </tr>
       </thead>
       <tbody className="bg-[#191919]">
-        {protocols.map((protocol) => (
+        {sortedProtocols.map((protocol) => (
           <ProtocolRankingRow
             label={protocol.label}
             values={protocol.values}

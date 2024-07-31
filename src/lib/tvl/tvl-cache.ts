@@ -3,9 +3,9 @@ import { combineTVLs } from '@/lib/tvl/tvl-utils';
 import { getAllTVLs } from '@/lib/tvl/tvls';
 import type { DataPoint } from '../chart-utils';
 
-const CACHE_DURATION = 10 * 1000;
+const REFRESH_PERIOD = 60 * 1000;
 
-let lastFetch = 0;
+let refreshInterval: number | undefined;
 let lastTvlValue: {
   tvls: Awaited<ReturnType<typeof getAllTVLs>>;
   chartData: DataPoint[][];
@@ -13,10 +13,21 @@ let lastTvlValue: {
 } | null = null;
 
 export async function getAllTVLsWithCache() {
-  if (lastTvlValue && Date.now() - lastFetch < CACHE_DURATION) {
+  if (refreshInterval === undefined) {
+    refreshInterval = setInterval(async () => {
+      lastTvlValue = await getTvl();
+    }, REFRESH_PERIOD);
+  }
+
+  if (lastTvlValue) {
     return lastTvlValue;
   }
 
+  lastTvlValue = await getTvl();
+  return lastTvlValue;
+}
+
+async function getTvl() {
   const tvls = await getAllTVLs();
 
   const chartData = Object.values(tvls).map((tvl) =>
@@ -33,12 +44,9 @@ export async function getAllTVLsWithCache() {
     min: Date.now() - YEAR
   });
 
-  lastFetch = Date.now();
-  lastTvlValue = {
-    chartData,
+  return {
     tvls,
+    chartData,
     combinedTVL
   };
-
-  return lastTvlValue;
 }

@@ -11,10 +11,14 @@ import { convertChartDenomination, percentChange, type DataPoint } from '@/lib/c
 import html2canvas from 'html2canvas';
 import { getDateText } from '@/lib/utils';
 
-function useCombineTVL(data: DataPoint[][], filter: number, defaultValue: DataPoint[]) {
-  const cache = useRef<Record<number, DataPoint[]>>({
-    [filter]: defaultValue
-  });
+function useCombineTVL(data: DataPoint[][], filter: number, defaultValue?: DataPoint[]) {
+  const cache = useRef<Record<number, DataPoint[]>>(
+    defaultValue
+      ? {
+          [filter]: defaultValue
+        }
+      : {}
+  );
 
   return useMemo(() => {
     if (cache.current[filter]) {
@@ -61,7 +65,7 @@ export function TVLChart({
   tvls,
   defaultValue
 }: {
-  defaultValue: DataPoint[];
+  defaultValue?: DataPoint[];
   tvls: DataPoint[][];
   title: string;
   logo?: string;

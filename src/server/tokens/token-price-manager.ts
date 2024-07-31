@@ -42,6 +42,46 @@ class TokenPriceManager {
     return tokenPriceManager;
   }
 
+  // Gets the prices for a pair of tokens
+  // If the pair is not found, it tries to find the inverted pair
+  private getPairPrices({
+    pair,
+    range
+  }: {
+    pair: Pair;
+    range: {
+      from: number;
+      to: number;
+    };
+  }) {
+    const tokenPair = this.tokenPrices.get(pairToString(pair));
+
+    if (tokenPair) {
+      return tokenPair.getPrices(range);
+    }
+
+    const invertedPair = {
+      baseToken: pair.quoteToken,
+      quoteToken: pair.baseToken
+    };
+
+    const invertedTokenPair = this.tokenPrices.get(pairToString(invertedPair));
+
+    if (invertedTokenPair) {
+      const prices = invertedTokenPair.getPrices(range);
+
+      if (!prices) {
+        return null;
+      }
+
+      for (let i = 0; i < prices.length; i++) {
+        prices[i].price = 1 / prices[i].price;
+      }
+    }
+
+    return null;
+  }
+
   async getPrices({
     pair,
     range
@@ -61,49 +101,23 @@ class TokenPriceManager {
     const result: Record<number, number> = {};
 
     for (let i = 0; i < path.length - 1; i++) {
-      const pair = {
-        baseToken: path[i],
-        quoteToken: path[i + 1]
-      };
-
-      let tokenPair = this.tokenPrices.get(pairToString(pair));
-
-      let inverted = false;
-
-      if (!tokenPair) {
-        inverted = true;
-
-        const pair = {
-          baseToken: path[i + 1],
-          quoteToken: path[i]
-        };
-
-        tokenPair = this.tokenPrices.get(pairToString(pair));
-
-        if (!tokenPair) {
-          return null;
+      const prices = this.getPairPrices({
+        range,
+        pair: {
+          baseToken: path[i],
+          quoteToken: path[i + 1]
         }
-      }
-
-      const prices = await tokenPair.getPrices(range);
+      });
 
       if (!prices) {
         return null;
       }
 
       for (const point of prices) {
-        const timestamp = point.timestamp;
-
-        let price = point.price;
-
-        if (inverted) {
-          price = 1 / price;
-        }
-
-        if (result[timestamp] === undefined) {
-          result[timestamp] = price;
+        if (result[point.timestamp] === undefined) {
+          result[point.timestamp] = point.price;
         } else {
-          result[timestamp] = result[timestamp] * price;
+          result[point.timestamp] = result[point.timestamp] * point.price;
         }
       }
     }

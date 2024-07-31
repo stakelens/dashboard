@@ -13,7 +13,7 @@ type FetchPrice = {
   };
 };
 
-export async function fetchPrices(input: FetchPrice): Promise<Record<string, number> | null> {
+export async function fetchPrices(input: FetchPrice): Promise<Record<number, number> | null> {
   return await fetchWithRetry({
     url: '/api/token-prices',
     method: 'POST',

@@ -18,13 +18,13 @@ export class TokenPair {
     setInterval(() => this.loadFromDB(), this.refetchInterval);
   }
 
-  async getPrices({
+  getPrices({
     from,
     to
   }: {
     from: number;
     to: number;
-  }): Promise<{ timestamp: number; price: number }[]> {
+  }): { timestamp: number; price: number }[] | null {
     const result: { timestamp: number; price: number }[] = [];
     let lastValidPrice: number | undefined;
 

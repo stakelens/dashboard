@@ -25,8 +25,8 @@ export function ProtocolRanking({
           <th className="p-4 text-sm font-medium text-left border-r border-white border-opacity-10">
             PROTOCOL
           </th>
-          <th className="p-4 text-sm font-medium text-left border-r border-white border-opacity-10">
-            24H
+          <th className="p-4 text-sm font-medium text-right border-r border-white border-opacity-10">
+            7D CHANGE
           </th>
           <th className="p-4 text-sm font-medium text-right border-r border-white border-opacity-10">
             TVL (ETH)
@@ -52,17 +52,17 @@ function percentChange(a: number, b: number): number {
 
 function ProtocolRankingRow({ label, values }: { label: string; values: { eth: number }[] }) {
   const TVL = values[values.length - 1].eth;
-  const dayChange = percentChange(values[values.length - 1].eth, values[values.length - 2].eth);
+  const weekChange = percentChange(values[values.length - 1].eth, values[values.length - 8].eth);
 
   return (
     <tr className="border-t border-white border-opacity-10">
       <td className="p-4 border-r border-white border-opacity-10">{label}</td>
       <td className="relative p-4 font-light text-right border-r border-white border-opacity-10">
-        <ArrowChange positive={dayChange >= 0}>
+        <ArrowChange change={weekChange}>
           <span>
             {Intl.NumberFormat('en-US', {
               maximumFractionDigits: 2
-            }).format(dayChange)}
+            }).format(weekChange)}
             %
           </span>
         </ArrowChange>

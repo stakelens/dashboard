@@ -11,8 +11,10 @@ import { convertChartDenomination, percentChange, type DataPoint } from '@/lib/c
 import html2canvas from 'html2canvas';
 import { getDateText } from '@/lib/utils';
 
-function useCombineTVL(data: DataPoint[][], filter: number) {
-  const cache = useRef<Record<number, DataPoint[]>>({});
+function useCombineTVL(data: DataPoint[][], filter: number, defaultValue: DataPoint[]) {
+  const cache = useRef<Record<number, DataPoint[]>>({
+    [filter]: defaultValue
+  });
 
   return useMemo(() => {
     if (cache.current[filter]) {
@@ -56,8 +58,10 @@ export function TVLChart({
   title,
   logo,
   description,
-  tvls
+  tvls,
+  defaultValue
 }: {
+  defaultValue: DataPoint[];
   tvls: DataPoint[][];
   title: string;
   logo?: string;
@@ -67,7 +71,7 @@ export function TVLChart({
   const [isUSD, setIsUSD] = useState(false);
   const timestamp = getLastTimestamp(tvls);
 
-  const ethTVL = useCombineTVL(tvls, filter);
+  const ethTVL = useCombineTVL(tvls, filter, defaultValue);
   const usdTVL = convertETHChartToUSD(ethTVL, filter);
 
   const TVL = useMemo(() => (isUSD ? usdTVL : ethTVL), [isUSD, usdTVL, ethTVL]);

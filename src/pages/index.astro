@@ -4,9 +4,9 @@ import Footer from '@/components/footer.astro';
 import Header from '@/components/header.astro';
 import { TVLChart } from '@/components/tvl-chart.tsx';
 import { ProtocolRanking } from '@/components/protocol-ranking';
-import { getAllTVLs } from '@/lib/tvl/tvls';
+import { getAllTVLsWithCache } from '@/lib/tvl/tvl-cache';
 
-const tvls = await getAllTVLs();
+const { chartData, combinedTVL, tvls } = await getAllTVLsWithCache();
 ---
 
 <Layout>
@@ -15,15 +15,11 @@ const tvls = await getAllTVLs();
       <Header />
       <div class="my-16 md:mt-24">
         <TVLChart
-          client:only="react"
+          client:load
           title={'Liquid Staking'}
           description={'Total ETH value of all liquid staking protocol assets.'}
-          tvls={Object.values(tvls).map((tvl) =>
-            tvl.map((x) => ({
-              timestamp: x.timestamp,
-              value: x.eth
-            }))
-          )}
+          tvls={chartData}
+          defaultValue={combinedTVL}
         />
       </div>
       <!-- <div

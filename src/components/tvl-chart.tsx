@@ -73,7 +73,10 @@ export function TVLChart({
   const TVL = useMemo(() => (isUSD ? usdTVL : ethTVL), [isUSD, usdTVL, ethTVL]);
 
   return (
-    <div className="relative bg-[#111] p-8 rounded border border-white border-opacity-10">
+    <div
+      className="relative bg-[#111] p-8 rounded border border-white border-opacity-10"
+      id="home-tvl"
+    >
       {isUSD && usdTVL.length == 0 && <LoadingOverlay />}
       <TVLHeader
         title={title}
@@ -114,7 +117,10 @@ function getLastTimestamp(tvls: DataPoint[][]) {
 
 function LastUpdated({ timestamp }: { timestamp: number }) {
   return (
-    <div className="py-2 px-4 rounded bg-[#22c55e] bg-opacity-10 text-[#22c55e] text-xs border border-[#22c55e] border-opacity-10 flex items-center justify-center gap-2">
+    <div
+      className="py-2 px-4 rounded bg-[#22c55e] bg-opacity-10 text-[#22c55e] text-xs border border-[#22c55e] border-opacity-10 flex items-center justify-center gap-2"
+      id="last-updated"
+    >
       <div className="bg-[#22c55e] rounded-full w-2 h-2 relative shadow ">
         <div className="bg-[#22c55e] rounded-full w-2 h-2 animate-ping absolute"></div>
       </div>
@@ -126,40 +132,48 @@ function LastUpdated({ timestamp }: { timestamp: number }) {
 function CopyToClipboard() {
   const [showCopyMsg, setShowCopyMsg] = useState(false);
 
+  const handleCopyClick = async () => {
+    const chart = document.getElementById('home-tvl');
+    if (!chart) return;
+
+    const elementsToExclude = [
+      document.getElementById('last-updated'),
+      document.getElementById('copy-to-clipboard')
+    ];
+    elementsToExclude.forEach((el) => {
+      if (el) el.classList.add('exclude-from-screenshot');
+    });
+
+    try {
+      const canvas = await html2canvas(chart, {
+        ignoreElements: (element) => {
+          return element.classList.contains('exclude-from-screenshot');
+        }
+      });
+
+      canvas.toBlob(function (blob) {
+        if (!blob) return;
+        const item = new ClipboardItem({ 'image/png': blob });
+        navigator.clipboard.write([item]);
+
+        setTimeout(() => {
+          setShowCopyMsg(true);
+          setTimeout(() => setShowCopyMsg(false), 1000);
+        }, 10);
+      });
+    } finally {
+      elementsToExclude.forEach((el) => {
+        if (el) el.classList.remove('exclude-from-screenshot');
+      });
+    }
+  };
+
   return (
     <div className="flex items-center justify-end gap-3">
       <div
+        id="copy-to-clipboard"
         className="border border-white border-opacity-10 rounded p-2 bg-[#242424] hover:bg-[#222] duration-200 cursor-pointer flex items-center justify-center gap-2 relative"
-        onClick={async () => {
-          setShowCopyMsg((value) => {
-            if (value) {
-              return true;
-            }
-
-            setTimeout(() => setShowCopyMsg(false), 1000);
-
-            return true;
-          });
-
-          setTimeout(async () => {
-            const chart = document.getElementById('tvl-chart');
-
-            if (!chart) {
-              return;
-            }
-
-            const canvas = await html2canvas(chart);
-
-            canvas.toBlob(function (blob) {
-              if (!blob) {
-                return;
-              }
-
-              const item = new ClipboardItem({ 'image/png': blob });
-              navigator.clipboard.write([item]);
-            });
-          }, 300);
-        }}
+        onClick={handleCopyClick}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

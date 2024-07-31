@@ -1,6 +1,6 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 @font-face {
   font-family: 'geist';
@@ -14,7 +14,7 @@
   font-weight: 300;
   font-display: block;
   src: url('/fonts/Geist/statics-ttf/Geist-Light.ttf') format('truetype');
-} 
+}
 
 @font-face {
   font-family: 'geist';
@@ -101,6 +101,10 @@
 }
 
 @layer base {
+  img {
+    @apply inline-block;
+  }
+
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -186,9 +190,10 @@
 }
 
 @keyframes ping {
-  75%, 100% {
-      transform: scale(2);
-      opacity: 0;
+  75%,
+  100% {
+    transform: scale(2);
+    opacity: 0;
   }
 }
 

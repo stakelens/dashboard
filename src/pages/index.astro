@@ -17,7 +17,7 @@ const { chartData, combinedTVL, tvls } = await getAllTVLsWithCache();
         <TVLChart
           client:load
           title={'Liquid Staking'}
-          description={'Total ETH value of all liquid staking protocol assets.'}
+          description={'Total value locked in all listed liquid staking protocols'}
           tvls={chartData}
           defaultValue={combinedTVL}
         />

@@ -3,7 +3,7 @@ import Layout from '@/layouts/layout.astro';
 import Footer from '@/components/footer.astro';
 import Header from '@/components/header.astro';
 import { TVLChart } from '@/components/tvl-chart.tsx';
-import { ProtocolRanking } from '@/components/protocol-ranking';
+import { ProjectRanking } from '@/components/project-ranking';
 import { getAllTVLsWithCache } from '@/lib/tvl/tvl-cache';
 
 const { chartData, combinedTVL, tvls } = await getAllTVLsWithCache();
@@ -17,7 +17,7 @@ const { chartData, combinedTVL, tvls } = await getAllTVLsWithCache();
         <TVLChart
           client:load
           title={'Liquid Staking'}
-          description={'Total value locked on all listed liquid staking protocols'}
+          description={'Total value locked on all listed liquid staking projects'}
           tvls={chartData}
           defaultValue={combinedTVL}
         />
@@ -54,17 +54,17 @@ const { chartData, combinedTVL, tvls } = await getAllTVLsWithCache();
       <div class="mt-32">
         <div class="flex flex-wrap items-center justify-between gap-8">
           <div>
-            <h2 class="mb-2 text-2xl font-medium md:text-3xl">Protocol Rankings</h2>
+            <h2 class="mb-2 text-2xl font-medium md:text-3xl">Project Rankings</h2>
             <div class="text-lg font-light md:text-xl opacity-70">
-              <span class="block"> The top 10 protocols by total value locked. </span>
+              <span class="block"> The top 10 projects by total value locked. </span>
             </div>
           </div>
         </div>
         <div
           class="max-w-[100vw] overflow-x-auto mt-8 mb-16 border border-white border-opacity-10 rounded"
         >
-          <ProtocolRanking
-            protocols={[
+          <ProjectRanking
+            projects={[
               {
                 label: 'RocketPool',
                 values: tvls.rocketPoolTVL

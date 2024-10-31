@@ -49,41 +49,51 @@ export function bigIntDiv(numerator: bigint, denominator: bigint, decimals: numb
   return Number((numerator * BigInt(decimalsHelper)) / denominator) / decimalsHelper;
 }
 
-export function getDateText(givenDate: Date | string) {
-  if (typeof givenDate === 'string') {
-    givenDate = new Date(givenDate);
+export function getDateText(date: Date | string) {
+  if (typeof date === 'string') {
+    date = new Date(date);
   }
 
-  const diff = (Date.now() - givenDate.getTime()) / 1000;
+  const diff = (Date.now() - date.getTime()) / 1000;
 
   if (diff < 60) {
     return `a few seconds ago`;
-  } else if (diff < 3600) {
+  }
+
+  if (diff < 3_600) {
     const minutes = Math.floor(diff / 60);
     return `${minutes} minutes ago`;
-  } else if (diff < 86400) {
-    const hours = Math.floor(diff / 3600);
+  }
+
+  if (diff < 86_400) {
+    const hours = Math.floor(diff / 3_600);
     return `${hours} hour${hours === 1 ? '' : 's'} ago`;
-  } else if (Math.floor(diff / 86400) === 1) {
+  }
+
+  if (Math.floor(diff / 86_400) === 1) {
     return `yesterday`;
-  } else if (diff < 604800) {
-    const days = Math.floor(diff / 86400);
+  }
+
+  if (diff < 604_800) {
+    const days = Math.floor(diff / 86_400);
     return `${days} day${days === 1 ? '' : 's'} ago`;
-  } else if (
-    givenDate.getFullYear() === new Date().getFullYear() &&
-    givenDate.getMonth() === new Date().getMonth()
+  }
+
+  if (
+    date.getFullYear() === new Date().getFullYear() &&
+    date.getMonth() === new Date().getMonth()
   ) {
-    return givenDate.toLocaleDateString('en-US', {
+    return date.toLocaleDateString('en-US', {
       day: 'numeric',
       month: 'short'
     });
-  } else {
-    return givenDate.toLocaleDateString('en-US', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric'
-    });
   }
+
+  return date.toLocaleDateString('en-US', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  });
 }
 
 export function average(values: number[]): number {

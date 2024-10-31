@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { numberFormater } from '@/lib/format';
+import { formatter } from '@/lib/format';
 import { ArrowChange } from './arrow-change';
 
-const formatter = new Intl.NumberFormat('en-US', { currency: 'USD' });
+const currencyFormatter = new Intl.NumberFormat('en-US', { currency: 'USD' });
 
 export function ProjectRanking({
   projects
@@ -70,8 +70,8 @@ function ProjectRankingRow({ label, values }: { label: string; values: { eth: nu
 
 function Cell({ value }: { value: number }) {
   const [hover, setHover] = useState(false);
-  const formattedValue = formatter.format(value);
-  const shortValue = numberFormater(value);
+  const formattedValue = currencyFormatter.format(value);
+  const shortValue = formatter.format(value);
 
   return (
     <td className="p-4 font-light text-right">

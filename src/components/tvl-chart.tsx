@@ -1,5 +1,5 @@
 import { combineTVLs } from '@/lib/tvl/tvl-utils';
-import { numberFormater } from '@/lib/format';
+import { formatter } from '@/lib/format';
 import { ArrowChange } from './arrow-change';
 import { USDToggele } from './chart/usd-toggle';
 import { useMemo, useRef, useState } from 'react';
@@ -240,7 +240,7 @@ function TVLHeader({
 }) {
   const rangeChange = percentChange(data);
   const lastValue = data[data.length - 1];
-  const TVL = lastValue ? numberFormater(lastValue.value) : 0;
+  const TVL = lastValue ? formatter.format(lastValue.value) : 0;
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-4 md:gap-8">

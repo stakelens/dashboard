@@ -10,7 +10,7 @@ import {
   Area
 } from 'recharts';
 import { MONTHS } from '@/lib/time-constants';
-import { numberFormater } from '@/lib/format';
+import { formatter } from '@/lib/format';
 import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
 import type { DataPoint } from '@/lib/chart-utils';
 
@@ -45,7 +45,7 @@ export function TimeChart({ data }: { data: DataPoint[] }) {
             className="font-mono text-xs"
             stroke={'#6b7280'}
             domain={['dataMin', 'dataMax']}
-            tickFormatter={numberFormater}
+            tickFormatter={formatter.format}
           />
           <RechartsTooltip content={(data) => <Tooltip data={data} />} />
           <Area
@@ -75,7 +75,7 @@ function Tooltip({ data }: { data: TooltipProps<ValueType, NameType> }) {
   }
 
   const date = formatDate(new Date(data.payload[0].payload.timestamp));
-  const value = numberFormater(data.payload[0].value);
+  const value = formatter.format(data.payload[0].value);
 
   return (
     <div className="bg-[#191919] border border-white border-opacity-10 rounded p-4 font-mono text-xs text-white">

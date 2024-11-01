@@ -7,6 +7,10 @@ export async function getStakeWiseTVL() {
     }
   });
 
+  if (stakeWiseDB.length === 0) {
+    return [];
+  }
+
   const vaultTVLChanges = stakeWiseDB.map((value) => {
     return {
       ...value,

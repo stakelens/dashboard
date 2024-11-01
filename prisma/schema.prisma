@@ -70,3 +70,9 @@ model UniswapTWAP {
 
   @@id([base_token, quote_token, block_timestamp])
 }
+
+model BeaconDeposit {
+  block_number    BigInt @unique
+  block_timestamp BigInt
+  eth             String
+}

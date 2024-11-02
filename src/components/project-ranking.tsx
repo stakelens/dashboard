@@ -13,9 +13,14 @@ export function ProjectRanking({
   }[];
 }) {
   const sortedProjects = [...projects].sort((a, b) => {
-    const tvlA = a.values[a.values.length - 1].eth;
-    const tvlB = b.values[b.values.length - 1].eth;
-    return tvlB - tvlA;
+    const aValue = a.values[a.values.length - 1];
+    const bValue = b.values[b.values.length - 1];
+
+    if (aValue === undefined || bValue === undefined) {
+      return 0;
+    }
+
+    return bValue.eth - aValue.eth;
   });
 
   return (

@@ -34,9 +34,15 @@ if (!prices) {
 const pricesArray: DataPoint[] = [];
 
 for (let timestamp = Math.round(from / DAY) * DAY; timestamp < to; timestamp += DAY) {
+  const value = prices[timestamp];
+
+  if (!value) {
+    continue;
+  }
+
   pricesArray.push({
     timestamp,
-    value: prices[timestamp]
+    value
   });
 }
 ---

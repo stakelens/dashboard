@@ -99,8 +99,8 @@ export function getDateText(date: Date | string) {
 export function average(values: number[]): number {
   let sum = 0;
 
-  for (let i = 0; i < values.length; i++) {
-    sum += values[i];
+  for (const value of values) {
+    sum += value;
   }
 
   return sum / values.length;

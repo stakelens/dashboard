@@ -1,10 +1,6 @@
 import { db } from '@/server/db';
 import { DAY } from '@/lib/time-constants';
-import { average } from '@/lib/utils';
-
-export function closestDay(timestamp: number): number {
-  return Math.floor(timestamp / DAY) * DAY;
-}
+import { average, closestDay } from '@/lib/utils';
 
 export class TokenPair {
   readonly baseToken: string;

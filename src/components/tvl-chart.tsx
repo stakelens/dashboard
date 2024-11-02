@@ -14,7 +14,7 @@ import {
 } from '@/lib/chart-utils';
 import html2canvas from 'html2canvas';
 import { getDateText } from '@/lib/utils';
-import { closestDay } from '@/server/tokens/token-price';
+import { closestDay } from '@/lib/utils';
 
 function useCombineTVL(
   data: DataPoint[][],

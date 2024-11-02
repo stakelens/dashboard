@@ -1,4 +1,4 @@
-import { closestDay } from '@/server/tokens/token-price';
+import { closestDay } from '@/lib/utils';
 
 export type DataPoint = {
   timestamp: number;

@@ -70,12 +70,18 @@ export function TimeChart({ data }: { data: DataPoint[] }) {
 }
 
 function Tooltip({ data }: { data: TooltipProps<ValueType, NameType> }) {
-  if (!data.payload || data.payload.length == 0 || typeof data.payload[0].value !== 'number') {
+  if (!data || !data.payload) {
     return null;
   }
 
-  const date = formatDate(new Date(data.payload[0].payload.timestamp));
-  const value = formatter.format(data.payload[0].value);
+  const payload = data.payload[0];
+
+  if (!payload || typeof payload.value !== 'number') {
+    return null;
+  }
+
+  const date = formatDate(new Date(payload.payload.timestamp));
+  const value = formatter.format(payload.value);
 
   return (
     <div className="bg-[#191919] border border-white border-opacity-10 rounded p-4 font-mono text-xs text-white">

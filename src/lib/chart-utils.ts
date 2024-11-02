@@ -1,4 +1,4 @@
-import { DAY } from './time-constants';
+import { closestDay } from '@/server/tokens/token-price';
 
 export type DataPoint = {
   timestamp: number;
@@ -29,9 +29,10 @@ export function convertChartDenomination({
     const timestamp = data[i].timestamp;
     const value = data[i].value;
 
-    let conversionValue = conversionTable[Math.floor(timestamp / DAY) * DAY];
+    const index = closestDay(timestamp);
+    let conversionValue = conversionTable[index];
 
-    if (!conversionValue) {
+    if (conversionValue === undefined) {
       console.warn(`Conversion value not found for ${timestamp}.`);
       conversionValue = 1;
     }
@@ -47,23 +48,21 @@ export function convertChartDenomination({
 
 /**
  * Combines multiple data points arrays into a single array.
- *
- * The result will have `numberOfSegments` data points.
  * The value of each data point is the sum of the values of the data points at the same timestamp.
  */
 export function combineDataPoints({
   dataPointsArray,
-  numberOfSegments,
+  stepSize,
   endTimestamp,
   startTimestamp
 }: {
   dataPointsArray: DataPoint[][];
-  numberOfSegments: number;
+  stepSize: number;
   endTimestamp: number;
   startTimestamp: number;
 }): DataPoint[] {
   const result: DataPoint[] = [];
-  const timestamps = range(startTimestamp, endTimestamp, numberOfSegments);
+  const timestamps = range(startTimestamp, endTimestamp, stepSize);
 
   for (const timestamp of timestamps) {
     let value = 0;
@@ -83,15 +82,17 @@ export function combineDataPoints({
 
 /**
  * Returns an array of numbers from min to max.
- * The array will have `segments` elements.
- *
  * The first element will be `min` and the last element will be `max`.
  */
-function range(min: number, max: number, segments: number): number[] {
+function range(min: number, max: number, step: number): number[] {
   const result: number[] = [];
 
-  for (let i = 0; i < segments; i++) {
-    result[i] = min + ((max - min) / (segments - 1)) * i;
+  for (let i = min; i <= max; i += step) {
+    result.push(i);
+  }
+
+  if (result[result.length - 1] !== max) {
+    result[result.length - 1] = max;
   }
 
   return result;

@@ -1,6 +1,7 @@
-import { YEAR } from '@/lib/time-constants';
+import { DAY, YEAR } from '@/lib/time-constants';
 import { getAllTVLs } from '@/lib/tvl/tvls';
-import { combineDataPoints, type DataPoint } from '../chart-utils';
+import { combineDataPoints, type DataPoint } from '@/lib/chart-utils';
+import { closestDay } from '@/server/tokens/token-price';
 
 const REFRESH_PERIOD = 60 * 1000;
 
@@ -38,9 +39,9 @@ async function getTvl() {
 
   const combinedTVL = combineDataPoints({
     dataPointsArray: chartData,
-    numberOfSegments: 365,
-    endTimestamp: Date.now(),
-    startTimestamp: Date.now() - YEAR
+    stepSize: DAY,
+    endTimestamp: closestDay(Date.now()),
+    startTimestamp: closestDay(Date.now() - YEAR)
   });
 
   return {

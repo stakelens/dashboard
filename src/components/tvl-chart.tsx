@@ -5,7 +5,7 @@ import { useMemo, useRef, useState } from 'react';
 import { Filter, FILTER_TO_LABEL } from './chart/filter';
 import { TimeChart } from './chart/time-chart';
 import { useETHPrice } from '@/lib/eth-prices';
-import { YEAR } from '@/lib/time-constants';
+import { DAY, YEAR } from '@/lib/time-constants';
 import {
   combineDataPoints,
   convertChartDenomination,
@@ -14,6 +14,7 @@ import {
 } from '@/lib/chart-utils';
 import html2canvas from 'html2canvas';
 import { getDateText } from '@/lib/utils';
+import { closestDay } from '@/server/tokens/token-price';
 
 function useCombineTVL(data: DataPoint[][], filter: number, defaultValue?: DataPoint[]) {
   const cache = useRef<Record<number, DataPoint[]>>(
@@ -31,9 +32,9 @@ function useCombineTVL(data: DataPoint[][], filter: number, defaultValue?: DataP
 
     cache.current[filter] = combineDataPoints({
       dataPointsArray: data,
-      numberOfSegments: 365,
-      endTimestamp: Date.now(),
-      startTimestamp: Date.now() - filter
+      stepSize: DAY,
+      endTimestamp: closestDay(Date.now()),
+      startTimestamp: closestDay(Date.now() - filter)
     });
 
     return cache.current[filter];

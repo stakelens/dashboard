@@ -52,8 +52,19 @@ function percentChange(a: number, b: number): number {
 }
 
 function ProjectRankingRow({ label, values }: { label: string; values: { eth: number }[] }) {
-  const TVL = values[values.length - 1].eth;
-  const weekChange = percentChange(values[values.length - 1].eth, values[values.length - 8].eth);
+  let TVL = 0;
+  let weekChange = 0;
+
+  const lastValue = values[values.length - 1];
+  const weekValue = values[values.length - 8];
+
+  if (lastValue) {
+    TVL = lastValue.eth;
+  }
+
+  if (lastValue && weekValue) {
+    weekChange = percentChange(lastValue.eth, weekValue.eth);
+  }
 
   return (
     <tr className="border-t border-white border-opacity-10">

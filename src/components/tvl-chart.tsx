@@ -1,4 +1,4 @@
-import { combineTVLs } from '@/lib/tvl/tvl-utils';
+import { combineDataPoints } from '@/lib/tvl/tvl-utils';
 import { formatter } from '@/lib/format';
 import { ArrowChange } from './arrow-change';
 import { USDToggele } from './chart/usd-toggle';
@@ -25,11 +25,11 @@ function useCombineTVL(data: DataPoint[][], filter: number, defaultValue?: DataP
       return cache.current[filter];
     }
 
-    cache.current[filter] = combineTVLs({
-      tvls: data,
-      divisions: 365,
-      max: Date.now(),
-      min: Date.now() - filter
+    cache.current[filter] = combineDataPoints({
+      dataPointsArray: data,
+      numberOfSegments: 365,
+      endTimestamp: Date.now(),
+      startTimestamp: Date.now() - filter
     });
 
     return cache.current[filter];

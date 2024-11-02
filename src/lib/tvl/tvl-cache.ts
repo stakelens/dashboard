@@ -1,5 +1,5 @@
 import { YEAR } from '@/lib/time-constants';
-import { combineTVLs } from '@/lib/tvl/tvl-utils';
+import { combineDataPoints } from '@/lib/tvl/tvl-utils';
 import { getAllTVLs } from '@/lib/tvl/tvls';
 import type { DataPoint } from '../chart-utils';
 
@@ -37,11 +37,11 @@ async function getTvl() {
     }))
   );
 
-  const combinedTVL = combineTVLs({
-    tvls: chartData,
-    divisions: 365,
-    max: Date.now(),
-    min: Date.now() - YEAR
+  const combinedTVL = combineDataPoints({
+    dataPointsArray: chartData,
+    numberOfSegments: 365,
+    endTimestamp: Date.now(),
+    startTimestamp: Date.now() - YEAR
   });
 
   return {

@@ -2,7 +2,7 @@ import { db } from '@/server/db';
 import { DAY } from '@/lib/time-constants';
 import { average } from '@/lib/utils';
 
-function closestDay(timestamp: number): number {
+export function closestDay(timestamp: number): number {
   return Math.floor(timestamp / DAY) * DAY;
 }
 
@@ -26,19 +26,23 @@ export class TokenPair {
     to: number;
   }): { timestamp: number; price: number }[] | null {
     const result: { timestamp: number; price: number }[] = [];
-    let lastValidPrice: number | undefined;
 
     for (let day = closestDay(from); day <= to; day += DAY) {
       const price = this.prices.get(day);
 
       if (price !== undefined) {
         result.push({ timestamp: day, price: price });
-        lastValidPrice = price;
-      } else if (lastValidPrice !== undefined) {
-        result.push({ timestamp: day, price: lastValidPrice });
-      } else {
-        return [];
+        continue;
       }
+
+      const lastValue = result[result.length - 1];
+
+      if (lastValue) {
+        result.push({ timestamp: day, price: lastValue.price });
+        continue;
+      }
+
+      result.push({ timestamp: day, price: 0 });
     }
 
     return result;

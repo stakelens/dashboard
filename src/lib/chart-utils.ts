@@ -5,15 +5,19 @@ export type DataPoint = {
   value: number;
 };
 
-export function percentChange(chartData: DataPoint[]) {
-  if (chartData.length < 2) {
+export function percentChange(data: DataPoint[]) {
+  if (data.length < 2) {
     return 0;
   }
 
-  const finalValue = chartData[chartData.length - 1].value;
-  const initialValue = chartData[0].value;
+  const first = data[0];
+  const last = data[data.length - 1];
 
-  return (100 * (finalValue - initialValue)) / initialValue;
+  if (!first || !last) {
+    return 0;
+  }
+
+  return (100 * (last.value - first.value)) / first.value;
 }
 
 export function convertChartDenomination({
@@ -25,22 +29,19 @@ export function convertChartDenomination({
 }) {
   const result = [];
 
-  for (let i = 0; i < data.length; i++) {
-    const timestamp = data[i].timestamp;
-    const value = data[i].value;
-
-    const index = closestDay(timestamp);
+  for (const dataPoint of data) {
+    const index = closestDay(dataPoint.timestamp);
     let conversionValue = conversionTable[index];
 
     if (conversionValue === undefined) {
-      console.warn(`Conversion value not found for ${timestamp}.`);
+      console.warn(`Conversion value not found for ${dataPoint.timestamp}.`);
       conversionValue = 1;
     }
 
-    result[i] = {
-      value: value * conversionValue,
-      timestamp: timestamp
-    };
+    result.push({
+      value: dataPoint.value * conversionValue,
+      timestamp: dataPoint.timestamp
+    });
   }
 
   return result;

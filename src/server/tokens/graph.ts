@@ -23,8 +23,8 @@ export class Graph {
         const path = [current];
 
         while (previous[current]) {
-          path.push(previous[current]);
-          current = previous[current];
+          path.push(previous[current]!);
+          current = previous[current]!;
         }
 
         return path.reverse();

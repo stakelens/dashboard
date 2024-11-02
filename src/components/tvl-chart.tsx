@@ -16,7 +16,11 @@ import html2canvas from 'html2canvas';
 import { getDateText } from '@/lib/utils';
 import { closestDay } from '@/server/tokens/token-price';
 
-function useCombineTVL(data: DataPoint[][], filter: number, defaultValue?: DataPoint[]) {
+function useCombineTVL(
+  data: DataPoint[][],
+  filter: number,
+  defaultValue?: DataPoint[]
+): DataPoint[] {
   const cache = useRef<Record<number, DataPoint[]>>(
     defaultValue
       ? {
@@ -25,9 +29,9 @@ function useCombineTVL(data: DataPoint[][], filter: number, defaultValue?: DataP
       : {}
   );
 
-  return useMemo(() => {
+  return useMemo<DataPoint[]>(() => {
     if (cache.current[filter]) {
-      return cache.current[filter];
+      return cache.current[filter]!;
     }
 
     cache.current[filter] = combineDataPoints({
@@ -37,7 +41,7 @@ function useCombineTVL(data: DataPoint[][], filter: number, defaultValue?: DataP
       startTimestamp: closestDay(Date.now() - filter)
     });
 
-    return cache.current[filter];
+    return cache.current[filter]!;
   }, [data, filter]);
 }
 
@@ -45,13 +49,13 @@ function convertETHChartToUSD(data: DataPoint[], key: number) {
   const ethPrice = useETHPrice();
   const usdCache = useRef<Record<number, DataPoint[]>>({});
 
-  return useMemo(() => {
+  return useMemo<DataPoint[]>(() => {
     if (!ethPrice) {
       return [];
     }
 
     if (usdCache.current[key]) {
-      return usdCache.current[key];
+      return usdCache.current[key]!;
     }
 
     usdCache.current[key] = convertChartDenomination({
@@ -59,7 +63,7 @@ function convertETHChartToUSD(data: DataPoint[], key: number) {
       conversionTable: ethPrice
     });
 
-    return usdCache.current[key];
+    return usdCache.current[key]!;
   }, [data, key, ethPrice]);
 }
 
@@ -83,7 +87,13 @@ export function TVLChart({
   const ethTVL = useCombineTVL(tvls, FILTERS[filter].value, defaultValue);
   const usdTVL = convertETHChartToUSD(ethTVL, FILTERS[filter].value);
 
-  const TVL = useMemo(() => (isUSD ? usdTVL : ethTVL), [isUSD, usdTVL, ethTVL]);
+  const TVL: DataPoint[] = useMemo<DataPoint[]>(() => {
+    if (isUSD) {
+      return usdTVL;
+    }
+
+    return ethTVL;
+  }, [isUSD, usdTVL, ethTVL]);
 
   return (
     <div

@@ -23,12 +23,16 @@ export async function getStakeWiseTVL() {
     eth: bigint;
   }[] = [];
 
-  stakeWiseTVL[0] = vaultTVLChanges[0];
+  if (vaultTVLChanges.length === 0) {
+    return [];
+  }
+
+  stakeWiseTVL[0] = vaultTVLChanges[0]!;
 
   for (let i = 1; i < vaultTVLChanges.length; i++) {
     stakeWiseTVL[i] = {
-      eth: vaultTVLChanges[i].eth + stakeWiseTVL[i - 1].eth,
-      block_timestamp: vaultTVLChanges[i].block_timestamp
+      eth: vaultTVLChanges[i]!.eth + stakeWiseTVL[i - 1]!.eth,
+      block_timestamp: vaultTVLChanges[i]!.block_timestamp
     };
   }
 

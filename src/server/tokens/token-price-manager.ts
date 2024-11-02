@@ -53,7 +53,12 @@ class TokenPriceManager {
       from: number;
       to: number;
     };
-  }) {
+  }):
+    | {
+        timestamp: number;
+        price: number;
+      }[]
+    | null {
     const tokenPair = this.tokenPrices.get(pairToString(pair));
 
     if (tokenPair) {

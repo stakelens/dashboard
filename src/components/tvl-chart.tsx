@@ -124,14 +124,18 @@ export function TVLChart({
   );
 }
 
-function getLastTimestamp(tvls: DataPoint[][]) {
+/**
+ * Get the last timestamp from an array of data points
+ * Assumes that each array is sorted by timestamp
+ */
+function getLastTimestamp(dataPointsArray: DataPoint[][]): number {
   let lastTimestamp = 0;
 
-  for (const tvl of tvls) {
-    for (const value of tvl) {
-      if (value.timestamp > lastTimestamp) {
-        lastTimestamp = value.timestamp;
-      }
+  for (const dataPoints of dataPointsArray) {
+    const value = dataPoints[dataPoints.length - 1];
+
+    if (value && value.timestamp > lastTimestamp) {
+      lastTimestamp = value.timestamp;
     }
   }
 

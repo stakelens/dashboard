@@ -73,14 +73,14 @@ class TokenPriceManager {
     const invertedTokenPair = this.tokenPrices.get(pairToString(invertedPair));
 
     if (invertedTokenPair) {
-      const prices = invertedTokenPair.getPrices(range);
+      const dataPoints = invertedTokenPair.getPrices(range);
 
-      if (!prices) {
+      if (!dataPoints) {
         return null;
       }
 
-      for (let i = 0; i < prices.length; i++) {
-        prices[i].price = 1 / prices[i].price;
+      for (const dataPoint of dataPoints) {
+        dataPoint.price = 1 / dataPoint.price;
       }
     }
 
@@ -106,11 +106,18 @@ class TokenPriceManager {
     const result: Record<number, number> = {};
 
     for (let i = 0; i < path.length - 1; i++) {
+      const baseToken = path[i];
+      const quoteToken = path[i + 1];
+
+      if (!baseToken || !quoteToken) {
+        return null;
+      }
+
       const prices = this.getPairPrices({
         range,
         pair: {
-          baseToken: path[i],
-          quoteToken: path[i + 1]
+          baseToken,
+          quoteToken
         }
       });
 
@@ -119,10 +126,12 @@ class TokenPriceManager {
       }
 
       for (const point of prices) {
-        if (result[point.timestamp] === undefined) {
+        const dataPoint = result[point.timestamp];
+
+        if (dataPoint === undefined) {
           result[point.timestamp] = point.price;
         } else {
-          result[point.timestamp] = result[point.timestamp] * point.price;
+          result[point.timestamp] = dataPoint * point.price;
         }
       }
     }

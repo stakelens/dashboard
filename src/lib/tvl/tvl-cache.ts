@@ -1,7 +1,6 @@
 import { YEAR } from '@/lib/time-constants';
-import { combineDataPoints } from '@/lib/tvl/tvl-utils';
 import { getAllTVLs } from '@/lib/tvl/tvls';
-import type { DataPoint } from '../chart-utils';
+import { combineDataPoints, type DataPoint } from '../chart-utils';
 
 const REFRESH_PERIOD = 60 * 1000;
 

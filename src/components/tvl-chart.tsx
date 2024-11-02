@@ -1,4 +1,3 @@
-import { combineDataPoints } from '@/lib/tvl/tvl-utils';
 import { formatter } from '@/lib/format';
 import { ArrowChange } from './arrow-change';
 import { USDToggele } from './chart/usd-toggle';
@@ -7,7 +6,12 @@ import { Filter, FILTER_TO_LABEL } from './chart/filter';
 import { TimeChart } from './chart/time-chart';
 import { useETHPrice } from '@/lib/eth-prices';
 import { YEAR } from '@/lib/time-constants';
-import { convertChartDenomination, percentChange, type DataPoint } from '@/lib/chart-utils';
+import {
+  combineDataPoints,
+  convertChartDenomination,
+  percentChange,
+  type DataPoint
+} from '@/lib/chart-utils';
 import html2canvas from 'html2canvas';
 import { getDateText } from '@/lib/utils';
 

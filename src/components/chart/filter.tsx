@@ -1,77 +1,74 @@
 import { DAY, MONTH, THREE_MONTHS, WEEK, YEAR } from '@/lib/time-constants';
 import { ChartButton } from './chart-button';
 
-export const FILTER_TO_LABEL = {
-  [DAY]: {
+export const FILTERS = {
+  day: {
+    value: DAY,
     long: '1 day',
     short: '24H'
   },
-  [WEEK]: {
+  week: {
+    value: WEEK,
     long: '7 days',
     short: '7D'
   },
-  [MONTH]: {
+  month: {
+    value: MONTH,
     long: '1 month',
     short: '1M'
   },
-  [THREE_MONTHS]: {
+  three_months: {
+    value: THREE_MONTHS,
     long: '3 months',
     short: '3M'
   },
-  [YEAR]: {
+  year: {
+    value: YEAR,
     long: '1 year',
     short: '1Y'
-  },
-  [Infinity]: {
-    long: 'All time',
-    short: 'MAX'
   }
 };
+
+export type Filter = keyof typeof FILTERS;
 
 export function Filter({
   setFilter,
   filter
 }: {
-  setFilter: (value: number) => void;
-  filter: number;
+  setFilter: (value: Filter) => void;
+  filter: Filter;
 }) {
   return (
     <div className="flex flex-wrap items-center justify-end gap-2 font-mono text-xs font-bold md:text-sm lg:gap-3">
       <ChartButton
-        active={filter === DAY}
-        onClick={() => setFilter(DAY)}
-        label={FILTER_TO_LABEL[DAY].short}
+        active={filter === 'day'}
+        onClick={() => setFilter('day')}
+        label={FILTERS['day'].short}
       />
 
       <ChartButton
-        active={filter === WEEK}
-        onClick={() => setFilter(WEEK)}
-        label={FILTER_TO_LABEL[WEEK].short}
+        active={filter === 'week'}
+        onClick={() => setFilter('week')}
+        label={FILTERS['week'].short}
       />
 
       <ChartButton
-        active={filter === MONTH}
-        onClick={() => setFilter(MONTH)}
-        label={FILTER_TO_LABEL[MONTH].short}
+        active={filter === 'month'}
+        onClick={() => setFilter('month')}
+        label={FILTERS['month'].short}
       />
 
       <ChartButton
-        active={filter === THREE_MONTHS}
-        onClick={() => setFilter(THREE_MONTHS)}
-        label={FILTER_TO_LABEL[THREE_MONTHS].short}
+        active={filter === 'three_months'}
+        onClick={() => setFilter('three_months')}
+        label={FILTERS['three_months'].short}
       />
 
       <ChartButton
-        active={filter === YEAR}
-        onClick={() => setFilter(YEAR)}
-        label={FILTER_TO_LABEL[YEAR].short}
+        active={filter === 'year'}
+        onClick={() => setFilter('year')}
+        label={FILTERS['year'].short}
       />
-
-      {/* <ChartButton
-        active={filter === Infinity}
-        onClick={() => setFilter(Infinity)}
-        label={FILTER_TO_LABEL[Infinity].short}
-      /> */}
     </div>
   );
 }

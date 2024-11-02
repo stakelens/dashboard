@@ -2,10 +2,10 @@ import { formatter } from '@/lib/format';
 import { ArrowChange } from './arrow-change';
 import { USDToggele } from './chart/usd-toggle';
 import { useMemo, useRef, useState } from 'react';
-import { Filter, FILTER_TO_LABEL } from './chart/filter';
+import { Filter, FILTERS } from './chart/filter';
 import { TimeChart } from './chart/time-chart';
 import { useETHPrice } from '@/lib/eth-prices';
-import { DAY, YEAR } from '@/lib/time-constants';
+import { DAY } from '@/lib/time-constants';
 import {
   combineDataPoints,
   convertChartDenomination,
@@ -76,12 +76,12 @@ export function TVLChart({
   logo?: string;
   description: string;
 }) {
-  const [filter, setFilter] = useState(YEAR);
+  const [filter, setFilter] = useState<Filter>('year');
   const [isUSD, setIsUSD] = useState(false);
   const timestamp = getLastTimestamp(tvls);
 
-  const ethTVL = useCombineTVL(tvls, filter, defaultValue);
-  const usdTVL = convertETHChartToUSD(ethTVL, filter);
+  const ethTVL = useCombineTVL(tvls, FILTERS[filter].value, defaultValue);
+  const usdTVL = convertETHChartToUSD(ethTVL, FILTERS[filter].value);
 
   const TVL = useMemo(() => (isUSD ? usdTVL : ethTVL), [isUSD, usdTVL, ethTVL]);
 
@@ -95,7 +95,7 @@ export function TVLChart({
         title={title}
         logo={logo}
         description={description}
-        changeRange={FILTER_TO_LABEL[filter].long}
+        changeRange={FILTERS[filter].long}
         isUSD={isUSD}
         data={TVL}
       />

@@ -1,4 +1,4 @@
-import { closestDay } from '@/lib/utils';
+import { closestDay } from '@/server/utils';
 
 export type DataPoint = {
   timestamp: number;

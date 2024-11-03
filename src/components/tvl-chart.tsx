@@ -2,10 +2,14 @@ import { USDToggele } from './chart/usd-toggle';
 import { useMemo, useRef, useState } from 'react';
 import { Filter, FILTERS } from './chart/filter';
 import { TimeChart } from './chart/time-chart';
-import { useETHPrice } from '@/lib/eth-prices';
-import { DAY } from '@/lib/time-constants';
-import { combineDataPoints, convertChartDenomination, type DataPoint } from '@/lib/chart-utils';
-import { closestDay } from '@/lib/utils';
+import { useETHPrice } from '@/components/eth-prices';
+import { DAY } from '@/server/time-constants';
+import {
+  combineDataPoints,
+  convertChartDenomination,
+  type DataPoint
+} from '@/components/chart-utils';
+import { closestDay } from '@/server/utils';
 import { CopyToClipboard } from './copy-to-clipboard';
 import { LastUpdated } from './last-update';
 import { TVLHeader } from './tvl-header';

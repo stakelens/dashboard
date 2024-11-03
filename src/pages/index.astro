@@ -4,8 +4,8 @@ import Footer from '@/components/footer.astro';
 import Header from '@/components/header.astro';
 import { TVLChart } from '@/components/tvl-chart.tsx';
 import { ProjectRanking } from '@/components/project-ranking';
-import { getAllTVLsWithCache } from '@/lib/tvl/tvl-cache';
-import { getStakedETH } from '@/lib/staked-eth';
+import { getAllTVLsWithCache } from '@/server/tvl/tvl-cache';
+import { getStakedETH } from '@/server/staked-eth';
 
 const { chartData, combinedTVL, tvls } = await getAllTVLsWithCache();
 const data = await getStakedETH();

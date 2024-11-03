@@ -1,4 +1,4 @@
-import { DAY, MONTH, THREE_MONTHS, WEEK, YEAR } from '@/lib/time-constants';
+import { DAY, MONTH, THREE_MONTHS, WEEK, YEAR } from '@/server/time-constants';
 import { ChartButton } from './chart-button';
 
 export const FILTERS = {

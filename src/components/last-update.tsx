@@ -1,4 +1,4 @@
-import { getDateText } from '@/lib/utils';
+import { getDateText } from './get-date-text';
 
 export function LastUpdated({ timestamp }: { timestamp: number }) {
   return (

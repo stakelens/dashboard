@@ -1,6 +1,6 @@
 import { db } from '@/server/db';
+import { bigIntDiv } from '@/server/utils';
 import { getStakeWiseTVL } from './stake-wise';
-import { bigIntDiv } from '../utils';
 
 export async function getAllTVLs() {
   const etherFiTVL = await db.etherFi.findMany({

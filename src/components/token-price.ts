@@ -1,4 +1,4 @@
-import { fetchWithRetry } from './utils';
+import { fetchWithRetry } from './fetch-with-retry';
 
 type Token = 'RPL' | 'WETH' | 'USDC';
 

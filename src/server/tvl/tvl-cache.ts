@@ -1,7 +1,7 @@
-import { DAY, YEAR } from '@/lib/time-constants';
-import { getAllTVLs } from '@/lib/tvl/tvls';
-import { combineDataPoints, type DataPoint } from '@/lib/chart-utils';
-import { closestDay } from '@/lib/utils';
+import { closestDay } from '@/server/utils';
+import { getAllTVLs } from '@/server/tvl/tvls';
+import { DAY, YEAR } from '@/server/time-constants';
+import { combineDataPoints, type DataPoint } from '@/components/chart-utils';
 
 const REFRESH_PERIOD = 60 * 1000;
 

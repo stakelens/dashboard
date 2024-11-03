@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { fetchPrices } from './token-price';
-import { YEAR } from './time-constants';
+import { YEAR } from '../server/time-constants';
 
 export function useETHPrice() {
   const [ethPrices, setEthPrices] = useState<Record<number, number> | null>(null);

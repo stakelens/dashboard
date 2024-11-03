@@ -1,6 +1,7 @@
 import { db } from '@/server/db';
 import { DAY } from '@/lib/time-constants';
 import { average, closestDay } from '@/lib/utils';
+import type { DataPoint } from '@/lib/chart-utils';
 
 export class TokenPair {
   readonly baseToken: string;
@@ -14,31 +15,25 @@ export class TokenPair {
     setInterval(() => this.loadFromDB(), this.refetchInterval);
   }
 
-  getPrices({
-    from,
-    to
-  }: {
-    from: number;
-    to: number;
-  }): { timestamp: number; price: number }[] | null {
-    const result: { timestamp: number; price: number }[] = [];
+  getPrices({ from, to }: { from: number; to: number }): DataPoint[] | null {
+    const result: DataPoint[] = [];
 
     for (let day = closestDay(from); day <= to; day += DAY) {
       const price = this.prices.get(day);
 
       if (price !== undefined) {
-        result.push({ timestamp: day, price: price });
+        result.push({ timestamp: day, value: price });
         continue;
       }
 
       const lastValue = result[result.length - 1];
 
       if (lastValue) {
-        result.push({ timestamp: day, price: lastValue.price });
+        result.push({ timestamp: day, value: lastValue.value });
         continue;
       }
 
-      result.push({ timestamp: day, price: 0 });
+      result.push({ timestamp: day, value: 0 });
     }
 
     return result;

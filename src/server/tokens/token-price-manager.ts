@@ -1,9 +1,15 @@
+import type { DataPoint } from '@/lib/chart-utils';
 import { Graph } from './graph';
 import { TokenPair } from './token-price';
 
 type Pair = {
   baseToken: string;
   quoteToken: string;
+};
+
+type Range = {
+  from: number;
+  to: number;
 };
 
 function pairToString(pair: Pair) {
@@ -27,7 +33,7 @@ class TokenPriceManager {
 
   private constructor() {}
 
-  private async load() {
+  private async load(): Promise<void> {
     for (const pair of PAIRS) {
       this.graph.addEdge(pair.baseToken, pair.quoteToken);
       const tokenPair = new TokenPair(pair.baseToken, pair.quoteToken);
@@ -36,7 +42,7 @@ class TokenPriceManager {
     }
   }
 
-  static async init() {
+  static async init(): Promise<TokenPriceManager> {
     const tokenPriceManager = new TokenPriceManager();
     await tokenPriceManager.load();
     return tokenPriceManager;
@@ -44,21 +50,7 @@ class TokenPriceManager {
 
   // Gets the prices for a pair of tokens
   // If the pair is not found, it tries to find the inverted pair
-  private getPairPrices({
-    pair,
-    range
-  }: {
-    pair: Pair;
-    range: {
-      from: number;
-      to: number;
-    };
-  }):
-    | {
-        timestamp: number;
-        price: number;
-      }[]
-    | null {
+  private getPairPrices({ pair, range }: { pair: Pair; range: Range }): DataPoint[] | null {
     const tokenPair = this.tokenPrices.get(pairToString(pair));
 
     if (tokenPair) {
@@ -80,7 +72,7 @@ class TokenPriceManager {
       }
 
       for (const dataPoint of dataPoints) {
-        dataPoint.price = 1 / dataPoint.price;
+        dataPoint.value = 1 / dataPoint.value;
       }
     }
 
@@ -129,9 +121,9 @@ class TokenPriceManager {
         const dataPoint = result[point.timestamp];
 
         if (dataPoint === undefined) {
-          result[point.timestamp] = point.price;
+          result[point.timestamp] = point.value;
         } else {
-          result[point.timestamp] = dataPoint * point.price;
+          result[point.timestamp] = dataPoint * point.value;
         }
       }
     }

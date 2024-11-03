@@ -1,10 +1,4 @@
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
 import { DAY } from './time-constants';
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 export function closestDay(timestamp: number): number {
   return Math.floor(timestamp / DAY) * DAY;

@@ -2,7 +2,7 @@ import { USDToggele } from './chart/usd-toggle';
 import { useMemo, useRef, useState } from 'react';
 import { Filter, FILTERS } from './chart/filter';
 import { TimeChart } from './chart/time-chart';
-import { useETHPrice } from '@/components/eth-prices';
+import { useETHPrice } from '@/components/use-eth-prices';
 import { DAY } from '@/server/time-constants';
 import {
   combineDataPoints,

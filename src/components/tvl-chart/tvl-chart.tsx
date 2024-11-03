@@ -4,7 +4,12 @@ import { Filter, FILTERS } from './filter';
 import { TimeChart } from '../chart/time-chart';
 import { useETHPrice } from './use-eth-prices';
 import { DAY } from '@/server/time-constants';
-import { combineDataPoints, convertChartDenomination, type DataPoint } from '../chart/chart-utils';
+import {
+  alignDataPointsTimestamps,
+  combineDataPoints,
+  convertChartDenomination,
+  type DataPoint
+} from '../chart/chart-utils';
 import { closestDay } from '@/server/utils';
 import { CopyToClipboard } from '../copy-to-clipboard';
 import { LastUpdated } from '../last-update';
@@ -28,12 +33,16 @@ function useCombineDataPoints(
       return cache.current[filter]!;
     }
 
-    cache.current[filter] = combineDataPoints({
-      dataPointsArray: data,
-      stepSize: DAY,
-      endTimestamp: closestDay(Date.now()),
-      startTimestamp: closestDay(Date.now() - filter)
-    });
+    const alignedData = data.map((data) =>
+      alignDataPointsTimestamps({
+        data,
+        stepSize: DAY,
+        endTimestamp: closestDay(Date.now()),
+        startTimestamp: closestDay(Date.now() - filter)
+      })
+    );
+
+    cache.current[filter] = combineDataPoints(alignedData);
 
     return cache.current[filter]!;
   }, [data, filter]);

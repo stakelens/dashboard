@@ -1,7 +1,11 @@
 import { closestDay } from '@/server/utils';
 import { getAllTVLs } from '@/server/tvl/tvls';
 import { DAY, YEAR } from '@/server/time-constants';
-import { combineDataPoints, type DataPoint } from '@/components/chart/chart-utils';
+import {
+  alignDataPointsTimestamps,
+  combineDataPoints,
+  type DataPoint
+} from '@/components/chart/chart-utils';
 
 const REFRESH_PERIOD = 60 * 1000;
 
@@ -37,12 +41,16 @@ async function getTvl() {
     }))
   );
 
-  const combinedTVL = combineDataPoints({
-    dataPointsArray: chartData,
-    stepSize: DAY,
-    endTimestamp: closestDay(Date.now()),
-    startTimestamp: closestDay(Date.now() - YEAR)
-  });
+  const alignedData = chartData.map((data) =>
+    alignDataPointsTimestamps({
+      data,
+      stepSize: DAY,
+      endTimestamp: closestDay(Date.now()),
+      startTimestamp: closestDay(Date.now() - YEAR)
+    })
+  );
+
+  const combinedTVL = combineDataPoints(alignedData);
 
   return {
     tvls,

@@ -20,6 +20,11 @@ export function percentChange(data: DataPoint[]) {
   return (100 * (last.value - first.value)) / first.value;
 }
 
+/**
+ * Converts the chart denomination.
+ * The conversion table is a record where the key is the timestamp and the value is the conversion rate.
+ * The value of each data point is multiplied by the conversion rate at the same timestamp.
+ */
 export function convertChartDenomination({
   data,
   conversionTable
@@ -50,14 +55,56 @@ export function convertChartDenomination({
 /**
  * Combines multiple data points arrays into a single array.
  * The value of each data point is the sum of the values of the data points at the same timestamp.
+ * Assumes that the data points are aligned, sorted by timestamp and have the same length.
  */
-export function combineDataPoints({
-  dataPointsArray,
+export function combineDataPoints(dataPointsArray: DataPoint[][]): DataPoint[] {
+  const result: DataPoint[] = [];
+
+  const firstDataPoints = dataPointsArray[0];
+
+  if (!firstDataPoints) {
+    return [];
+  }
+
+  for (const dataPoints of dataPointsArray) {
+    if (dataPoints.length !== firstDataPoints.length) {
+      throw new Error('Data points arrays have different lengths.');
+    }
+
+    for (let i = 0; i < dataPoints.length; i++) {
+      const dataPoint = dataPoints[i]!;
+
+      if (dataPoint.timestamp !== firstDataPoints[i]!.timestamp) {
+        throw new Error('Data points timestamps are not aligned.');
+      }
+
+      if (!result[i]) {
+        result[i] = {
+          value: dataPoint.value,
+          timestamp: dataPoint.timestamp
+        };
+      } else {
+        result[i] = {
+          value: result[i]!.value + dataPoint.value,
+          timestamp: result[i]!.timestamp
+        };
+      }
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Aligns the data points timestamps to a given step size.
+ */
+export function alignDataPointsTimestamps({
+  data,
   stepSize,
   endTimestamp,
   startTimestamp
 }: {
-  dataPointsArray: DataPoint[][];
+  data: DataPoint[];
   stepSize: number;
   endTimestamp: number;
   startTimestamp: number;
@@ -66,11 +113,7 @@ export function combineDataPoints({
   const timestamps = range(startTimestamp, endTimestamp, stepSize);
 
   for (const timestamp of timestamps) {
-    let value = 0;
-
-    for (const dataPoints of dataPointsArray) {
-      value += getValueForTimestamp(dataPoints, timestamp);
-    }
+    const value = getValueForTimestamp(data, timestamp);
 
     result.push({
       value,

@@ -1,4 +1,4 @@
-import { formatDateToDDMMYYYY as formatDate } from '../format-date';
+import { formatDateToDDMMYYYY as formatDate } from '../utils/format-date';
 import type { TooltipProps } from 'recharts';
 import {
   XAxis,
@@ -10,9 +10,9 @@ import {
   Area
 } from 'recharts';
 import { MONTHS } from '@/server/time-constants';
-import { formatter } from '@/components/format';
+import { formatter } from '@/components/utils/format';
 import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
-import type { DataPoint } from '@/components/chart-utils';
+import type { DataPoint } from '@/components/chart/chart-utils';
 
 export function TimeChart({ data }: { data: DataPoint[] }) {
   return (

@@ -2,7 +2,7 @@
 import Layout from '../../layouts/layout.astro';
 import { TimeChart } from '../../components/chart/time-chart.tsx';
 import { tokenPriceManager } from '@/server/tokens/token-price-manager.ts';
-import type { DataPoint } from '@/components/chart-utils.ts';
+import type { DataPoint } from '@/components/chart/chart-utils.ts';
 import { DAY, YEAR } from '@/server/time-constants.ts';
 
 const { token } = Astro.params;

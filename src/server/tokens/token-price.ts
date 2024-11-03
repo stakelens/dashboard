@@ -1,7 +1,7 @@
 import { db } from '@/server/db';
 import { DAY } from '@/server/time-constants';
 import { average, closestDay } from '@/server/utils';
-import type { DataPoint } from '@/components/chart-utils';
+import type { DataPoint } from '@/components/chart/chart-utils';
 
 export class TokenPair {
   readonly baseToken: string;

@@ -1,17 +1,13 @@
-import { USDToggele } from './chart/usd-toggle';
+import { USDToggele } from './usd-toggle';
 import { useMemo, useRef, useState } from 'react';
-import { Filter, FILTERS } from './chart/filter';
-import { TimeChart } from './chart/time-chart';
-import { useETHPrice } from '@/components/use-eth-prices';
+import { Filter, FILTERS } from './filter';
+import { TimeChart } from '../chart/time-chart';
+import { useETHPrice } from './use-eth-prices';
 import { DAY } from '@/server/time-constants';
-import {
-  combineDataPoints,
-  convertChartDenomination,
-  type DataPoint
-} from '@/components/chart-utils';
+import { combineDataPoints, convertChartDenomination, type DataPoint } from '../chart/chart-utils';
 import { closestDay } from '@/server/utils';
-import { CopyToClipboard } from './copy-to-clipboard';
-import { LastUpdated } from './last-update';
+import { CopyToClipboard } from '../copy-to-clipboard';
+import { LastUpdated } from '../last-update';
 import { TVLHeader } from './tvl-header';
 
 function useCombineTVL(

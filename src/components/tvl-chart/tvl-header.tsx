@@ -1,6 +1,6 @@
-import { formatter } from '@/components/format';
-import { ArrowChange } from './arrow-change';
-import { percentChange, type DataPoint } from '@/components/chart-utils';
+import { formatter } from '@/components/utils/format';
+import { ArrowChange } from '../arrow-change';
+import { percentChange, type DataPoint } from '@/components/chart/chart-utils';
 
 export function TVLHeader({
   title,

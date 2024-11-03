@@ -1,6 +1,6 @@
 import { db } from '@/server/db';
 import { bigIntDiv, closestDay } from '@/server/utils';
-import { combineDataPoints, type DataPoint } from '../components/chart-utils';
+import { combineDataPoints, type DataPoint } from '../components/chart/chart-utils';
 import { DAY, YEAR } from './time-constants';
 
 export async function getStakedETH(): Promise<DataPoint[]> {

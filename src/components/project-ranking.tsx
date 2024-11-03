@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { formatter } from '@/components/format';
+import { formatter } from '@/components/utils/format';
 import { ArrowChange } from './arrow-change';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', { currency: 'USD' });

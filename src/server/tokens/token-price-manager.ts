@@ -1,4 +1,4 @@
-import type { DataPoint } from '@/components/chart-utils';
+import type { DataPoint } from '@/components/chart/chart-utils';
 import { Graph } from './graph';
 import { TokenPair } from './token-price';
 

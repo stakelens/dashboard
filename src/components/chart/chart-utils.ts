@@ -5,15 +5,20 @@ export type DataPoint = {
   value: number;
 };
 
+/**
+ * Calculates the percentage change between the first and last data points.
+ * Assumes that the data points are sorted by timestamp.
+ * If there are less than two data points, returns 0.
+ */
 export function percentChange(data: DataPoint[]) {
   if (data.length < 2) {
     return 0;
   }
 
-  const first = data[0];
-  const last = data[data.length - 1];
+  const first = data[0]!;
+  const last = data[data.length - 1]!;
 
-  if (!first || !last) {
+  if (first.value === 0) {
     return 0;
   }
 

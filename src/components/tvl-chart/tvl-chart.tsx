@@ -10,7 +10,7 @@ import { CopyToClipboard } from '../copy-to-clipboard';
 import { LastUpdated } from '../last-update';
 import { TVLHeader } from './tvl-header';
 
-function useCombineTVL(
+function useCombineDataPoints(
   data: DataPoint[][],
   filter: number,
   defaultValue?: DataPoint[]
@@ -78,7 +78,7 @@ export function TVLChart({
   const [isUSD, setIsUSD] = useState(false);
   const timestamp = getLastTimestamp(tvls);
 
-  const ethTVL = useCombineTVL(tvls, FILTERS[filter].value, defaultValue);
+  const ethTVL = useCombineDataPoints(tvls, FILTERS[filter].value, defaultValue);
   const usdTVL = convertETHChartToUSD(ethTVL, FILTERS[filter].value);
 
   const TVL: DataPoint[] = useMemo<DataPoint[]>(() => {

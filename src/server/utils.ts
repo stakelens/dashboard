@@ -4,10 +4,6 @@ export function closestDay(timestamp: number): number {
   return Math.floor(timestamp / DAY) * DAY;
 }
 
-export function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 export function bigIntDiv(numerator: bigint, denominator: bigint, decimals: number = 6): number {
   const decimalsHelper = 10 ** decimals;
   return Number((numerator * BigInt(decimalsHelper)) / denominator) / decimalsHelper;

@@ -1,4 +1,4 @@
-import { delay } from '@/server/utils';
+import { delay } from './delay';
 
 export async function fetchWithRetry(
   params: RequestInit & {

@@ -19,12 +19,12 @@ const data = await getStakedETH();
         <TVLChart
           client:load
           title={'Staked ETH'}
-          description={'Total value of ETH staked on Ethereum 2.0'}
+          description={'Total value of staked ETH on the Beacon Chain'}
           tvls={[data]}
           defaultValue={data}
         />
       </div>
-      <div class="my-16 md:mt-24">
+      <!-- <div class="my-16 md:mt-24">
         <TVLChart
           client:load
           title={'Liquid Staking'}
@@ -32,7 +32,7 @@ const data = await getStakedETH();
           tvls={chartData}
           defaultValue={combinedTVL}
         />
-      </div>
+      </div> -->
       <!-- <div
         class="bg-[#191919] rounded flex items-center justify-between md:h-[140px] flex-wrap md:flex-nowrap border border-white border-opacity-10"
       >
